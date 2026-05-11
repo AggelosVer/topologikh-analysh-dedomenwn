@@ -27,18 +27,51 @@
     showstringspaces=false
 }
 
-\title{Τοπολογική Ανάλυση Δεδομένων (\foreignlanguage{english}{TDA}) \\ Αναφορά Εργασίας}
-\author{Όνομα Φοιτητή}
-\date{\today}
-
 \begin{document}
 \selectlanguage{greek}
-\maketitle
 
+% Ξεχωριστή Σελίδα Τίτλου
+\begin{titlepage}
+\begin{center}
+    % Banner Placeholder
+    \vspace*{-1cm}
+    \begin{figure}[H]
+    \centering
+    \foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{upatras_banner.png}}
+    \end{figure}
+    
+    \vspace{0.5cm}
+    
+    {\large Πανεπιστημιούπολη Ρίου $\cdot$ Πολυτεχνική Σχολή} \\
+    {\large Τμήμα Μηχανικών Η/Υ \& Πληροφορικής (\foreignlanguage{english}{ΤΜΗΥΠ} -- \foreignlanguage{english}{CEID})} \\
+    
+    \vspace{2cm}
+    
+    {\Huge \textbf{ΤΟΠΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ}} \\[0.4cm]
+    {\Huge \textbf{ΔΕΔΟΜΕΝΩΝ}} \\
+    \vspace{0.8cm}
+    {\Large (\foreignlanguage{english}{CEID\_25EE606})} \\
+    \vspace{0.5cm}
+    {\Large Εξαμηνιαία Εργασία --- 2026}
+    
+    \vspace{2.5cm}
+    
+    {\large \textbf{Ομάδα Εργασίας:}} \\
+    \vspace{0.5cm}
+    {\large Βερύκιος Άγγελος (1100500)} \\[0.3cm]
+    {\large Βογινατζής Αναστάσιος (1100506)} \\[0.3cm]
+    {\large Κολύβρας Κωνσταντίνος (1103826)}
+    
+    \vfill
+    
+    {\large 11 Μαΐου 2026}
+\end{center}
+\end{titlepage}
+
+\newpage
 \tableofcontents
 \newpage
 
-\newpage
 \section{\texorpdfstring{\underline{Θεωρητική Εισαγωγή}}{Θεωρητική Εισαγωγή}}
 \vspace{1em}
 
@@ -47,23 +80,23 @@
 \subsection{\foreignlanguage{english}{Simplicial Complexes}}
 \vspace{1em}
 
-Τα \foreignlanguage{english}{Simplicial Complexes} αποτελούν τη διακριτή προσέγγιση των συνεχών τοπολογικών χώρων...
+Τα \foreignlanguage{english}{Simplicial Complexes} αποτελούν τη διακριτή προσέ步ιση των συνεχών τοπολογικών χώρων. Αποτελούνται από απλόπλοκα (\foreignlanguage{english}{simplices}) διαφόρων διαστάσεων: 0-απλόπλοκα (σημεία), 1-απλόπλοκα (ακμές), 2-απλόπλοκα (τρίγωνα), 3-απλόπλοκα (τετράεδρα) κ.ο.κ. Η ένωση αυτών των στοιχείων με συγκεκριμένους κανόνες συνδυαστικότητας μας επιτρέπει να μοντελοποιήσουμε το σχήμα των δεδομένων και να υπολογίσουμε τοπολογικές ιδιότητες.
 
 \subsection{\foreignlanguage{english}{Persistent Homology}}
 \vspace{1em}
 
-Η \foreignlanguage{english}{Persistent Homology} είναι ένα εργαλείο που ανιχνεύει τοπολογικά χαρακτηριστικά (όπως συνεκτικές συνιστώσες, τρύπες, κοιλότητες) σε πολλαπλές κλίμακες...
+Η \foreignlanguage{english}{Persistent Homology} είναι ένα εργαλείο που ανιχνεύει τοπολογικά χαρακτηριστικά (όπως συνεκτικές συνιστώσες, τρύπες, κοιλότητες) σε πολλαπλές κλίμακες. Καθώς αυξάνουμε την ακτίνα $r$ γύρω από κάθε σημείο (διήθηση ή \foreignlanguage{english}{filtration}), νέα απλόπλοκα δημιουργούνται. Η εμμονή (\foreignlanguage{english}{persistence}) μετρά πόσο "ζει" κάθε τοπολογικό χαρακτηριστικό. Χαρακτηριστικά που επιμένουν για μεγάλο εύρος τιμών του $r$ θεωρούνται αληθή τοπολογικά σήματα, ενώ αυτά που πεθαίνουν γρήγορα θεωρούνται θόρυβος.
 
 \subsection{\foreignlanguage{english}{Mapper}}
 \vspace{1em}
 
-Ο αλγόριθμος \foreignlanguage{english}{Mapper} είναι μια τεχνική μείωσης διαστάσεων και οπτικοποίησης που διατηρεί την τοπολογική δομή των δεδομένων...
+Ο αλγόριθμος \foreignlanguage{english}{Mapper} είναι μια τεχνική μείωσης διαστάσεων και οπτικοποίησης που διατηρεί την τοπολογική δομή των δεδομένων. Χρησιμοποιεί μια συνάρτηση φίλτρου (\foreignlanguage{english}{filter function}) για να προβάλλει τα δεδομένα σε χαμηλότερη διάσταση, χωρίζει τον χώρο σε επικαλυπτόμενα διαστήματα, εφαρμόζει \foreignlanguage{english}{clustering} στα σημεία κάθε διαστήματος και συνδέει τα \foreignlanguage{english}{clusters} που μοιράζονται κοινά σημεία, δημιουργώντας ένα γράφημα που συνοψίζει τη δομή.
 
 \newpage
 \section{\texorpdfstring{\underline{Μεθοδολογία}}{Μεθοδολογία}}
 \vspace{1em}
 
-Για την υλοποίηση της εργασίας χρησιμοποιήθηκαν οι εξής βιβλιοθήκες και αλγόριθμοι:
+Για την υλοποίηση της εργασίας ακολουθήθηκε η εξής διαδικασία:
 
 \subsection{Βιβλιοθήκες}
 \vspace{1em}
@@ -79,7 +112,7 @@
 \subsection{Αιτιολόγηση Επιλογών}
 \vspace{1em}
 
-Η επιλογή της \foreignlanguage{english}{GUDHI} έγινε λόγω της πληρότητάς της σε διάφορα είδη συμπλεγμάτων (\foreignlanguage{english}{Alpha Complex}, \foreignlanguage{english}{Cech Complex} κ.λπ.), ενώ η \foreignlanguage{english}{Ripser} επιλέχθηκε για την ταχύτητά της στον υπολογισμό του $H_1$...
+Η επιλογή της \foreignlanguage{english}{GUDHI} έγινε λόγω της πληρότητάς της σε διάφορα είδη συμπλεγμάτων (\foreignlanguage{english}{Alpha Complex}, \foreignlanguage{english}{Cech Complex} κ.λπ.), ενώ η \foreignlanguage{english}{Ripser} επιλέχθηκε για την ταχύτητά της στον υπολογισμό του $H_1$. Ο αλγόριθμος \foreignlanguage{english}{Mapper} υλοποιήθηκε τόσο εκ του μηδενός (για βαθύτερη κατανόηση) όσο και μέσω της βιβλιοθήκης \foreignlanguage{english}{\texttt{kmapper}} για επαλήθευση των αποτελεσμάτων.
 
 \newpage
 \section{\texorpdfstring{\underline{Αποτελέσματα \& Ανάλυση}}{Αποτελέσματα \& Ανάλυση}}
@@ -161,7 +194,7 @@ for i in range(n):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{filtration_betti.png}}
+\foreignlanguage{english}{\texttt{\includegraphics[width=0.6\textwidth]{filtration_betti.png}}}
 \caption{Διάγραμμα αριθμών \foreignlanguage{english}{Betti}. Στο $r=0.2$ εμφανίζεται ο $\beta_1=1$.}
 \end{figure}
 
@@ -302,7 +335,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 \textit{Σχολιασμός: Η τριάδα των γραφημάτων για το \foreignlanguage{english}{Figure-8} διαφέρει ανάλογα με το φίλτρο:
 1. Το \foreignlanguage{english}{PCA} διαχωρίζει τους δύο κύκλους (αριστερά-δεξιά) στον άξονα μέγιστης διασποράς.
 2. Το \foreignlanguage{english}{L2-norm} δείχνει την απόσταση από το κέντρο, δημιουργώντας μια δομή που "ανοίγει" από το κέντρο προς τα άκρα.
-3. Το \foreignlanguage{english}{Density} αναδεικνύει το σημείο τομής των δύο κύκλων όπου η πυκνότητα των σημείων είναι μέγιστη.}
+3. Το \foreignlanguage{english}{Density} αναδεικνύει το σημείο τομής των δύο κύκλους όπου η πυκνότητα των σημείων είναι μέγιστη.}
 
 \begin{figure}[H]
 \centering
@@ -328,16 +361,27 @@ for int_idx, interval_bounds in enumerate(intervals):
 \newpage
 \section{\texorpdfstring{\underline{Συμπεράσματα}}{Συμπεράσματα}}
 \vspace{1em}
-Η \foreignlanguage{english}{TDA} αποκάλυψε ότι...
+Η \foreignlanguage{english}{TDA} αποκάλυψε ότι τα δεδομένα μας διαθέτουν πλούσια τοπολογική δομή που δεν είναι πάντα ορατή με παραδοσιακές μεθόδους στατιστικής ή μηχανικής μάθησης. Συγκεκριμένα:
+
+\begin{enumerate}
+    \item Οι αριθμοί \foreignlanguage{english}{Betti} και τα διαγράμματα εμμονής προσδιορίζουν με ακρίβεια τον αριθμό των οπών και των κοιλοτήτων στα σχήματα (κύκλος, τόρος, σφαίρα).
+    \item Η ανάλυση ευαισθησίας στον θόρυβο έδειξε ότι τα τοπολογικά χαρακτηριστικά είναι στιβαρά μέχρι ένα σημείο, αλλά ο έντονος θόρυβος μπορεί να αλλοιώσει τις αποστάσεις \foreignlanguage{english}{Bottleneck}.
+    \item Ο αλγόριθμος \foreignlanguage{english}{Mapper} αποδείχθηκε εξαιρετικό εργαλείο για την οπτικοποίηση σύνθετων δομών όπως το \foreignlanguage{english}{Figure-8} και το \foreignlanguage{english}{Horse-shoe}, επιτρέποντας την κατανόηση της γεωμετρίας τους μέσω απλών γραφημάτων.
+\end{enumerate}
 
 \newpage
 \section{\texorpdfstring{\underline{Χρήση AI}}{Χρήση AI}}
 \vspace{1em}
-Η χρήση Τεχνητής Νοημοσύνης έγινε στα εξής σημεία:
+Η χρήση Τεχνητής Νοημοσύνης (συγκεκριμένα Μεγάλων Γλωσσικών Μοντέλων - \foreignlanguage{english}{LLMs}) έγινε στα εξής σημεία της εργασίας:
+
 \begin{itemize}
-    \item Στην υλοποίηση του αλγορίθμου \foreignlanguage{english}{Vietoris-Rips}(Ερώτημα Α).
-    \item Στην επίλυση σφαλμάτων συμβατότητας βιβλιοθηκών (\foreignlanguage{english}{GUDHI}, \foreignlanguage{english}{Ripser}).
+    \item \textbf{Ανάπτυξη Κώδικα:} Υποστήριξη στη συγγραφή και βελτιστοποίηση κώδικα \foreignlanguage{english}{Python} σε όλα τα ερωτήματα της εργασίας (συμπεριλαμβανομένης της υλοποίησης του συμπλέγματος \foreignlanguage{english}{Vietoris--Rips} εκ του μηδενός και του αλγορίθμου \foreignlanguage{english}{Custom Mapper}).
+    \item \textbf{Επίλυση Σφαλμάτων (\foreignlanguage{english}{Debugging}):} Βοήθεια στην επίλυση σφαλμάτων συμβατότητας των βιβλιοθηκών \foreignlanguage{english}{GUDHI} και \foreignlanguage{english}{Ripser}, καθώς και στη διαχείριση της κωδικοποίησης (\foreignlanguage{english}{UTF-8}) στο περιβάλλον των \foreignlanguage{english}{Windows}.
+    \item \textbf{Συγγραφή Αναφοράς σε \foreignlanguage{english}{\LaTeX}:} Υποστήριξη στη δομή του εγγράφου, στη διαχείριση των πακέτων γλωσσών (\foreignlanguage{english}{\texttt{babel}}) για τη σωστή εναλλαγή ελληνικών και αγγλικών, και στη μορφοποίηση των πινάκων και των σχημάτων.
+    \item \textbf{Ερμηνεία Αποτελεσμάτων:} Συζήτηση και ανάλυση των διαγραμμάτων εμμονής και των γραφημάτων του \foreignlanguage{english}{Mapper} για την καλύτερη κατανόηση των τοπολογικών δομών.
 \end{itemize}
+
+\textit{Σημείωση: Η τελική αξιολόγηση, ο έλεγχος της ορθότητας του κώδικα και η συγγραφή των τελικών συμπερασμάτων έγιναν από την ομάδα εργασίας.}
 
 \newpage
 \section{\texorpdfstring{\underline{Βιβλιογραφία}}{Βιβλιογραφία}}
