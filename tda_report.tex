@@ -1,0 +1,351 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{parskip} % Για καλύτερο spacing παραγράφων
+\usepackage{listings} % Για κώδικα
+\usepackage{xcolor} % Για χρώματα στον κώδικα
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry} % Μικρότερα περιθώρια
+
+% Ρυθμίσεις για τον κώδικα Python
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+\title{Τοπολογική Ανάλυση Δεδομένων (\foreignlanguage{english}{TDA}) \\ Αναφορά Εργασίας}
+\author{Όνομα Φοιτητή}
+\date{\today}
+
+\begin{document}
+\selectlanguage{greek}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\newpage
+\section{\texorpdfstring{\underline{Θεωρητική Εισαγωγή}}{Θεωρητική Εισαγωγή}}
+\vspace{1em}
+
+Στην ενότητα αυτή παρουσιάζονται οι βασικές έννοιες της Τοπολογικής Ανάλυσης Δεδομένων (\foreignlanguage{english}{TDA}).
+
+\subsection{\foreignlanguage{english}{Simplicial Complexes}}
+\vspace{1em}
+
+Τα \foreignlanguage{english}{Simplicial Complexes} αποτελούν τη διακριτή προσέγγιση των συνεχών τοπολογικών χώρων...
+
+\subsection{\foreignlanguage{english}{Persistent Homology}}
+\vspace{1em}
+
+Η \foreignlanguage{english}{Persistent Homology} είναι ένα εργαλείο που ανιχνεύει τοπολογικά χαρακτηριστικά (όπως συνεκτικές συνιστώσες, τρύπες, κοιλότητες) σε πολλαπλές κλίμακες...
+
+\subsection{\foreignlanguage{english}{Mapper}}
+\vspace{1em}
+
+Ο αλγόριθμος \foreignlanguage{english}{Mapper} είναι μια τεχνική μείωσης διαστάσεων και οπτικοποίησης που διατηρεί την τοπολογική δομή των δεδομένων...
+
+\newpage
+\section{\texorpdfstring{\underline{Μεθοδολογία}}{Μεθοδολογία}}
+\vspace{1em}
+
+Για την υλοποίηση της εργασίας χρησιμοποιήθηκαν οι εξής βιβλιοθήκες και αλγόριθμοι:
+
+\subsection{Βιβλιοθήκες}
+\vspace{1em}
+
+\begin{itemize}
+    \item \foreignlanguage{english}{\texttt{GUDHI}}: Για την κατασκευή συμπλεγμάτων και τον υπολογισμό \foreignlanguage{english}{Persistent Homology} στο Ερώτημα Α.
+    \item \foreignlanguage{english}{\texttt{Ripser}}: Για τον γρήγορο υπολογισμό της \foreignlanguage{english}{Persistent Homology} στο Ερώτημα Β.
+    \item \foreignlanguage{english}{\texttt{Persim}}: Για τον υπολογισμό αποστάσεων \foreignlanguage{english}{Bottleneck} και \foreignlanguage{english}{Wasserstein}.
+    \item \foreignlanguage{english}{\texttt{NumPy}} \& \foreignlanguage{english}{\texttt{SciPy}}: Για τη διαχείριση δεδομένων και μαθηματικούς υπολογισμούς.
+    \item \foreignlanguage{english}{\texttt{Matplotlib}} \& \foreignlanguage{english}{\texttt{Plotly}}: Για την οπτικοποίηση των αποτελεσμάτων.
+\end{itemize}
+
+\subsection{Αιτιολόγηση Επιλογών}
+\vspace{1em}
+
+Η επιλογή της \foreignlanguage{english}{GUDHI} έγινε λόγω της πληρότητάς της σε διάφορα είδη συμπλεγμάτων (\foreignlanguage{english}{Alpha Complex}, \foreignlanguage{english}{Cech Complex} κ.λπ.), ενώ η \foreignlanguage{english}{Ripser} επιλέχθηκε για την ταχύτητά της στον υπολογισμό του $H_1$...
+
+\newpage
+\section{\texorpdfstring{\underline{Αποτελέσματα \& Ανάλυση}}{Αποτελέσματα \& Ανάλυση}}
+\vspace{1em}
+
+\subsection{Ερώτημα Α}
+\vspace{1em}
+
+\subsubsection{Α.1—Νέφος Σημείων \& \foreignlanguage{english}{Vietoris--Rips} (\foreignlanguage{english}{from scratch})}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Εξήγηση Υλοποίησης:}
+Για την υλοποίηση εκ του μηδενός, δημιουργήσαμε τα νέφη σημείων και υπολογίσαμε τον πίνακα αποστάσεων. Στη συνέχεια, για μια δεδομένη ακτίνα $r$, βρήκαμε όλες τις ακμές (αποστάσεις $\le 2r$) και όλα τα τρίγωνα (κλίκες μεγέθους 3). Ο υπολογισμός των αριθμών \foreignlanguage{english}{Betti} έγινε μέσω του πίνακα συνόρων (\foreignlanguage{english}{boundary matrix}) και απαλοιφής \foreignlanguage{english}{Gauss}.
+
+\vspace{1em}
+\textbf{Σημαντικό Κομμάτι Κώδικα:}
+\selectlanguage{english}
+\begin{lstlisting}
+# Finding edges and triangles (Simplices)
+edges = []
+for i in range(n):
+    for j in range(i+1, n):
+        if dist_matrix[i, j] <= 2 * r:
+            edges.append((i, j))
+
+triangles = []
+for i in range(n):
+    for j in range(i+1, n):
+        for k in range(j+1, n):
+            if dist_matrix[i, j] <= 2*r and dist_matrix[i, k] <= 2*r and dist_matrix[j, k] <= 2*r:
+                triangles.append((i, j, k))
+\end{lstlisting}
+\selectlanguage{greek}
+\textit{Σχολιασμός: Ο κώδικας αυτός ελέγχει όλους τους συνδυασμούς σημείων για να βρει αν σχηματίζουν ακμές ή τρίγωνα με βάση την ακτίνα $r$. Είναι η βάση για την κατασκευή του συμπλέγματος.}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Τα αποτελέσματα του υπολογισμού των αριθμών \foreignlanguage{english}{Betti} για τον κύκλο με $\epsilon = 0.5$ έδωσαν $\beta_0 = 1$, $\beta_1 = 1$, $\beta_2 = 1$. \textit{Σημείωση: Η τιμή $\beta_2=1$ οφείλεται στην αποκοπή του συμπλέγματος στη διάσταση 2 (έλλειψη τετραέδρων).}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{point_clouds.png}}
+\caption{Τα 4 παραγόμενα νέφη σημείων. Παρατηρούμε τις διαφορετικές τοπολογικές δομές (κύκλος, τόρος, σφαίρα).}
+\end{figure}
+
+\subsubsection{Α.2—Σύγκριση \foreignlanguage{english}{VR/Cech/Alpha} μέσω \foreignlanguage{english}{GUDHI}}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+\begin{table}[H]
+\centering
+\caption{Σύγκριση Συμπλεγμάτων για $r = 0.3$}
+\begin{tabular}{lcccccc}
+\toprule
+Σύμπλεγμα & \foreignlanguage{english}{0-simplices} & \foreignlanguage{english}{1-simplices} & \foreignlanguage{english}{2-simplices} & $\beta_0$ & $\beta_1$ & $\beta_2$ \\
+\midrule
+\foreignlanguage{english}{VR Complex} & 30 & 72 & 54 & 1 & 1 & 0 \\
+\foreignlanguage{english}{Cech Complex} & 30 & 56 & 26 & 1 & 1 & 0 \\
+\foreignlanguage{english}{Alpha Complex} & 30 & 37 & 7 & 1 & 1 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+Παρατηρούμε ότι το \foreignlanguage{english}{Alpha Complex} παράγει πολύ λιγότερα απλόπλοκα (ακμές και τρίγωνα) σε σχέση με το \foreignlanguage{english}{VR}, αλλά διατηρεί τους ίδιους αριθμούς \foreignlanguage{english}{Betti}. Αυτό το καθιστά πολύ πιο αποδοτικό.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{complex_2d_colored.png}}
+\caption{Οπτικοποίηση του \foreignlanguage{english}{VR Complex}. Τα σημεία είναι μπλε, οι ακμές κόκκινες και τα τρίγωνα πράσινα.}
+\end{figure}
+
+\subsubsection{Α.3—\foreignlanguage{english}{Filtration} \& Ανάλυση Κλίμακας}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Η τρύπα του κύκλου γεννιέται στο $r=0.2$ (όταν οι ακμές κλείνουν τον κύκλο) και πεθαίνει στο $r=0.9$ (όταν τα τρίγωνα γεμίζουν τον κύκλο).
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{filtration_betti.png}}
+\caption{Διάγραμμα αριθμών \foreignlanguage{english}{Betti}. Στο $r=0.2$ εμφανίζεται ο $\beta_1=1$.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{complex_steps.png}}
+\caption{Στιγμιότυπα της κατασκευής του συμπλέγματος για διάφορες τιμές του $r$.}
+\end{figure}
+
+\subsubsection{Α.4—Οπτικοποίηση σε 3 Διαστάσεις (\foreignlanguage{english}{3D})}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Εξήγηση Υλοποίησης:}
+Για τις δομές σε 3 διαστάσεις (όπως ο Τόρος και η Σφαίρα), η οπτικοποίηση του συμπλέγματος \foreignlanguage{english}{Vietoris--Rips} απαιτεί την εμφάνιση των σημείων, των ακμών αλλά και των τριγώνων (\foreignlanguage{english}{2-simplices}) στον τρισδιάστατο χώρο. Αυτό βοηθά στην κατανόηση του πώς τα απλόπλοκα "γεμίζουν" τον χώρο και σχηματίζουν τις τοπολογικές τρύπες.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{complex_3d_persp1.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{complex_3d_persp2.png}}
+\caption{Οπτικοποίηση του συμπλέγματος σε 3 διαστάσεις (\foreignlanguage{english}{3D}) για τον Τόρο από δύο διαφορετικές οπτικές γωνίες.}
+\end{figure}
+
+\newpage
+\subsection{Ερώτημα Β}
+\vspace{1em}
+
+\subsubsection{Β.1: \foreignlanguage{english}{Persistent Homology} από Νέφη Σημείων}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Εξήγηση Υλοποίησης:}
+Χρησιμοποιήσαμε τη βιβλιοθήκη \foreignlanguage{english}{\texttt{Ripser}} για τον υπολογισμό των διαγραμμάτων εμμονής. Η \foreignlanguage{english}{\texttt{Ripser}} είναι εξαιρετικά γρήγορη και αποδοτική για αυτόν τον σκοπό.
+
+\vspace{1em}
+\textbf{Σημαντικό Κομμάτι Κώδικα:}
+\selectlanguage{english}
+\begin{lstlisting}
+from ripser import ripser
+# Calculate Persistent Homology
+result = ripser(data, maxdim=2)
+diagrams = result['dgms']
+\end{lstlisting}
+\selectlanguage{greek}
+\textit{Σχολιασμός: Η συνάρτηση \foreignlanguage{english}{\texttt{ripser}} υπολογίζει αυτόματα τα διαγράμματα εμμονής μέχρι τη διάσταση που ορίζουμε (\foreignlanguage{english}{\texttt{maxdim}}).}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Τα σημεία που βρίσκονται μακριά από τη διαγώνιο αντιπροσωπεύουν πραγματικά τοπολογικά χαρακτηριστικά που επιμένουν, ενώ τα σημεία κοντά στη διαγώνιο είναι θόρυβος.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Random_R2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Noisy_Circle.png}}
+\caption{\foreignlanguage{english}{Persistence Diagrams} για Τυχαία Σημεία και Θορυβώδη Κύκλο.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Torus_T2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Sphere_S2.png}}
+\caption{\foreignlanguage{english}{Persistence Diagrams} για Τόρο και Σφαίρα.}
+\end{figure}
+
+\subsubsection{Β.2: Στιβαρότητα (\foreignlanguage{english}{Robustness}) σε \foreignlanguage{english}{Gaussian} Θόρυβο}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Όπως φαίνεται στο διάγραμμα, η απόσταση \foreignlanguage{english}{Bottleneck} και \foreignlanguage{english}{Wasserstein} αυξάνεται καθώς αυξάνεται ο θόρυβος $\sigma$. Αυτό δείχνει την ευαισθησία των τοπολογικών χαρακτηριστικών στον θόρυβο.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{b2_robustness.png}}
+\caption{Επίδραση του θορύβου στις αποστάσεις \foreignlanguage{english}{Bottleneck} και \foreignlanguage{english}{Wasserstein}.}
+\end{figure}
+
+\subsubsection{Β.3: \foreignlanguage{english}{Persistent Homology} σε Γράφους}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Υπολογίστηκαν δύο διαφορετικές διηθήσεις (\foreignlanguage{english}{filtrations}). Τα αποτελέσματα δείχνουν πώς η επιλογή της διήθησης επηρεάζει τα τοπολογικά χαρακτηριστικά που ανιχνεύονται.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{b3_persistence_diagrams_comparison.png}}
+\caption{Σύγκριση \foreignlanguage{english}{Persistence Diagrams} για γράφους.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{b3_persistence_images.png}}
+\caption{\foreignlanguage{english}{Persistence Images} για τους γράφους.}
+\end{figure}
+
+\newpage
+\subsection{Ερώτημα Γ}
+\vspace{1em}
+
+\subsubsection{Γ.1: Υλοποίηση \foreignlanguage{english}{Mapper} εκ του Μηδενός}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Εξήγηση Υλοποίησης:}
+Υλοποιήσαμε τον αλγόριθμο \foreignlanguage{english}{Mapper} από το μηδέν. Ο αλγόριθμος χωρίζει τον χώρο των τιμών του φίλτρου σε επικαλυπτόμενα διαστήματα, ομαδοποιεί τα σημεία που αντιστοιχούν σε κάθε διάστημα (χρησιμοποιώντας \foreignlanguage{english}{DBSCAN}) και συνδέει τους κόμβους που μοιράζονται κοινά σημεία.
+
+\vspace{1em}
+\textbf{Σημαντικό Κομμάτι Κώδικα:}
+\selectlanguage{english}
+\begin{lstlisting}
+# Main logic of fit method in CustomMapper
+for int_idx, interval_bounds in enumerate(intervals):
+    # Find points in interval
+    pts_idx = np.where(in_interval)[0]
+    # Cluster subset of points
+    labels = self.clustering_algo.fit_predict(X_subset)
+    # Add nodes and edges to graph
+\end{lstlisting}
+\selectlanguage{greek}
+\textit{Σχολιασμός: Η λογική αυτή διατρέχει όλα τα διαστήματα και εφαρμόζει clustering για να βρει τους κόμβους του γραφήματος.}
+
+\subsubsection{Γ.2: Εφαρμογή \foreignlanguage{english}{Mapper} \& Ανάλυση Ευαισθησίας}
+\vspace{0.5em}
+
+\vspace{1em}
+\textbf{Αποτελέσματα \& Ερμηνεία:}
+Εφαρμόσαμε τον αλγόριθμο στα σύνολα δεδομένων \foreignlanguage{english}{Figure-8} και \foreignlanguage{english}{Horse-shoe} με 3 διαφορετικές συναρτήσεις φίλτρου: \foreignlanguage{english}{PCA} 1ης συνιστώσας, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_pca_1st_component_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_l2-norm_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_density_custom.png}}
+\caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Figure-8} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
+\end{figure}
+
+\textit{Σχολιασμός: Η τριάδα των γραφημάτων για το \foreignlanguage{english}{Figure-8} διαφέρει ανάλογα με το φίλτρο:
+1. Το \foreignlanguage{english}{PCA} διαχωρίζει τους δύο κύκλους (αριστερά-δεξιά) στον άξονα μέγιστης διασποράς.
+2. Το \foreignlanguage{english}{L2-norm} δείχνει την απόσταση από το κέντρο, δημιουργώντας μια δομή που "ανοίγει" από το κέντρο προς τα άκρα.
+3. Το \foreignlanguage{english}{Density} αναδεικνύει το σημείο τομής των δύο κύκλων όπου η πυκνότητα των σημείων είναι μέγιστη.}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_pca_1st_component_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_l2-norm_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_density_custom.png}}
+\caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Horse-shoe} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
+\end{figure}
+
+\textit{Σχολιασμός: Στο \foreignlanguage{english}{Horse-shoe}:
+1. Το \foreignlanguage{english}{PCA} "ξεδιπλώνει" την καμπύλη σε μια συνεχή γραμμική δομή.
+2. Το \foreignlanguage{english}{L2-norm} δίνει παρόμοιες τιμές σε όλα τα σημεία (αφού ισαπέχουν από το κέντρο), συμπυκνώνοντας το γράφημα.
+3. Το \foreignlanguage{english}{Density} δείχνει ότι η πυκνότητα είναι ομοιόμορφη κατά μήκος του πετάλου, διατηρώντας τη δομή ως μία συνεκτική συνιστώσα.}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{g2_sensitivity_heatmap.png}}
+\caption{Ανάλυση ευαισθησίας: Αριθμός συνεκτικών συνιστωσών συναρτήσει των παραμέτρων.}
+\end{figure}
+
+\textit{Σχολιασμός: Η ανάλυση ευαισθησίας δείχνει ότι ο αριθμός των συνεκτικών συνιστωσών εξαρτάται έντονα από τον αριθμό των διαστημάτων και το ποσοστό επικάλυψης. Μεγαλύτερη επικάλυψη οδηγεί σε πιο συνεκτικά γραφήματα.}
+
+\newpage
+\section{\texorpdfstring{\underline{Συμπεράσματα}}{Συμπεράσματα}}
+\vspace{1em}
+Η \foreignlanguage{english}{TDA} αποκάλυψε ότι...
+
+\newpage
+\section{\texorpdfstring{\underline{Χρήση AI}}{Χρήση AI}}
+\vspace{1em}
+Η χρήση Τεχνητής Νοημοσύνης έγινε στα εξής σημεία:
+\begin{itemize}
+    \item Στην υλοποίηση του αλγορίθμου \foreignlanguage{english}{Vietoris-Rips}(Ερώτημα Α).
+    \item Στην επίλυση σφαλμάτων συμβατότητας βιβλιοθηκών (\foreignlanguage{english}{GUDHI}, \foreignlanguage{english}{Ripser}).
+\end{itemize}
+
+\newpage
+\section{\texorpdfstring{\underline{Βιβλιογραφία}}{Βιβλιογραφία}}
+\vspace{1em}
+\begin{thebibliography}{9}
+\bibitem{andrikopoulos} Ανδρικόπουλος, Α. \emph{Τοπολογική Ανάλυση Δεδομένων}. Πανεπιστήμιο Πατρών, Τμήμα Μηχανικών Η/Υ και Πληροφορικής.
+\bibitem{gudhi} \foreignlanguage{english}{GUDHI Editorial Board}. \emph{\foreignlanguage{english}{GUDHI User and Reference Manual}}.
+\bibitem{ripser} \foreignlanguage{english}{Bauer, U.} (2021). \emph{\foreignlanguage{english}{Ripser: efficient computation of Vietoris-Rips persistence barcodes}}.
+\end{thebibliography}
+
+\end{document}
