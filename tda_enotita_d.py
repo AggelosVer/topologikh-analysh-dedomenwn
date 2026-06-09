@@ -224,6 +224,18 @@ def run_d2():
     fig_3d = px.scatter_3d(df_embedded, x='Dim1', y='Dim2', z='Dim3', title="S&P 500 3D Takens Embedding", opacity=0.7)
     fig_3d.write_html("d2_sp500_3d_embedding.html")
     
+    # Save static 3D plot using matplotlib for LaTeX report
+    fig_static = plt.figure(figsize=(8, 6))
+    ax = fig_static.add_subplot(111, projection='3d')
+    ax.scatter(X_embedded[:, 0], X_embedded[:, 1], X_embedded[:, 2], c='blue', alpha=0.6, s=10)
+    ax.set_title("S&P 500 3D Takens Embedding")
+    ax.set_xlabel("Dim 1")
+    ax.set_ylabel("Dim 2")
+    ax.set_zlabel("Dim 3")
+    plt.tight_layout()
+    plt.savefig("d2_sp500_3d_embedding.png", dpi=150)
+    plt.close()
+    
     # 3. Βαθιά σύγκριση με PCA, t-SNE, UMAP (χρήση Seaborn και Pandas)
     print("3. Σύγκριση TDA point cloud με PCA, t-SNE, UMAP...")
     pca = PCA(n_components=2)

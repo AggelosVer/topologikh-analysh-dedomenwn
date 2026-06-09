@@ -462,6 +462,45 @@ for int_idx, interval_bounds in enumerate(intervals):
 \end{enumerate}
 
 \newpage
+\subsection{Ερώτημα Ε --- \en{Zigzag Persistent Homology}}
+\vspace{1em}
+
+\subsubsection{Ε.1 --- \en{Zigzag Persistent Homology} σε Χρονοσειρές}
+\vspace{0.5em}
+
+\textbf{1. Μεθοδολογία και Κατασκευή:}
+Για την καταγραφή της δυναμικής εξέλιξης των τοπολογικών χαρακτηριστικών της χρονοσειράς του δείκτη \en{S\&P 500}, εφαρμόσαμε τη μέθοδο της \en{Zigzag Persistent Homology}. Η μονοδιάστατη χρονοσειρά μετατράπηκε σε ακολουθία \en{point clouds} μέσω \en{Sliding Window} με μέγεθος παραθύρου $W = 50$ ημέρες και βήμα $S = 25$ ημέρες, χρησιμοποιώντας \en{Takens Embedding} με διάσταση $d = 3$ και καθυστέρηση $\tau = 1$. 
+
+Η κατασκευή της \en{zigzag filtration} έγινε με την εναλλαγή \en{forward} και \en{backward inclusions}:
+\[ K_0 \hookrightarrow K_0 \cup K_1 \hookleftarrow K_1 \hookrightarrow K_1 \cup K_2 \hookleftarrow K_2 \hookrightarrow \dots \]
+όπου $K_i$ είναι το \en{Rips complex} του $i$-οστού παραθύρου για ακτίνα \en{Rips} $\epsilon = 2 \times 0.1524 = 0.3048$ (η 15η εκατοστημόρια θέση των αποστάσεων). Ο υπολογισμός των αριθμών \en{Betti} έγινε μέσω απαλοιφής \en{Gauss} σε \en{GF(2)} πάνω στους αντίστοιχους πίνακες συνοριακών απεικονίσεων ($\partial_1, \partial_2$).
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.85\textwidth]{e1_sliding_windows.png}}
+\caption{\en{Sliding windows} στη χρονοσειρά \en{S\&P 500} που χρησιμοποιήθηκαν για την κατασκευή των \en{point clouds}.}
+\label{fig:e1_sliding_windows}
+\end{figure}
+
+\textbf{2. Αποτελέσματα και Σχολιασμός:}
+\begin{itemize}
+    \item \textbf{Συνεκτικότητα ($H_0$):} Εντοπίστηκαν $13$ \en{intervals} στην $H_0$. Το κυρίαρχο \en{interval} έχει διάρκεια $19.0$ \en{steps} (από $t=0$ έως $t=19$), που αντιστοιχεί στη βασική συνεκτική δομή που επιβιώνει σε όλα τα παράθυρα. Παρατηρείται ένα σημαντικό \en{spike} στο $t = 16$ (παράθυρο $K_8$), όπου ο αριθμός των συνεκτικών συνιστωσών αυξάνεται σε $\beta_0 = 9$, υποδηλώνοντας τοπολογική διάσπαση του \en{point cloud} κατά τη διάρκεια περιόδου υψηλής μεταβλητότητας στην αγορά.
+    \item \textbf{Τοπολογικοί Κύκλοι ($H_1$):} Εντοπίστηκε $1$ \en{interval} στην $H_1$ με διάρκεια $1.0$ \en{step}. Η κλασική \en{PH} ανά παράθυρο δίνει μέσο $\beta_1 = 0.00 \pm 0.00$. Αυτό δείχνει ότι τα μεμονωμένα παράθυρα δεν περιέχουν μόνιμους κύκλους, αλλά η \en{zigzag PH} ανιχνεύει έναν μεταβατικό (\en{transient}) κύκλο που δημιουργείται κατά την ένωση $K_i \cup K_{i+1}$.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{e1_summary_comparison.png}}
+\caption{Συγκεντρωτικό διάγραμμα σύγκρισης: \en{Zigzag Persistence Diagram} (πάνω αριστερά), \en{Zigzag Barcode} (πάνω δεξιά) και εξέλιξη των \en{Betti} αριθμών $\beta_0$ (κάτω αριστερά) και $\beta_1$ (κάτω δεξιά) σε σύγκριση με την κλασική \en{PH}.}
+\label{fig:e1_summary_comparison}
+\end{figure}
+
+\textbf{3. Σύγκριση με Κλασική \en{Persistent Homology}:}
+Η κλασική \en{PH} αναλύει κάθε παράθυρο ανεξάρτητα και στατικά, χάνοντας τη χρονική συσχέτιση των χαρακτηριστικών. Αντίθετα, η \en{zigzag PH} συνδέει τα τοπολογικά χαρακτηριστικά μεταξύ διαδοχικών παραθύρων μέσω των \en{union complexes}. 
+
+Όπως επιβεβαιώνεται στα διαγράμματα του Σχήματος \ref{fig:e1_summary_comparison}, στα άρτια βήματα $t=2i$ οι Betti αριθμοί της \en{zigzag PH} ταυτίζονται απόλυτα με τους \en{Betti} αριθμούς της κλασικής \en{PH} στο παράθυρο $i$, ενώ τα ενδιάμεσα περιττά βήματα αποτυπώνουν με ακρίβεια τη δυναμική μετάβαση (ένωση) μεταξύ τους.
+
+\newpage
 \section{\texorpdfstring{\underline{Συμπεράσματα}}{Συμπεράσματα}}
 \vspace{1em}
 Η \foreignlanguage{english}{TDA} αποκάλυψε ότι τα δεδομένα μας διαθέτουν πλούσια τοπολογική δομή που δεν είναι πάντα ορατή με παραδοσιακές μεθόδους στατιστικής ή μηχανικής μάθησης. Συγκεκριμένα:
@@ -470,6 +509,7 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item Οι αριθμοί \foreignlanguage{english}{Betti} και τα διαγράμματα εμμονής προσδιορίζουν με ακρίβεια τον αριθμό των οπών και των κοιλοτήτων στα σχήματα (κύκλος, τόρος, σφαίρα).
     \item Η ανάλυση ευαισθησίας στον θόρυβο έδειξε ότι τα τοπολογικά χαρακτηριστικά είναι στιβαρά μέχρι ένα σημείο, αλλά ο έντονος θόρυβος μπορεί να αλλοιώσει τις αποστάσεις \foreignlanguage{english}{Bottleneck}.
     \item Ο αλγόριθμος \foreignlanguage{english}{Mapper} αποδείχθηκε εξαιρετικό εργαλείο για την οπτικοποίηση σύνθετων δομών όπως το \foreignlanguage{english}{Figure-8} και το \foreignlanguage{english}{Horse-shoe}, επιτρέποντας την κατανόηση της γεωμετρίας τους μέσω απλών γραφημάτων.
+    \item Η μέθοδος της \foreignlanguage{english}{Zigzag Persistent Homology} επέτρεψε την επιτυχή καταγραφή της δυναμικής εξέλιξης των τοπολογικών δομών σε χρηματοοικονομικές χρονοσειρές, αναδεικνύοντας μεταβατικά τοπολογικά χαρακτηριστικά που συνδέονται με την αστάθεια της αγοράς.
 \end{enumerate}
 
 \newpage
@@ -493,6 +533,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 \bibitem{andrikopoulos} Ανδρικόπουλος, Α. \emph{Τοπολογική Ανάλυση Δεδομένων}. Πανεπιστήμιο Πατρών, Τμήμα Μηχανικών Η/Υ και Πληροφορικής.
 \bibitem{gudhi} \foreignlanguage{english}{GUDHI Editorial Board}. \emph{\foreignlanguage{english}{GUDHI User and Reference Manual}}.
 \bibitem{ripser} \foreignlanguage{english}{Bauer, U.} (2021). \emph{\foreignlanguage{english}{Ripser: efficient computation of Vietoris-Rips persistence barcodes}}.
+\bibitem{carlsson} Carlsson, G., \& de Silva, V. (2010). \foreignlanguage{english}{Zigzag Persistence}. \emph{\foreignlanguage{english}{Foundations of Computational Mathematics}}, 10(4), 367-405.
 \end{thebibliography}
 
 \end{document}
