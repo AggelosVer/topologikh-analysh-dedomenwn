@@ -170,8 +170,9 @@ def run_b3():
     print("\n--- Β.3: Persistent Homology σε Γράφους ---")
     np.random.seed(42)
     
-    # Δημιουργία τυχαίων σημείων για το γράφο (nodes)
-    pts = np.random.uniform(0, 1, (40, 2))
+    # Δημιουργία σημείων σε σχήμα κύκλου για να έχουμε έναν ουσιαστικό τοπολογικό κύκλο στο γράφο
+    t = np.linspace(0, 2*np.pi, 30, endpoint=False)
+    pts = np.column_stack([np.cos(t), np.sin(t)]) + np.random.normal(0, 0.05, (30, 2))
     dist_matrix = squareform(pdist(pts))
     
     # --- Υλοποίηση: Clique Complex & Sublevel Filtration (βάρη ακμών) ---
@@ -179,7 +180,7 @@ def run_b3():
     for i in range(len(pts)):
         st_edge.insert([i], filtration=0.0)
         
-    threshold = 0.4
+    threshold = 0.5
     for i in range(len(pts)):
         for j in range(i+1, len(pts)):
             if dist_matrix[i, j] < threshold:
@@ -230,7 +231,7 @@ def run_b3():
     
     # Ανάκτηση Diagrams (H1)
     dgm_edge = clean_dgm(st_edge.persistence_intervals_in_dimension(1), threshold + 0.1)
-    dgm_hks = clean_dgm(st_hks.persistence_intervals_in_dimension(1), 1.1)
+    dgm_hks = clean_dgm(st_hks.persistence_intervals_in_dimension(1), 1.5)
 
     # --- Συγκριτικό Plot των Persistence Diagrams ---
     plt.figure(figsize=(12, 5))
@@ -256,8 +257,7 @@ def run_b3():
     
     # Imager Edge
     if len(dgm_edge) > 0:
-        pimager_edge = PersistenceImager(pixel_size=0.02)
-        pimager_edge.fit([dgm_edge])
+        pimager_edge = PersistenceImager(birth_range=(0.0, 0.6), pers_range=(0.0, 0.6), pixel_size=0.01)
         pimg_edge = pimager_edge.transform(dgm_edge)
         
         plt.subplot(1, 2, 1)
@@ -270,8 +270,7 @@ def run_b3():
         
     # Imager HKS
     if len(dgm_hks) > 0:
-        pimager_hks = PersistenceImager(pixel_size=0.02)
-        pimager_hks.fit([dgm_hks])
+        pimager_hks = PersistenceImager(birth_range=(0.0, 1.5), pers_range=(0.0, 1.5), pixel_size=0.02)
         pimg_hks = pimager_hks.transform(dgm_hks)
         
         plt.subplot(1, 2, 2)

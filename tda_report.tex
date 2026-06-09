@@ -5,13 +5,14 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{parskip} % Για καλύτερο spacing παραγράφων
 \usepackage{listings} % Για κώδικα
 \usepackage{xcolor} % Για χρώματα στον κώδικα
 \usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry} % Μικρότερα περιθώρια
+\newcommand{\en}[1]{\foreignlanguage{english}{#1}}
 
 % Ρυθμίσεις για τον κώδικα Python
 \lstset{
@@ -37,7 +38,7 @@
     \vspace*{-1cm}
     \begin{figure}[H]
     \centering
-    \foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{upatras_banner.png}}
+    \foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{upatras_banner.jpg}}
     \end{figure}
     
     \vspace{0.5cm}
@@ -80,7 +81,7 @@
 \subsection{\foreignlanguage{english}{Simplicial Complexes}}
 \vspace{1em}
 
-Τα \foreignlanguage{english}{Simplicial Complexes} αποτελούν τη διακριτή προσέ步ιση των συνεχών τοπολογικών χώρων. Αποτελούνται από απλόπλοκα (\foreignlanguage{english}{simplices}) διαφόρων διαστάσεων: 0-απλόπλοκα (σημεία), 1-απλόπλοκα (ακμές), 2-απλόπλοκα (τρίγωνα), 3-απλόπλοκα (τετράεδρα) κ.ο.κ. Η ένωση αυτών των στοιχείων με συγκεκριμένους κανόνες συνδυαστικότητας μας επιτρέπει να μοντελοποιήσουμε το σχήμα των δεδομένων και να υπολογίσουμε τοπολογικές ιδιότητες.
+Τα \foreignlanguage{english}{Simplicial Complexes} αποτελούν τη διακριτή προσέγγιση των συνεχών τοπολογικών χώρων. Αποτελούνται από απλόπλοκα (\foreignlanguage{english}{simplices}) διαφόρων διαστάσεων: 0-απλόπλοκα (σημεία), 1-απλόπλοκα (ακμές), 2-απλόπλοκα (τρίγωνα), 3-απλόπλοκα (τετράεδρα) κ.ο.κ. Η ένωση αυτών των στοιχείων με συγκεκριμένους κανόνες συνδυαστικότητας μας επιτρέπει να μοντελοποιήσουμε το σχήμα των δεδομένων και να υπολογίσουμε τοπολογικές ιδιότητες.
 
 \subsection{\foreignlanguage{english}{Persistent Homology}}
 \vspace{1em}
@@ -315,7 +316,7 @@ for int_idx, interval_bounds in enumerate(intervals):
     # Add nodes and edges to graph
 \end{lstlisting}
 \selectlanguage{greek}
-\textit{Σχολιασμός: Η λογική αυτή διατρέχει όλα τα διαστήματα και εφαρμόζει clustering για να βρει τους κόμβους του γραφήματος.}
+\textit{Σχολιασμός: Η λογική αυτή διατρέχει όλα τα διαστήματα και εφαρμόζει \en{clustering} για να βρει τους κόμβους του γραφήματος.}
 
 \subsubsection{Γ.2: Εφαρμογή \foreignlanguage{english}{Mapper} \& Ανάλυση Ευαισθησίας}
 \vspace{0.5em}
@@ -359,6 +360,108 @@ for int_idx, interval_bounds in enumerate(intervals):
 \textit{Σχολιασμός: Η ανάλυση ευαισθησίας δείχνει ότι ο αριθμός των συνεκτικών συνιστωσών εξαρτάται έντονα από τον αριθμό των διαστημάτων και το ποσοστό επικάλυψης. Μεγαλύτερη επικάλυψη οδηγεί σε πιο συνεκτικά γραφήματα.}
 
 \newpage
+\subsection{Ερώτημα Δ --- Εφαρμογή σε Πραγματικά Δεδομένα}
+\vspace{1em}
+
+Σε αυτή την ενότητα εφαρμόζουμε τις τεχνικές της Τοπολογικής Ανάλυσης Δεδομένων (\foreignlanguage{english}{TDA}) σε δύο πραγματικά σύνολα δεδομένων: το \foreignlanguage{english}{dataset} καρκίνου του μαστού (\foreignlanguage{english}{Breast Cancer Wisconsin}) ως Κατηγορία Ι και τις χρονοσειρές των τιμών κλεισίματος του δείκτη \foreignlanguage{english}{S\&P 500} των τελευταίων δύο ετών ως Κατηγορία ΙΙ.
+
+\subsubsection{Δ.1 --- Ανάλυση Πρώτου \en{Dataset} (\en{Breast Cancer})}
+\vspace{0.5em}
+
+\textbf{1. Προεπεξεργασία και Μείωση Διάστασης:}
+Το σύνολο δεδομένων \foreignlanguage{english}{Breast Cancer} περιλαμβάνει 569 δείγματα με 30 αριθμητικά χαρακτηριστικά που περιγράφουν πυρήνες κυττάρων από βιοψίες μαστού. Τα δεδομένα κατηγοριοποιούνται σε δύο κλάσεις: \foreignlanguage{english}{Malignant} (κακοήθης, 212 δείγματα) και \foreignlanguage{english}{Benign} (καλοήθης, 357 δείγματα). 
+Πραγματοποιήθηκε τυποποίηση (\foreignlanguage{english}{Standardization}) των δεδομένων με χρήση του \foreignlanguage{english}{\texttt{StandardScaler}} ώστε όλα τα χαρακτηριστικά να έχουν μέση τιμή 0 και διασπορά 1. Στη συνέχεια, εφαρμόστηκε η μέθοδος \foreignlanguage{english}{PCA} κρατώντας τις 5 κύριες συνιστώσες για τη διευκόλυνση του υπολογισμού της επίμονης ομολογίας.
+
+\textbf{2. Επίμονη Ομολογία ($H_0, H_1$):}
+Υπολογίστηκε η επίμονη ομολογία για τις διαστάσεις 0 και 1 ξεχωριστά για την κλάση των κακοήθων και των καλοήθων δειγμάτων χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{ripser}}. 
+Τα αποτελέσματα οπτικοποιούνται στα διαγράμματα εμμονής (\foreignlanguage{english}{Persistence Diagrams}) και \foreignlanguage{english}{barcodes}.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{d1_persistence_diagrams.png}}
+\caption{\foreignlanguage{english}{Persistence Diagrams} για την κλάση \foreignlanguage{english}{Malignant} (αριστερά) και \foreignlanguage{english}{Benign} (δεξιά).}
+\end{figure}
+
+Παρατηρούμε ότι οι δύο κλάσεις παρουσιάζουν διαφορές στην τοπολογική τους δομή. Η κλάση των καλοήθων δειγμάτων εμφανίζει πιο διάσπαρτα και μακρόβια χαρακτηριστικά $H_1$ (τρύπες) σε σχέση με την κλάση των κακοήθων, πράγμα που υποδηλώνει μια πιο σύνθετη και «ανοιχτή» γεωμετρική διάταξη στο χώρο των κύριων συνιστωσών.
+
+\textbf{3. Εφαρμογή \foreignlanguage{english}{Mapper}:}
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 επικαλυπτόμενα διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση, και εφαρμόστηκε ο αλγόριθμος \foreignlanguage{english}{DBSCAN} (με \foreignlanguage{english}{\texttt{eps=2.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}) για το \foreignlanguage{english}{clustering} των σημείων. Το διαδραστικό γράφημα \foreignlanguage{english}{Mapper} αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{d1\_mapper\_graph.html}}. Το γράφημα αναδεικνύει τον διαχωρισμό των κλάσεων σε διαφορετικές περιοχές (\foreignlanguage{english}{branches}) του γραφήματος, με μια περιοχή μετάβασης όπου συνυπάρχουν καλοήθη και κακοήθη δείγματα.
+
+\textbf{4. \foreignlanguage{english}{TDA} ως Χαρακτηριστικά (\foreignlanguage{english}{Features}) για Μηχανική Μάθηση:}
+Για να χρησιμοποιήσουμε την τοπολογική πληροφορία σε ταξινόμηση, μετατρέψαμε το διάνυσμα χαρακτηριστικών κάθε ασθενούς (30 τιμές) σε χρονοσειρά / \foreignlanguage{english}{point cloud} μέσω της μεθόδου \foreignlanguage{english}{Takens Embedding} (με διάσταση 3 και καθυστέρηση 1).
+Στη συνέχεια, για κάθε ασθενή υπολογίστηκε η επίμονη ομολογία $H_0$ και τα διαγράμματα εμμονής μετατράπηκαν σε εικόνες εμμονής (\foreignlanguage{english}{Persistence Images}) μέσω του \foreignlanguage{english}{\texttt{PersistenceImager}} (με μέγεθος \foreignlanguage{english}{pixel} 0.1). Οι εικόνες αυτές ισοπεδώθηκαν (\foreignlanguage{english}{flatten}) σε μονοδιάστατα διανύσματα χαρακτηριστικών.
+Εκπαιδεύτηκε ένας ταξινομητής \foreignlanguage{english}{Random Forest} με τα παρακάτω αποτελέσματα στο \foreignlanguage{english}{test set} (30\%):
+\begin{itemize}
+    \item \foreignlanguage{english}{\textbf{Accuracy}}: 0.6901
+    \item \foreignlanguage{english}{\textbf{AUC Score}}: 0.7152
+\end{itemize}
+Αν και η ακρίβεια αυτή είναι χαμηλότερη από τη χρήση των αρχικών δεδομένων άμεσα (καθώς το \foreignlanguage{english}{Takens embedding} σε 30 \foreignlanguage{english}{features} εισάγει θόρυβο), επιβεβαιώνει ότι η καθαρά τοπολογική δομή των χαρακτηριστικών φέρει σημαντική διακριτική ικανότητα για τη διάγνωση του καρκίνου.
+
+\subsubsection{Δ.2 --- Ανάλυση Δεύτερου \en{Dataset} (\en{S\&P 500})}
+\vspace{0.5em}
+
+\textbf{1. Δεδομένα και \foreignlanguage{english}{Giotto-TDA Pipeline}:}
+Φορτώθηκαν οι καθημερινές τιμές κλεισίματος του δείκτη \foreignlanguage{english}{S\&P 500} (\foreignlanguage{english}{\texttt{\^{}GSPC}}) για τα τελευταία 2 έτη μέσω της \foreignlanguage{english}{\texttt{yfinance}}. Οι τιμές τυποποιήθηκαν και εφαρμόστηκε η μέθοδος \foreignlanguage{english}{Takens Embedding} με διάσταση $d=3$ και καθυστέρηση $\tau=1$, μετατρέποντας τη μονοδιάστατη χρονοσειρά σε ένα τρισδιάστατο \foreignlanguage{english}{point cloud} που αναπαριστά τη δυναμική της αγοράς.
+Κατασκευάστηκε ένα \foreignlanguage{english}{scikit-learn} συμβατό \foreignlanguage{english}{pipeline} μέσω της βιβλιοθήκης \foreignlanguage{english}{\texttt{giotto-tda}} που περιλαμβάνει:
+\begin{enumerate}
+    \item \foreignlanguage{english}{\texttt{TakensEmbedding}} για την αναπαράσταση της χρονοσειράς σε \foreignlanguage{english}{3D}.
+    \item \foreignlanguage{english}{\texttt{VietorisRipsPersistence}} για τον υπολογισμό των διαγραμμάτων εμμονής για τις διαστάσεις 0, 1 και 2.
+    \item \foreignlanguage{english}{\texttt{PersistenceEntropy}} για τον υπολογισμό της επίμονης εντροπίας ως μέτρο πολυπλοκότητας της τοπολογίας της χρονοσειράς.
+\end{enumerate}
+
+Η κανονικοποιημένη επίμονη εντροπία (\foreignlanguage{english}{Normalized Persistence Entropy}) για το σύνολο των δεδομένων υπολογίστηκε σε:
+\begin{itemize}
+    \item $H_0$: 1.6775
+    \item $H_1$: 8.6782
+    \item $H_2$: -0.6358
+\end{itemize}
+
+\textbf{2. Επαλήθευση $H_2$ Ομολογίας με \foreignlanguage{english}{GUDHI}:}
+Επειδή η διάσταση του \foreignlanguage{english}{point cloud} είναι $d \ge 3$, υπολογίστηκε η ομολογία διάστασης 2 ($H_2$). Χρησιμοποιήθηκε το \foreignlanguage{english}{\texttt{AlphaComplex}} της βιβλιοθήκης \foreignlanguage{english}{GUDHI} για την επαλήθευση. Οι αριθμοί \foreignlanguage{english}{Betti} που προέκυψαν ήταν $\beta = [1, 0, 0]$, γεγονός που δείχνει ότι το σύμπλεγμα είναι τοπολογικά ισοδύναμο με ένα μόνο σημείο (συνεκτικό σύμπλεγμα χωρίς 1-κύκλους ή 2-κοιλότητες στην τελική κλίμακα), επιβεβαιώνοντας ότι το \foreignlanguage{english}{Takens Embedding} της χρηματοοικονομικής χρονοσειράς δεν σχηματίζει κλειστές σφαιρικές κοιλότητες ($H_2 = 0$).
+
+\textbf{3. Οπτικοποίηση και Μείωση Διάστασης:}
+Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα (\foreignlanguage{english}{embedding}).
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{d2_sp500_3d_embedding.png}}
+\caption{Τρισδιάστατη τροχιά του \foreignlanguage{english}{Takens Embedding} ($d=3, \tau=1$) για τη χρονοσειρά \foreignlanguage{english}{S\&P 500}.}
+\end{figure}
+
+Για τη σύγκριση, το \foreignlanguage{english}{3D point cloud} προβλήθηκε σε 2 διαστάσεις με 3 μεθόδους: \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{d2_sp500_dim_reduction.png}}
+\caption{Σύγκριση μείωσης διάστασης του \foreignlanguage{english}{3D Takens Embedding} του \foreignlanguage{english}{S\&P 500} με \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}.}
+\end{figure}
+
+\begin{itemize}
+    \item Η \foreignlanguage{english}{PCA} αποκαλύπτει τη γραμμική κατεύθυνση μέγιστης διασποράς της αγοράς.
+    \item Το \foreignlanguage{english}{t-SNE} δημιουργεί ξεχωριστές συστάδες, τονίζοντας τοπικές ομοιότητες αλλά καταστρέφοντας την παγκόσμια γεωμετρία της χρονοσειράς.
+    \item Το \foreignlanguage{english}{UMAP} διατηρεί καλύτερα τη συνέχεια της τροχιάς της χρονοσειράς, αναδεικνύοντας τη δομή «νήματος» (\foreignlanguage{english}{filament structure}) των τιμών.
+\end{itemize}
+
+\textbf{4. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
+Για να ελέγξουμε τη σταθερότητα της επίμονης εντροπίας, εφαρμόστηκε \foreignlanguage{english}{bootstrap resampling} ($n=100$) με τυχαία επιλογή του 80\% των σημείων με επανατοποθέτηση. Τα 95\% διαστήματα εμπιστοσύνης για την επίμονη εντροπία είναι:
+\begin{itemize}
+    \item \textbf{$H_0$}: \foreignlanguage{english}{Mean} = 1.7014, 95\% \foreignlanguage{english}{CI} = $[1.6596, 1.7349]$
+    \item \textbf{$H_1$}: \foreignlanguage{english}{Mean} = -12.2571, 95\% \foreignlanguage{english}{CI} = $[-28.6147, -4.8745]$
+    \item \textbf{$H_2$}: \foreignlanguage{english}{Mean} = -0.2339, 95\% \foreignlanguage{english}{CI} = $[-1.0000, -0.0000]$
+\end{itemize}
+Τα στενά διαστήματα εμπιστοσύνης για το $H_0$ δείχνουν τη σταθερότητα της βασικής συνεκτικότητας των δεδομένων, ενώ οι αρνητικές τιμές και η διακύμανση στο $H_1$ και $H_2$ υποδηλώνουν την ευαισθησία και τον θόρυβο των ανώτερων τοπολογικών χαρακτηριστικών όταν υποδειγματίζεται το \foreignlanguage{english}{point cloud} της χρονοσειράς.
+
+\subsubsection{Δ.3 --- Βαθιά Σύγκριση \& Συζήτηση: \en{TDA} \en{vs} Κλασικές Μέθοδοι}
+\vspace{0.5em}
+
+Η εφαρμογή των \foreignlanguage{english}{TDA} μεθόδων στα δύο \foreignlanguage{english}{datasets} ανέδειξε τα εξής πλεονεκτήματα έναντι των \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}:
+\begin{enumerate}
+    \item \textbf{Πολλαπλές Κλίμακες:} Οι κλασικές μέθοδοι μείωσης διάστασης απαιτούν την επιλογή μιας συγκεκριμένης κλίμακας (π.χ. \foreignlanguage{english}{perplexity} στο \foreignlanguage{english}{t-SNE} ή \foreignlanguage{english}{\texttt{n\_neighbors}} στο \foreignlanguage{english}{UMAP}). Αντίθετα, η επίμονη ομολογία εξετάζει όλες τις κλίμακες ταυτόχρονα (μέσω του \en{filtration} $r$), διαχωρίζοντας με μαθηματική αυστηρότητα το σήμα από τον θόρυβο.
+    \item \foreignlanguage{english}{\textbf{Feature Extraction}}: Η \foreignlanguage{english}{TDA} επιτρέπει τη μετατροπή γεωμετρικών ιδιοτήτων σε ποσοτικά χαρακτηριστικά (όπως η \foreignlanguage{english}{Persistent Entropy} και οι \foreignlanguage{english}{Persistence Images}) που εισάγονται άμεσα σε μοντέλα μηχανικής μάθησης. Οι κλασικές μέθοδοι (όπως το \foreignlanguage{english}{t-SNE}) δεν ορίζουν εύκολα μια αντίστροφη απεικόνιση ή μια γενικεύσιμη μεταμόρφωση για νέα δεδομένα (\foreignlanguage{english}{out-of-sample extension}).
+    \item \textbf{Διατήρηση Σχήματος:} Ο \foreignlanguage{english}{Mapper} και η επίμονη εντροπία αποτυπώνουν το «σχήμα» των δεδομένων (π.χ. βρόχους, διακλαδώσεις, κοιλότητες) το οποίο οι κλασικές προβολές (κυρίως η \foreignlanguage{english}{PCA}) συμπιέζουν και καταστρέφουν. Στην ανάλυση χρονοσειρών (\foreignlanguage{english}{S\&P 500}), η \foreignlanguage{english}{TDA} σε συνδυασμό με το \foreignlanguage{english}{Takens Embedding} προσφέρει μια πλήρη εικόνα του χώρου φάσεων (\foreignlanguage{english}{phase space reconstruction}), επιτρέποντας την ανίχνευση τοπολογικών αλλαγών που σχετίζονται με περιόδους αστάθειας στην αγορά.
+\end{enumerate}
+
+\newpage
 \section{\texorpdfstring{\underline{Συμπεράσματα}}{Συμπεράσματα}}
 \vspace{1em}
 Η \foreignlanguage{english}{TDA} αποκάλυψε ότι τα δεδομένα μας διαθέτουν πλούσια τοπολογική δομή που δεν είναι πάντα ορατή με παραδοσιακές μεθόδους στατιστικής ή μηχανικής μάθησης. Συγκεκριμένα:
@@ -370,7 +473,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 \end{enumerate}
 
 \newpage
-\section{\texorpdfstring{\underline{Χρήση AI}}{Χρήση AI}}
+\section{\texorpdfstring{\underline{Χρήση \en{AI}}}{Χρήση AI}}
 \vspace{1em}
 Η χρήση Τεχνητής Νοημοσύνης (συγκεκριμένα Μεγάλων Γλωσσικών Μοντέλων - \foreignlanguage{english}{LLMs}) έγινε στα εξής σημεία της εργασίας:
 

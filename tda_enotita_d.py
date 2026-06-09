@@ -1,3 +1,13 @@
+import sklearn.utils
+import sklearn.utils.validation
+orig_check_array = sklearn.utils.validation.check_array
+def patched_check_array(array, *args, **kwargs):
+    if 'ensure_all_finite' in kwargs:
+        kwargs['force_all_finite'] = kwargs.pop('ensure_all_finite')
+    return orig_check_array(array, *args, **kwargs)
+sklearn.utils.validation.check_array = patched_check_array
+sklearn.utils.check_array = patched_check_array
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
@@ -188,7 +198,7 @@ def run_d2():
     X_ts = [close_prices_scaled]
     
     tda_pipeline = Pipeline([
-        ('embedding', TakensEmbedding(parameters_type="fixed", dimension=embedding_dim, time_delay=delay)),
+        ('embedding', TakensEmbedding(dimension=embedding_dim, time_delay=delay)),
         ('persistence', VietorisRipsPersistence(homology_dimensions=(0, 1, 2), n_jobs=-1)),
         ('entropy', PersistenceEntropy(normalize=True))
     ])
@@ -197,7 +207,7 @@ def run_d2():
     print(f"   -> Persistent Entropy (H0, H1, H2): {features[0]}")
     
     # Εξαγωγή του point cloud για τα βήματα 3 και 4
-    embedder = TakensEmbedding(parameters_type="fixed", dimension=embedding_dim, time_delay=delay)
+    embedder = TakensEmbedding(dimension=embedding_dim, time_delay=delay)
     X_embedded = embedder.fit_transform(X_ts)[0] # Παίρνουμε το 1o (και μοναδικό) sample, σχήμα: (n_points, 3)
     
     # [ΠΡΟΣΘΗΚΗ] Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
