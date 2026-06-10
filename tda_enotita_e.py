@@ -923,5 +923,504 @@ def run_e1():
     print(f"     - e1_summary_comparison.png")
 
 
-if __name__ == "__main__":
+
+# =============================================================================
+# Ε.2 — Topological Loss σε Neural Network
+# =============================================================================
+# Topological regularization term (H0 persistence) που ελαχιστοποιεί την
+# «σύνολική επίμονη» ενδιάμεσων αναπαραστάσεων.
+# MLP 2 κρυφά layers με & χωρίς topological loss.
+# Dataset: Breast Cancer Wisconsin (binary classification).
+# Αποτελέσματα: accuracy, AUC-ROC, latent spaces, persistence diagrams.
+# =============================================================================
+
+
+# ---------------------------------------------------------------------------
+# H0 Topological Loss — Γρήγορη Υλοποίηση (Union-Find, O(n² log n))
+# ---------------------------------------------------------------------------
+
+def h0_persistence_pairs(points):
+    """
+    Υπολογίζει H0 persistence pairs μέσω Vietoris-Rips filtration.
+    Χρησιμοποιεί Union-Find — O(n² log n), πρακτικά γρήγορο.
+
+    Returns list of (birth=0, death=dist(i,j), local_i, local_j).
+    """
+    n = len(points)
+    if n < 2:
+        return []
+
+    dist_mat = squareform(pdist(points))
+
+    edges = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            edges.append((dist_mat[i, j], i, j))
+    edges.sort()
+
+    parent = list(range(n))
+    rnk = [0] * n
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra == rb:
+            return False
+        if rnk[ra] < rnk[rb]:
+            ra, rb = rb, ra
+        parent[rb] = ra
+        if rnk[ra] == rnk[rb]:
+            rnk[ra] += 1
+        return True
+
+    pairs = []
+    for (d, i, j) in edges:
+        if union(i, j):
+            pairs.append((0.0, d, i, j))
+    return pairs
+
+
+def topological_loss_h0(hidden, max_pts=30, lam=1.0):
+    """
+    H0 Topological Regularization Loss:
+        L_topo = lam * Σ death_k²  (death_k = dist(i_k, j_k))
+
+    Ελαχιστοποιεί τις αποστάσεις των κέντρων που ενώνονται κατά τη
+    Rips filtration → πιο συμπαγής latent space.
+
+    Returns: (loss_value, pairs, used_indices)
+    """
+    n = len(hidden)
+    if n > max_pts:
+        idx = np.random.choice(n, max_pts, replace=False)
+        pts = hidden[idx]
+    else:
+        idx = np.arange(n)
+        pts = hidden
+
+    pairs = h0_persistence_pairs(pts)
+    loss = lam * sum(d * d for (_, d, _, _) in pairs)
+    return loss, pairs, idx
+
+
+def topological_gradient_h0(hidden, pairs, pts_idx, lam=1.0):
+    """
+    Αναλυτική παράγωγος του H0 Topological Loss:
+        dL/d(pts[i]) = 2 * lam * (pts[i] - pts[j])
+
+    Ωθεί κάθε ζεύγος (i,j) να πλησιάσει (μειώνει death = dist(i,j)).
+    """
+    N, d = hidden.shape
+    grad = np.zeros((N, d))
+    pts = hidden[pts_idx]
+
+    for (_, dist_ij, i, j) in pairs:
+        if dist_ij < 1e-10:
+            continue
+        diff = pts[i] - pts[j]
+        g = 2.0 * lam * diff
+        grad[pts_idx[i]] += g
+        grad[pts_idx[j]] -= g
+
+    return grad
+
+
+# ---------------------------------------------------------------------------
+# MLP εκ του μηδενός (NumPy only)
+# ---------------------------------------------------------------------------
+
+class MLP:
+    """
+    Πολυεπίπεδο Perceptron (2 κρυφά layers) για binary classification.
+    Αρχιτεκτονική: input → ReLU → ReLU → Sigmoid
+    Εκπαίδευση: mini-batch gradient descent + backpropagation.
+    """
+
+    def __init__(self, layer_sizes, lr=0.005, seed=42):
+        np.random.seed(seed)
+        self.lr = lr
+        self.weights = []
+        self.biases = []
+        for i in range(len(layer_sizes) - 1):
+            fi, fo = layer_sizes[i], layer_sizes[i + 1]
+            self.weights.append(np.random.randn(fi, fo) * np.sqrt(2.0 / fi))
+            self.biases.append(np.zeros((1, fo)))
+
+    @staticmethod
+    def _relu(x):
+        return np.maximum(0.0, x)
+
+    @staticmethod
+    def _relu_d(x):
+        return (x > 0.0).astype(float)
+
+    @staticmethod
+    def _sigmoid(x):
+        return 1.0 / (1.0 + np.exp(-np.clip(x, -500, 500)))
+
+    def forward(self, X, return_hidden=False):
+        a = X
+        hiddens = []
+        self._cache = {'a': [X], 'z': []}
+        for i, (W, b) in enumerate(zip(self.weights, self.biases)):
+            z = a @ W + b
+            self._cache['z'].append(z)
+            if i < len(self.weights) - 1:
+                a = self._relu(z)
+                hiddens.append(a)
+            else:
+                a = self._sigmoid(z)
+            self._cache['a'].append(a)
+        return (a, hiddens) if return_hidden else a
+
+    def backward(self, X, y, topo_grad=None, topo_weight=0.0):
+        N = X.shape[0]
+        y = y.reshape(-1, 1)
+        dL = (self._cache['a'][-1] - y) / N
+        gW, gb = [], []
+        for i in reversed(range(len(self.weights))):
+            z = self._cache['z'][i]
+            ap = self._cache['a'][i]
+            dz = dL if i == len(self.weights) - 1 else dL * self._relu_d(z)
+            if topo_grad is not None and i == len(self.weights) - 2:
+                dz = dz + topo_weight * topo_grad * self._relu_d(z)
+            gW.insert(0, ap.T @ dz)
+            gb.insert(0, dz.sum(axis=0, keepdims=True))
+            dL = dz @ self.weights[i].T
+        for i in range(len(self.weights)):
+            self.weights[i] -= self.lr * gW[i]
+            self.biases[i] -= self.lr * gb[i]
+
+    def bce(self, yp, yt):
+        yt = yt.reshape(-1, 1)
+        e = 1e-12
+        return -np.mean(yt * np.log(yp + e) + (1 - yt) * np.log(1 - yp + e))
+
+    def predict(self, X):
+        return (self.forward(X) >= 0.5).astype(int).flatten()
+
+    def predict_proba(self, X):
+        return self.forward(X).flatten()
+
+
+def compute_auc_roc(y_true, y_scores):
+    """AUC-ROC από το μηδέν (trapezoid)."""
+    pos = np.sum(y_true == 1)
+    neg = np.sum(y_true == 0)
+    if pos == 0 or neg == 0:
+        return 0.5, np.array([0.0, 1.0]), np.array([0.0, 1.0])
+    thr = np.linspace(0, 1, 201)
+    fprs, tprs = [], []
+    for t in thr:
+        p = (y_scores >= t).astype(int)
+        tprs.append(np.sum((p == 1) & (y_true == 1)) / pos)
+        fprs.append(np.sum((p == 1) & (y_true == 0)) / neg)
+    fprs, tprs = np.array(fprs), np.array(tprs)
+    o = np.argsort(fprs)
+    fprs, tprs = fprs[o], tprs[o]
+    return float(np.trapezoid(tprs, fprs)), fprs, tprs
+
+
+def train_mlp(X_tr, y_tr, X_vl, y_vl,
+              layers, epochs=80, bs=32, lr=0.005,
+              use_topo=False, topo_w=0.001,
+              topo_start=20, verbose=True):
+    """
+    Εκπαιδεύει MLP με ή χωρίς H0 Topological Loss.
+    """
+    mlp = MLP(layers, lr=lr)
+    N = X_tr.shape[0]
+    hist = {'tl': [], 'vl': [], 'ta': [], 'va': [], 'topo': []}
+
+    for ep in range(epochs):
+        perm = np.random.permutation(N)
+        Xs, ys = X_tr[perm], y_tr[perm]
+        ep_topo, n_topo = 0.0, 0
+
+        for s in range(0, N, bs):
+            Xb, yb = Xs[s:s + bs], ys[s:s + bs]
+            _, hids = mlp.forward(Xb, return_hidden=True)
+            lh = hids[-1]
+
+            tg, tv = None, 0.0
+            if use_topo and ep >= topo_start:
+                tv, pairs, pidx = topological_loss_h0(lh, max_pts=25, lam=1.0)
+                tg = topological_gradient_h0(lh, pairs, pidx, lam=1.0)
+                ep_topo += tv
+                n_topo += 1
+
+            mlp.backward(Xb, yb, topo_grad=tg, topo_weight=topo_w)
+
+        ytp = mlp.forward(X_tr)
+        yvp = mlp.forward(X_vl)
+        tl = mlp.bce(ytp, y_tr)
+        vl = mlp.bce(yvp, y_vl)
+        ta = float(np.mean((ytp.flatten() >= 0.5) == y_tr))
+        va = float(np.mean((yvp.flatten() >= 0.5) == y_vl))
+        avg_t = ep_topo / max(n_topo, 1)
+
+        hist['tl'].append(tl)
+        hist['vl'].append(vl)
+        hist['ta'].append(ta)
+        hist['va'].append(va)
+        hist['topo'].append(avg_t)
+
+        if verbose and (ep + 1) % 20 == 0:
+            ts = f', Topo={avg_t:.3f}' if use_topo else ''
+            print(f'   Epoch {ep+1:3d}/{epochs} | '
+                  f'Val Loss={vl:.4f} | Val Acc={va:.4f}{ts}')
+
+    return mlp, hist
+
+
+# ---------------------------------------------------------------------------
+# Οπτικοποιήσεις Ε.2
+# ---------------------------------------------------------------------------
+
+def plot_e2_training_curves(h_base, h_topo, filename):
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    ep = range(1, len(h_base['va']) + 1)
+
+    ax = axes[0]
+    ax.plot(ep, h_base['va'], '#2980b9', lw=2, label='Χωρίς Topo Loss')
+    ax.plot(ep, h_topo['va'], '#e74c3c', lw=2, ls='--', label='Με Topo Loss')
+    ax.set_xlabel('Epoch', fontsize=12)
+    ax.set_ylabel('Validation Accuracy', fontsize=12)
+    ax.set_title('Validation Accuracy', fontsize=13, fontweight='bold')
+    ax.legend(fontsize=10)
+    ax.grid(True, alpha=0.3)
+    ax.set_ylim(0.5, 1.01)
+
+    ax = axes[1]
+    ax.plot(ep, h_base['vl'], '#2980b9', lw=2, label='Χωρίς Topo Loss')
+    ax.plot(ep, h_topo['vl'], '#e74c3c', lw=2, ls='--', label='Με Topo Loss')
+    ax.set_xlabel('Epoch', fontsize=12)
+    ax.set_ylabel('BCE Loss', fontsize=12)
+    ax.set_title('Validation Loss', fontsize=13, fontweight='bold')
+    ax.legend(fontsize=10)
+    ax.grid(True, alpha=0.3)
+
+    ax = axes[2]
+    tv = [(i + 1, v) for i, v in enumerate(h_topo['topo']) if v > 0]
+    if tv:
+        xs, ys = zip(*tv)
+        ax.plot(xs, ys, '#27ae60', lw=2, marker='o', markersize=3)
+    ax.set_xlabel('Epoch', fontsize=12)
+    ax.set_ylabel('H0 Persistence Loss', fontsize=12)
+    ax.set_title('Topological Loss (H0) κατά Εκπαίδευση', fontsize=13,
+                 fontweight='bold')
+    ax.grid(True, alpha=0.3)
+
+    plt.suptitle('Ε.2 — MLP: Baseline vs Topological Regularization',
+                 fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(filename, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f'   -> Αποθηκεύτηκε: {filename}')
+
+
+def plot_e2_roc(y_test, auc_b, auc_t, fpr_b, tpr_b, fpr_t, tpr_t, filename):
+    fig, ax = plt.subplots(figsize=(8, 7))
+    ax.plot(fpr_b, tpr_b, '#2980b9', lw=2.5,
+            label=f'Baseline MLP (AUC={auc_b:.4f})')
+    ax.plot(fpr_t, tpr_t, '#e74c3c', lw=2.5, ls='--',
+            label=f'Topo-MLP (AUC={auc_t:.4f})')
+    ax.plot([0, 1], [0, 1], 'k--', alpha=0.4)
+    ax.set_xlabel('False Positive Rate', fontsize=13)
+    ax.set_ylabel('True Positive Rate', fontsize=13)
+    ax.set_title('ROC Curve — Baseline vs Topo-MLP\n(Breast Cancer)',
+                 fontsize=13, fontweight='bold')
+    ax.legend(fontsize=11)
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(filename, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f'   -> Αποθηκεύτηκε: {filename}')
+
+
+def plot_e2_latent_spaces(X_test, y_test, mlp_b, mlp_t, filename):
+    from sklearn.decomposition import PCA as _PCA
+    _, hb = mlp_b.forward(X_test, return_hidden=True)
+    _, ht = mlp_t.forward(X_test, return_hidden=True)
+    hb2 = _PCA(n_components=2).fit_transform(hb[-1])
+    ht2 = _PCA(n_components=2).fit_transform(ht[-1])
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    for ax, h2d, title in zip(
+        axes, [hb2, ht2],
+        ['Baseline MLP — Latent Space (PCA 2D)',
+         'Topo-MLP — Latent Space (PCA 2D)']
+    ):
+        for cls, col, lbl in [(0, '#2980b9', 'Benign'),
+                               (1, '#e74c3c', 'Malignant')]:
+            m = y_test == cls
+            ax.scatter(h2d[m, 0], h2d[m, 1], c=col, s=35, alpha=0.75,
+                       label=lbl, edgecolors='k', linewidths=0.3)
+        ax.set_title(title, fontsize=12, fontweight='bold')
+        ax.set_xlabel('PC1', fontsize=11)
+        ax.set_ylabel('PC2', fontsize=11)
+        ax.legend(fontsize=10)
+        ax.grid(True, alpha=0.3)
+
+    plt.suptitle('Ε.2 — Latent Spaces: Baseline vs Topo-MLP',
+                 fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(filename, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f'   -> Αποθηκεύτηκε: {filename}')
+
+
+def plot_e2_persistence_diagrams(X_test, mlp_b, mlp_t, filename):
+    _, hb = mlp_b.forward(X_test[:50], return_hidden=True)
+    _, ht = mlp_t.forward(X_test[:50], return_hidden=True)
+    pb = h0_persistence_pairs(hb[-1])
+    pt = h0_persistence_pairs(ht[-1])
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    for ax, pairs, title in zip(
+        axes, [pb, pt],
+        ['Baseline MLP — H0 Persistence Diagram (Latent)',
+         'Topo-MLP — H0 Persistence Diagram (Latent)']
+    ):
+        bs_ = [b for b, d, i, j in pairs]
+        ds_ = [d for b, d, i, j in pairs]
+        mx = max(ds_) * 1.05 if ds_ else 1.0
+        ax.scatter(bs_, ds_, c='#e67e22', s=45, alpha=0.75,
+                   edgecolors='k', linewidths=0.5, label='$H_0$')
+        ax.plot([0, mx], [0, mx], 'k--', alpha=0.3)
+        ax.set_xlabel('Birth', fontsize=12)
+        ax.set_ylabel('Death', fontsize=12)
+        ax.set_title(title, fontsize=12, fontweight='bold')
+        ax.legend(fontsize=10)
+        ax.grid(True, alpha=0.3)
+
+    plt.suptitle('Ε.2 — H0 Persistence Diagrams (Latent Spaces)',
+                 fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(filename, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f'   -> Αποθηκεύτηκε: {filename}')
+
+
+# ---------------------------------------------------------------------------
+# run_e2()
+# ---------------------------------------------------------------------------
+
+def run_e2():
+    """
+    Ε.2 — Topological Loss σε Neural Network
+    Breast Cancer Wisconsin dataset, binary classification.
+    Σύγκριση Baseline MLP vs Topo-MLP (με H0 Topological Regularization).
+    """
+    print('=' * 70)
+    print('Ε.2 — Topological Loss σε Neural Network')
+    print('=' * 70)
+
+    # 1. Δεδομένα
+    print('\n1. Φόρτωση Breast Cancer Wisconsin dataset...')
+    try:
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import StandardScaler as _SS
+        from sklearn.decomposition import PCA as _PCA
+
+        bc = load_breast_cancer()
+        X_all, y_all = bc.data, bc.target
+        X_sc = _SS().fit_transform(X_all)
+        pca_pre = _PCA(n_components=10, random_state=42)
+        X = pca_pre.fit_transform(X_sc)
+        ev = pca_pre.explained_variance_ratio_.sum()
+        print(f'   {X_all.shape[0]} δείγματα | 30→10 PCA (var={ev:.3f})')
+        print(f'   Malignant={np.sum(y_all==0)}, Benign={np.sum(y_all==1)}')
+
+        X_tv, X_test, y_tv, y_test = train_test_split(
+            X, y_all, test_size=0.20, random_state=42, stratify=y_all)
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_tv, y_tv, test_size=0.20, random_state=42, stratify=y_tv)
+        print(f'   Train={len(X_train)}, Val={len(X_val)}, Test={len(X_test)}')
+    except ImportError:
+        np.random.seed(42)
+        X = np.random.randn(400, 10)
+        y_all = (X[:, 0] + X[:, 1] > 0).astype(int)
+        X_train, X_val, X_test = X[:280], X[280:340], X[340:]
+        y_train, y_val, y_test = y_all[:280], y_all[280:340], y_all[340:]
+
+    in_dim = X_train.shape[1]
+    layers = [in_dim, 64, 32, 1]
+
+    # 2. Baseline MLP
+    print('\n2. Εκπαίδευση Baseline MLP (χωρίς Topological Loss)...')
+    mlp_b, hist_b = train_mlp(
+        X_train, y_train, X_val, y_val,
+        layers, epochs=80, bs=32, lr=0.005,
+        use_topo=False, verbose=True
+    )
+
+    # 3. Topo-MLP
+    print('\n3. Εκπαίδευση Topo-MLP (H0 Topological Loss, start epoch 20)...')
+    mlp_t, hist_t = train_mlp(
+        X_train, y_train, X_val, y_val,
+        layers, epochs=80, bs=32, lr=0.005,
+        use_topo=True, topo_w=0.001, topo_start=20, verbose=True
+    )
+
+    # 4. Αξιολόγηση
+    print('\n4. Αξιολόγηση στο Test Set...')
+    acc_b = float(np.mean(mlp_b.predict(X_test) == y_test))
+    acc_t = float(np.mean(mlp_t.predict(X_test) == y_test))
+    auc_b, fpr_b, tpr_b = compute_auc_roc(y_test, mlp_b.predict_proba(X_test))
+    auc_t, fpr_t, tpr_t = compute_auc_roc(y_test, mlp_t.predict_proba(X_test))
+
+    print(f'\n   {"Μοντέλο":<25} {"Accuracy":>10} {"AUC-ROC":>10}')
+    print(f'   {"-"*47}')
+    print(f'   {"Baseline MLP":<25} {acc_b:>10.4f} {auc_b:>10.4f}')
+    print(f'   {"Topo-MLP":<25} {acc_t:>10.4f} {auc_t:>10.4f}')
+    print(f'\n   ΔAccuracy = {acc_t-acc_b:+.4f}  |  ΔAUC = {auc_t-auc_b:+.4f}')
+
+    # H0 persistence latent space
+    _, hb_ = mlp_b.forward(X_test[:40], return_hidden=True)
+    _, ht_ = mlp_t.forward(X_test[:40], return_hidden=True)
+    pb_pairs = h0_persistence_pairs(hb_[-1])
+    pt_pairs = h0_persistence_pairs(ht_[-1])
+    avg_pb = float(np.mean([d for _, d, _, _ in pb_pairs])) if pb_pairs else 0.0
+    avg_pt = float(np.mean([d for _, d, _, _ in pt_pairs])) if pt_pairs else 0.0
+    print(f'\n   Μέση H0 Persistence (test latent space):')
+    print(f'     Baseline: {avg_pb:.4f}')
+    print(f'     Topo-MLP: {avg_pt:.4f}')
+    if avg_pt < avg_pb:
+        print('     → Topo-MLP: μικρότερη persistence (πιο συμπαγής latent space)')
+    else:
+        print('     → Παρόμοια persistence (topological loss επικεντρώθηκε αλλού)')
+
+    # 5. Γραφήματα
+    print('\n5. Δημιουργία γραφημάτων...')
+    plot_e2_training_curves(hist_b, hist_t, 'e2_training_curves.png')
+    plot_e2_roc(y_test, auc_b, auc_t, fpr_b, tpr_b, fpr_t, tpr_t,
+                'e2_roc_curves.png')
+    plot_e2_latent_spaces(X_test, y_test, mlp_b, mlp_t,
+                          'e2_latent_spaces.png')
+    plot_e2_persistence_diagrams(X_test, mlp_b, mlp_t,
+                                 'e2_persistence_diagrams.png')
+
+    print('\n   Γραφήματα αποθηκεύτηκαν:')
+    print('     - e2_training_curves.png')
+    print('     - e2_roc_curves.png')
+    print('     - e2_latent_spaces.png')
+    print('     - e2_persistence_diagrams.png')
+
+    return {
+        'acc_base': acc_b, 'auc_base': auc_b,
+        'acc_topo': acc_t, 'auc_topo': auc_t,
+        'avg_pers_base': avg_pb, 'avg_pers_topo': avg_pt,
+    }
+
+
+if __name__ == '__main__':
     run_e1()
+    print('\n' + '=' * 70)
+    run_e2()
