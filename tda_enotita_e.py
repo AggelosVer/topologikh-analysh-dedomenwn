@@ -1123,7 +1123,11 @@ def compute_auc_roc(y_true, y_scores):
     fprs, tprs = np.array(fprs), np.array(tprs)
     o = np.argsort(fprs)
     fprs, tprs = fprs[o], tprs[o]
-    return float(np.trapezoid(tprs, fprs)), fprs, tprs
+    if hasattr(np, 'trapezoid'):
+        auc_val = float(np.trapezoid(tprs, fprs))
+    else:
+        auc_val = float(np.trapz(tprs, fprs))
+    return auc_val, fprs, tprs
 
 
 def train_mlp(X_tr, y_tr, X_vl, y_vl,

@@ -420,20 +420,22 @@ for int_idx, interval_bounds in enumerate(intervals):
 Επειδή η διάσταση του \foreignlanguage{english}{point cloud} είναι $d \ge 3$, υπολογίστηκε η ομολογία διάστασης 2 ($H_2$). Χρησιμοποιήθηκε το \foreignlanguage{english}{\texttt{AlphaComplex}} της βιβλιοθήκης \foreignlanguage{english}{GUDHI} για την επαλήθευση. Οι αριθμοί \foreignlanguage{english}{Betti} που προέκυψαν ήταν $\beta = [1, 0, 0]$, γεγονός που δείχνει ότι το σύμπλεγμα είναι τοπολογικά ισοδύναμο με ένα μόνο σημείο (συνεκτικό σύμπλεγμα χωρίς 1-κύκλους ή 2-κοιλότητες στην τελική κλίμακα), επιβεβαιώνοντας ότι το \foreignlanguage{english}{Takens Embedding} της χρηματοοικονομικής χρονοσειράς δεν σχηματίζει κλειστές σφαιρικές κοιλότητες ($H_2 = 0$).
 
 \textbf{3. Οπτικοποίηση και Μείωση Διάστασης:}
-Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα (\foreignlanguage{english}{embedding}).
+Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα στο Σχήμα \ref{fig:d2_3d_embedding}.
 
 \begin{figure}[H]
 \centering
 \foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{d2_sp500_3d_embedding.png}}
 \caption{Τρισδιάστατη τροχιά του \foreignlanguage{english}{Takens Embedding} ($d=3, \tau=1$) για τη χρονοσειρά \foreignlanguage{english}{S\&P 500}.}
+\label{fig:d2_3d_embedding}
 \end{figure}
 
-Για τη σύγκριση, το \foreignlanguage{english}{3D point cloud} προβλήθηκε σε 2 διαστάσεις με 3 μεθόδους: \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}.
+Για τη σύγκριση, το \foreignlanguage{english}{3D point cloud} προβλήθηκε σε 2 διαστάσεις με 3 μεθόδους: \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}, όπως φαίνεται στο Σχήμα \ref{fig:d2_dim_reduction}.
 
 \begin{figure}[H]
 \centering
 \foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{d2_sp500_dim_reduction.png}}
 \caption{Σύγκριση μείωσης διάστασης του \foreignlanguage{english}{3D Takens Embedding} του \foreignlanguage{english}{S\&P 500} με \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}.}
+\label{fig:d2_dim_reduction}
 \end{figure}
 
 \begin{itemize}
@@ -579,6 +581,8 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item Οι αριθμοί \foreignlanguage{english}{Betti} και τα διαγράμματα εμμονής προσδιορίζουν με ακρίβεια τον αριθμό των οπών και των κοιλοτήτων στα σχήματα (κύκλος, τόρος, σφαίρα).
     \item Η ανάλυση ευαισθησίας στον θόρυβο έδειξε ότι τα τοπολογικά χαρακτηριστικά είναι στιβαρά μέχρι ένα σημείο, αλλά ο έντονος θόρυβος μπορεί να αλλοιώσει τις αποστάσεις \foreignlanguage{english}{Bottleneck}.
     \item Ο αλγόριθμος \foreignlanguage{english}{Mapper} αποδείχθηκε εξαιρετικό εργαλείο για την οπτικοποίηση σύνθετων δομών όπως το \foreignlanguage{english}{Figure-8} και το \foreignlanguage{english}{Horse-shoe}, επιτρέποντας την κατανόηση της γεωμετρίας τους μέσω απλών γραφημάτων.
+    \item Η εξαγωγή τοπολογικών χαρακτηριστικών (\foreignlanguage{english}{Persistence Images}) από το \foreignlanguage{english}{Takens Embedding} του \foreignlanguage{english}{Breast Cancer dataset} και η εισαγωγή τους σε ταξινομητή \foreignlanguage{english}{Random Forest} απέδειξε ότι η καθαρά τοπολογική δομή των χαρακτηριστικών φέρει σημαντική διαγνωστική ικανότητα για τη διάγνωση του καρκίνου.
+    \item Η ανάλυση της χρονοσειράς \foreignlanguage{english}{S\&P 500} μέσω \foreignlanguage{english}{Takens Embedding} και επίμονης εντροπίας επέτρεψε την ποσοτικοποίηση της πολυπλοκότητας της αγοράς. Η επαλήθευση με \foreignlanguage{english}{GUDHI} (\foreignlanguage{english}{Alpha Complex}) επιβεβαίωσε την απουσία τρισδιάστατων κοιλοτήτων ($H_2=0$), ενώ το \foreignlanguage{english}{bootstrap resampling} ($n=100$) απέδειξε τη στατιστική σταθερότητα των τοπολογικών χαρακτηριστικών (ιδίως του $H_0$) έναντι δειγματοληπτικών διακυμάνσεων.
     \item Η μέθοδος της \foreignlanguage{english}{Zigzag Persistent Homology} επέτρεψε την επιτυχή καταγραφή της δυναμικής εξέλιξης των τοπολογικών δομών σε χρηματοοικονομικές χρονοσειρές, αναδεικνύοντας μεταβατικά τοπολογικά χαρακτηριστικά που συνδέονται με την αστάθεια της αγοράς.
     \item Το \en{Topological Loss} ως \en{regularization} σε \en{Neural Network} (\en{MLP}) επέδειξε τη δυνατότητα αμεσότερου ελέγχου της γεωμετρίας του \en{latent space}. Η ελαχιστοποίηση της \en{persistence} ενδιάμεσων αναπαραστάσεων οδηγεί σε πιο συμπαγείς και διαχωρισμένες συστάδες ανά κλάση, ενισχύοντας τη διακριτική ικανότητα του μοντέλου χωρίς τη χρήση εξωτερικών βιβλιοθηκών.
 \end{enumerate}
@@ -591,7 +595,6 @@ for int_idx, interval_bounds in enumerate(intervals):
 \begin{itemize}
     \item \textbf{Ανάπτυξη Κώδικα:} Υποστήριξη στη συγγραφή και βελτιστοποίηση κώδικα \foreignlanguage{english}{Python} σε όλα τα ερωτήματα της εργασίας (συμπεριλαμβανομένης της υλοποίησης του συμπλέγματος \foreignlanguage{english}{Vietoris--Rips} εκ του μηδενός και του αλγορίθμου \foreignlanguage{english}{Custom Mapper}).
     \item \textbf{Επίλυση Σφαλμάτων (\foreignlanguage{english}{Debugging}):} Βοήθεια στην επίλυση σφαλμάτων συμβατότητας των βιβλιοθηκών \foreignlanguage{english}{GUDHI} και \foreignlanguage{english}{Ripser}, καθώς και στη διαχείριση της κωδικοποίησης (\foreignlanguage{english}{UTF-8}) στο περιβάλλον των \foreignlanguage{english}{Windows}.
-    \item \textbf{Συγγραφή Αναφοράς σε \foreignlanguage{english}{\LaTeX}:} Υποστήριξη στη δομή του εγγράφου, στη διαχείριση των πακέτων γλωσσών (\foreignlanguage{english}{\texttt{babel}}) για τη σωστή εναλλαγή ελληνικών και αγγλικών, και στη μορφοποίηση των πινάκων και των σχημάτων.
     \item \textbf{Ερμηνεία Αποτελεσμάτων:} Συζήτηση και ανάλυση των διαγραμμάτων εμμονής και των γραφημάτων του \foreignlanguage{english}{Mapper} για την καλύτερη κατανόηση των τοπολογικών δομών.
 \end{itemize}
 
@@ -604,9 +607,9 @@ for int_idx, interval_bounds in enumerate(intervals):
 \bibitem{andrikopoulos} Ανδρικόπουλος, Α. \emph{Τοπολογική Ανάλυση Δεδομένων}. Πανεπιστήμιο Πατρών, Τμήμα Μηχανικών Η/Υ και Πληροφορικής.
 \bibitem{gudhi} \foreignlanguage{english}{GUDHI Editorial Board}. \emph{\foreignlanguage{english}{GUDHI User and Reference Manual}}.
 \bibitem{ripser} \foreignlanguage{english}{Bauer, U.} (2021). \emph{\foreignlanguage{english}{Ripser: efficient computation of Vietoris-Rips persistence barcodes}}.
-\bibitem{carlsson} Carlsson, G., \& de Silva, V. (2010). \foreignlanguage{english}{Zigzag Persistence}. \emph{\foreignlanguage{english}{Foundations of Computational Mathematics}}, 10(4), 367-405.
-\bibitem{hofer} Hofer, C., Kwitt, R., Niethammer, M., \& Uhl, A. (2017). Deep Learning with Topological Signatures. \emph{Advances in Neural Information Processing Systems (NeurIPS)}.
-\bibitem{chen} Chen, C., Ni, X., Bai, Q., \& Wang, Y. (2019). A Topological Regularizer for Classifiers via Persistent Homology. \emph{AISTATS}.
+\bibitem{carlsson} \en{Carlsson, G., \& de Silva, V. (2010). Zigzag Persistence. \emph{Foundations of Computational Mathematics}, 10(4), 367-405.}
+\bibitem{hofer} \en{Hofer, C., Kwitt, R., Niethammer, M., \& Uhl, A. (2017). Deep Learning with Topological Signatures. \emph{Advances in Neural Information Processing Systems (NeurIPS)}.}
+\bibitem{chen} \en{Chen, C., Ni, X., Bai, Q., \& Wang, Y. (2019). A Topological Regularizer for Classifiers via Persistent Homology. \emph{AISTATS}.}
 \end{thebibliography}
 
 \end{document}
