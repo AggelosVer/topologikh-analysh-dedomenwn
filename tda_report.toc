@@ -26,12 +26,13 @@
 \babel@toc {english}{}\relax 
 \babel@toc {greek}{}\relax 
 \contentsline {subsubsection}{\numberline {3.3.2}Γ.2: Εφαρμογή \foreignlanguage {english}{Mapper} \bbl@greek@ampersand Ανάλυση Ευαισθησίας}{11}{subsubsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.4}Ερώτημα Δ --- Εφαρμογή σε Πραγματικά Δεδομένα}{13}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {3.4.1}Δ.1 --- Ανάλυση Πρώτου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{Breast Cancer})}{13}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Δ.2 --- Ανάλυση Δεύτερου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{S\bbl@greek@ampersand P 500})}{14}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Δ.3 --- Βαθιά Σύγκριση \bbl@greek@ampersand Συζήτηση: \foreignlanguage {english}{TDA} \foreignlanguage {english}{vs} Κλασικές Μέθοδοι}{16}{subsubsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.5}Ερώτημα Ε --- \foreignlanguage {english}{Zigzag Persistent Homology}}{17}{subsection.3.5}%
-\contentsline {subsubsection}{\numberline {3.5.1}Ε.1 --- \foreignlanguage {english}{Zigzag Persistent Homology} σε Χρονοσειρές}{17}{subsubsection.3.5.1}%
-\contentsline {section}{\numberline {4}\underline {Συμπεράσματα}}{19}{section.4}%
-\contentsline {section}{\numberline {5}\underline {Χρήση \foreignlanguage {english}{AI}}}{20}{section.5}%
-\contentsline {section}{\numberline {6}\underline {Βιβλιογραφία}}{21}{section.6}%
+\contentsline {subsection}{\numberline {3.4}Ερώτημα Δ --- Εφαρμογή σε Πραγματικά Δεδομένα}{14}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Δ.1 --- Ανάλυση Πρώτου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{Breast Cancer})}{14}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Δ.2 --- Ανάλυση Δεύτερου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{S\bbl@greek@ampersand P 500})}{15}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Δ.3 --- Βαθιά Σύγκριση \bbl@greek@ampersand Συζήτηση: \foreignlanguage {english}{TDA} \foreignlanguage {english}{vs} Κλασικές Μέθοδοι}{18}{subsubsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.5}Ερώτημα Ε --- \foreignlanguage {english}{Zigzag Persistent Homology}}{19}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Ε.1 --- \foreignlanguage {english}{Zigzag Persistent Homology} σε Χρονοσειρές}{19}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Ε.2 --- \foreignlanguage {english}{Topological Loss} σε \foreignlanguage {english}{Neural Network}}{21}{subsubsection.3.5.2}%
+\contentsline {section}{\numberline {4}\underline {Συμπεράσματα}}{23}{section.4}%
+\contentsline {section}{\numberline {5}\underline {Χρήση \foreignlanguage {english}{AI}}}{24}{section.5}%
+\contentsline {section}{\numberline {6}\underline {Βιβλιογραφία}}{25}{section.6}%
