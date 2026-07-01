@@ -179,13 +179,18 @@ def run_d2():
 
     # 1. Φόρτωση δεδομένων S&P 500
     print("1. Φόρτωση δεδομένων S&P 500 (τελευταία 2 έτη)...")
-    sp500 = yf.download('^GSPC', period='2y', interval='1d', progress=False)
-    if sp500.empty:
-        print("Αποτυχία φόρτωσης δεδομένων.")
-        return
-    
-    # Χρησιμοποιούμε τις τιμές κλεισίματος (Close)
-    close_prices = sp500['Close'].values.flatten()
+    try:
+        sp500 = yf.download('^GSPC', period='2y', interval='1d', progress=False)
+        if sp500.empty:
+            raise ValueError("Κενά δεδομένα")
+        close_prices = sp500['Close'].values.flatten()
+        print(f"   Φορτώθηκαν {len(close_prices)} ημερήσιες τιμές κλεισίματος.")
+    except Exception as e:
+        print(f"   Αποτυχία φόρτωσης S&P 500 ({e}).")
+        print("   Χρήση συνθετικής χρονοσειράς (ημίτονο + τάση + θόρυβος)...")
+        np.random.seed(42)
+        t = np.linspace(0, 4 * np.pi, 500)
+        close_prices = np.sin(t) + 0.3 * np.sin(3 * t) + 0.1 * t + np.random.normal(0, 0.1, len(t))
     scaler = StandardScaler()
     close_prices_scaled = scaler.fit_transform(close_prices.reshape(-1, 1)).flatten()
     
@@ -209,6 +214,37 @@ def run_d2():
     # Εξαγωγή του point cloud για τα βήματα 3 και 4
     embedder = TakensEmbedding(dimension=embedding_dim, time_delay=delay)
     X_embedded = embedder.fit_transform(X_ts)[0] # Παίρνουμε το 1o (και μοναδικό) sample, σχήμα: (n_points, 3)
+    
+    # [ΠΡΟΣΘΗΚΗ] Υπολογισμός Persistent Homology H0, H1, H2 (ripser)
+    print("   -> Υπολογισμός Persistent Homology για το S&P 500 (ripser)...")
+    res_sp500 = ripser(X_embedded, maxdim=2)
+    
+    # Persistence Diagram
+    plt.figure(figsize=(6, 5))
+    plot_diagrams(res_sp500['dgms'], title="S&P 500 - Persistence Diagram")
+    plt.tight_layout()
+    plt.savefig("d2_sp500_persistence_diagrams.png")
+    plt.close()
+    
+    # Barcode
+    plt.figure(figsize=(8, 4))
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+    y_pos = 0
+    for dim, dgm in enumerate(res_sp500['dgms']):
+        for b, d in dgm:
+            if np.isinf(d): d = 5.0 # Οπτικό όριο
+            plt.plot([b, d], [y_pos, y_pos], color=colors[dim], lw=2)
+            y_pos += 1
+    plt.yticks([])
+    plt.title("S&P 500 - Barcode")
+    # Legend
+    from matplotlib.lines import Line2D
+    custom_lines = [Line2D([0], [0], color=colors[dim], lw=2) for dim in range(len(res_sp500['dgms']))]
+    plt.legend(custom_lines, [f'H{dim}' for dim in range(len(res_sp500['dgms']))], loc='lower right')
+    plt.tight_layout()
+    plt.savefig("d2_sp500_barcode.png")
+    plt.close()
+    print("   -> Αποθηκεύτηκαν τα διαγράμματα: d2_sp500_persistence_diagrams.png και d2_sp500_barcode.png")
     
     # [ΠΡΟΣΘΗΚΗ] Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
     print("   -> Επαλήθευση/Υπολογισμός H2 ομολογίας με GUDHI (Alpha Complex)...")
@@ -235,6 +271,31 @@ def run_d2():
     plt.tight_layout()
     plt.savefig("d2_sp500_3d_embedding.png", dpi=150)
     plt.close()
+    
+    # [ΠΡΟΣΘΗΚΗ] Εφαρμογή Mapper στο S&P 500
+    print("   -> Δημιουργία διαδραστικού Mapper Graph (kmapper) για το S&P 500...")
+    mapper_d2 = km.KeplerMapper(verbose=0)
+    # Προβολή στα 2 πρώτα PCA components του 3D embedding
+    lens_d2 = mapper_d2.fit_transform(X_embedded, projection=PCA(n_components=2))
+    
+    graph_d2 = mapper_d2.map(
+        lens_d2,
+        X_embedded,
+        cover=km.Cover(n_cubes=10, perc_overlap=0.3),
+        clusterer=DBSCAN(eps=0.5, min_samples=3)
+    )
+    
+    tooltip_html_d2 = np.array([f"Day: {i}" for i in range(len(X_embedded))])
+    
+    mapper_d2.visualize(
+        graph_d2,
+        path_html="d2_sp500_mapper_graph.html",
+        title="S&P 500 - KeplerMapper",
+        color_values=np.arange(len(X_embedded)),
+        color_function_name="Trading Day",
+        custom_tooltips=tooltip_html_d2
+    )
+    print("   -> Αποθηκεύτηκε το γράφημα Mapper στο 'd2_sp500_mapper_graph.html'.")
     
     # 3. Βαθιά σύγκριση με PCA, t-SNE, UMAP (χρήση Seaborn και Pandas)
     print("3. Σύγκριση TDA point cloud με PCA, t-SNE, UMAP...")

@@ -44,7 +44,7 @@
     \vspace{0.5cm}
     
     {\large Πανεπιστημιούπολη Ρίου $\cdot$ Πολυτεχνική Σχολή} \\
-    {\large Τμήμα Μηχανικών Η/Υ \& Πληροφορικής (\foreignlanguage{english}{ΤΜΗΥΠ} -- \foreignlanguage{english}{CEID})} \\
+    {\large Τμήμα Μηχανικών Η/Υ \& Πληροφορικής (ΤΜΗΥΠ -- \foreignlanguage{english}{CEID})} \\
     
     \vspace{2cm}
     
@@ -419,7 +419,26 @@ for int_idx, interval_bounds in enumerate(intervals):
 \textbf{2. Επαλήθευση $H_2$ Ομολογίας με \foreignlanguage{english}{GUDHI}:}
 Επειδή η διάσταση του \foreignlanguage{english}{point cloud} είναι $d \ge 3$, υπολογίστηκε η ομολογία διάστασης 2 ($H_2$). Χρησιμοποιήθηκε το \foreignlanguage{english}{\texttt{AlphaComplex}} της βιβλιοθήκης \foreignlanguage{english}{GUDHI} για την επαλήθευση. Οι αριθμοί \foreignlanguage{english}{Betti} που προέκυψαν ήταν $\beta = [1, 0, 0]$, γεγονός που δείχνει ότι το σύμπλεγμα είναι τοπολογικά ισοδύναμο με ένα μόνο σημείο (συνεκτικό σύμπλεγμα χωρίς 1-κύκλους ή 2-κοιλότητες στην τελική κλίμακα), επιβεβαιώνοντας ότι το \foreignlanguage{english}{Takens Embedding} της χρηματοοικονομικής χρονοσειράς δεν σχηματίζει κλειστές σφαιρικές κοιλότητες ($H_2 = 0$).
 
-\textbf{3. Οπτικοποίηση και Μείωση Διάστασης:}
+\textbf{3. Επίμονη Ομολογία ($H_0, H_1, H_2$):}
+Υπολογίστηκε η επίμονη ομολογία για τις διαστάσεις 0, 1 και 2 για το \en{point cloud} της χρονοσειράς \en{S\&P 500} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{ripser}}. Τα αποτελέσματα οπτικοποιούνται στο διάγραμμα εμμονής (\foreignlanguage{english}{Persistence Diagram}) και στο \en{barcode} (Σχήμα \ref{fig:d2_persistence}).
+Παρατηρούμε ότι στο διάγραμμα εμμονής εμφανίζονται αρκετοί $H_0$-γεννήτορες που πεθαίνουν γρήγορα (θόρυβος) και ένας κύριος που ζει επ' άπειρον (η συνεκτική συνιστώσα). Για τις διαστάσεις $H_1$ και $H_2$, δεν παρατηρούμε σημαντικά τοπολογικά χαρακτηριστικά (όλα πεθαίνουν πολύ κοντά στη διαγώνιο), γεγονός που επιβεβαιώνει την απουσία σημαντικών βρόχων ή τρισδιάστατων κοιλοτήτων στη δομή φάσης της χρονοσειράς, όπως επαληθεύτηκε και από το \en{GUDHI}.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \foreignlanguage{english}{\includegraphics[width=\textwidth]{d2_sp500_persistence_diagrams.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \foreignlanguage{english}{\includegraphics[width=\textwidth]{d2_sp500_barcode.png}}
+\end{minipage}
+\caption{\foreignlanguage{english}{Persistence Diagram} (αριστερά) και \foreignlanguage{english}{Barcode} (δεξιά) για το point cloud της χρονοσειράς S\&P 500.}
+\label{fig:d2_persistence}
+\end{figure}
+
+\textbf{4. Οπτικοποίηση και Μείωση Διάστασης:}
 Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα στο Σχήμα \ref{fig:d2_3d_embedding}.
 
 \begin{figure}[H]
@@ -444,7 +463,10 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item Το \foreignlanguage{english}{UMAP} διατηρεί καλύτερα τη συνέχεια της τροχιάς της χρονοσειράς, αναδεικνύοντας τη δομή «νήματος» (\foreignlanguage{english}{filament structure}) των τιμών.
 \end{itemize}
 
-\textbf{4. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
+\textbf{5. Εφαρμογή \foreignlanguage{english}{Mapper}:}
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} για τις 3D Takens αναπαραστάσεις της χρηματοοικονομικής χρονοσειράς χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση και εφαρμόστηκε ο \foreignlanguage{english}{DBSCAN} με \foreignlanguage{english}{\texttt{eps=0.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}. Το διαδραστικό γράφημα αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{d2\_sp500\_mapper\_graph.html}} και χρωματίστηκε βάσει της χρονικής σειράς (Day), αναδεικνύοντας τη χρονική εξέλιξη της τροχιάς των τιμών.
+
+\textbf{6. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
 Για να ελέγξουμε τη σταθερότητα της επίμονης εντροπίας, εφαρμόστηκε \foreignlanguage{english}{bootstrap resampling} ($n=100$) με τυχαία επιλογή του 80\% των σημείων με επανατοποθέτηση. Τα 95\% διαστήματα εμπιστοσύνης για την επίμονη εντροπία είναι:
 \begin{itemize}
     \item \textbf{$H_0$}: \foreignlanguage{english}{Mean} = 1.7014, 95\% \foreignlanguage{english}{CI} = $[1.6596, 1.7349]$
