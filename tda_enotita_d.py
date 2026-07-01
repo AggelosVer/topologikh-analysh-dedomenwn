@@ -228,7 +228,7 @@ def run_d2():
     plt.figure(figsize=(6, 5))
     plot_diagrams(res_sp500['dgms'], title="S&P 500 - Persistence Diagram")
     plt.tight_layout()
-    plt.savefig("d2_sp500_persistence_diagrams.png")
+    plt.savefig(os.path.join(output_dir, "d2_sp500_persistence_diagrams.png"))
     plt.close()
     
     # Barcode
@@ -247,9 +247,9 @@ def run_d2():
     custom_lines = [Line2D([0], [0], color=colors[dim], lw=2) for dim in range(len(res_sp500['dgms']))]
     plt.legend(custom_lines, [f'H{dim}' for dim in range(len(res_sp500['dgms']))], loc='lower right')
     plt.tight_layout()
-    plt.savefig("d2_sp500_barcode.png")
+    plt.savefig(os.path.join(output_dir, "d2_sp500_barcode.png"))
     plt.close()
-    print("   -> Αποθηκεύτηκαν τα διαγράμματα: d2_sp500_persistence_diagrams.png και d2_sp500_barcode.png")
+    print("   -> Αποθηκεύτηκαν τα διαγράμματα: instants/d/d2_sp500_persistence_diagrams.png και instants/d/d2_sp500_barcode.png")
     
     # [ΠΡΟΣΘΗΚΗ] Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
     print("   -> Επαλήθευση/Υπολογισμός H2 ομολογίας με GUDHI (Alpha Complex)...")
@@ -294,13 +294,13 @@ def run_d2():
     
     mapper_d2.visualize(
         graph_d2,
-        path_html="d2_sp500_mapper_graph.html",
+        path_html=os.path.join(output_dir, "d2_sp500_mapper_graph.html"),
         title="S&P 500 - KeplerMapper",
         color_values=np.arange(len(X_embedded)),
         color_function_name="Trading Day",
         custom_tooltips=tooltip_html_d2
     )
-    print("   -> Αποθηκεύτηκε το γράφημα Mapper στο 'd2_sp500_mapper_graph.html'.")
+    print("   -> Αποθηκεύτηκε το γράφημα Mapper στο 'instants/d/d2_sp500_mapper_graph.html'.")
     
     # 3. Βαθιά σύγκριση με PCA, t-SNE, UMAP (χρήση Seaborn και Pandas)
     print("3. Σύγκριση TDA point cloud με PCA, t-SNE, UMAP...")
