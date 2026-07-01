@@ -8,6 +8,11 @@ import scipy.sparse as sparse
 from scipy.linalg import eigh
 import warnings
 import sys
+import os
+
+# Create target output directory
+output_dir = os.path.join('instants', 'b')
+os.makedirs(output_dir, exist_ok=True)
 
 # Υποστήριξη ελληνικών στο terminal των Windows
 sys.stdout.reconfigure(encoding='utf-8')
@@ -99,7 +104,7 @@ def run_b1():
         ax.legend(custom_lines, [f'H{dim}' for dim in range(len(dgms))], loc='lower right')
         
         plt.tight_layout()
-        filename = f"b1_{name.replace(' ', '_')}.png"
+        filename = os.path.join(output_dir, f"b1_{name.replace(' ', '_')}.png")
         plt.savefig(filename)
         plt.close()
         print(f"Αποθηκεύτηκε: {filename}")
@@ -148,9 +153,9 @@ def run_b2():
     plt.title('Robustness of H1 Persistence Diagrams to Gaussian Noise')
     plt.legend()
     plt.grid(True)
-    plt.savefig("b2_robustness.png")
+    plt.savefig(os.path.join(output_dir, "b2_robustness.png"))
     plt.close()
-    print("Αποθηκεύτηκε: b2_robustness.png")
+    print("Αποθηκεύτηκε: instants/b/b2_robustness.png")
 
 # =============================================================================
 # Β.3 — Persistent Homology σε Γράφους
@@ -246,9 +251,9 @@ def run_b3():
     plt.title('Persistence Diagram (HKS Filtration)')
     
     plt.tight_layout()
-    plt.savefig("b3_persistence_diagrams_comparison.png")
+    plt.savefig(os.path.join(output_dir, "b3_persistence_diagrams_comparison.png"))
     plt.close()
-    print("Αποθηκεύτηκε: b3_persistence_diagrams_comparison.png")
+    print("Αποθηκεύτηκε: instants/b/b3_persistence_diagrams_comparison.png")
     
     # --- Persistence Images ---
     from persim import PersistenceImager
@@ -282,9 +287,9 @@ def run_b3():
         plt.title('No H1 features (HKS)')
         
     plt.tight_layout()
-    plt.savefig("b3_persistence_images.png")
+    plt.savefig(os.path.join(output_dir, "b3_persistence_images.png"))
     plt.close()
-    print("Αποθηκεύτηκε: b3_persistence_images.png")
+    print("Αποθηκεύτηκε: instants/b/b3_persistence_images.png")
 
 if __name__ == "__main__":
     run_b1()

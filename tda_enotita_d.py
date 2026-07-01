@@ -24,6 +24,11 @@ import kmapper as km
 
 import sys
 import warnings
+import os
+
+# Create target output directory
+output_dir = os.path.join('instants', 'd')
+os.makedirs(output_dir, exist_ok=True)
 
 # Υποστήριξη ελληνικών στο terminal των Windows
 sys.stdout.reconfigure(encoding='utf-8')
@@ -70,7 +75,7 @@ def run_d1():
     plt.subplot(1, 2, 2)
     plot_diagrams(res_ben['dgms'], title="Benign - Persistence Diagram")
     plt.tight_layout()
-    plt.savefig("d1_persistence_diagrams.png")
+    plt.savefig(os.path.join(output_dir, "d1_persistence_diagrams.png"))
     plt.close()
     
     # Barcodes
@@ -89,9 +94,9 @@ def run_d1():
         plt.savefig(filename)
         plt.close()
         
-    plot_barcode(res_mal['dgms'], "Malignant - Barcode", "d1_barcode_malignant.png")
-    plot_barcode(res_ben['dgms'], "Benign - Barcode", "d1_barcode_benign.png")
-    print("   -> Αποθηκεύτηκαν τα διαγράμματα: d1_persistence_diagrams.png και d1_barcode_*.png")
+    plot_barcode(res_mal['dgms'], "Malignant - Barcode", os.path.join(output_dir, "d1_barcode_malignant.png"))
+    plot_barcode(res_ben['dgms'], "Benign - Barcode", os.path.join(output_dir, "d1_barcode_benign.png"))
+    print("   -> Αποθηκεύτηκαν τα διαγράμματα: instants/d/d1_persistence_diagrams.png και instants/d/d1_barcode_*.png")
     
     # 3. Εφαρμογή Mapper
     print("3. Δημιουργία διαδραστικού Mapper Graph (kmapper)...")
@@ -109,13 +114,13 @@ def run_d1():
     
     mapper.visualize(
         graph,
-        path_html="d1_mapper_graph.html",
+        path_html=os.path.join(output_dir, "d1_mapper_graph.html"),
         title="Breast Cancer - KeplerMapper",
         color_values=y,
         color_function_name="Class (0=Mal, 1=Ben)",
         custom_tooltips=tooltip_html
     )
-    print("   -> Αποθηκεύτηκε το γράφημα Mapper στο 'd1_mapper_graph.html'.")
+    print("   -> Αποθηκεύτηκε το γράφημα Mapper στο 'instants/d/d1_mapper_graph.html'.")
     
     # 4. TDA ως features -> ML Pipeline
     print("4. Εξαγωγή TDA features (Persistence Images) και εκπαίδευση Random Forest...")
@@ -222,7 +227,7 @@ def run_d2():
     print("   -> Δημιουργία διαδραστικού 3D γραφήματος με Plotly...")
     df_embedded = pd.DataFrame(X_embedded, columns=['Dim1', 'Dim2', 'Dim3'])
     fig_3d = px.scatter_3d(df_embedded, x='Dim1', y='Dim2', z='Dim3', title="S&P 500 3D Takens Embedding", opacity=0.7)
-    fig_3d.write_html("d2_sp500_3d_embedding.html")
+    fig_3d.write_html(os.path.join(output_dir, "d2_sp500_3d_embedding.html"))
     
     # Save static 3D plot using matplotlib for LaTeX report
     fig_static = plt.figure(figsize=(8, 6))
@@ -233,7 +238,7 @@ def run_d2():
     ax.set_ylabel("Dim 2")
     ax.set_zlabel("Dim 3")
     plt.tight_layout()
-    plt.savefig("d2_sp500_3d_embedding.png", dpi=150)
+    plt.savefig(os.path.join(output_dir, "d2_sp500_3d_embedding.png"), dpi=150)
     plt.close()
     
     # 3. Βαθιά σύγκριση με PCA, t-SNE, UMAP (χρήση Seaborn και Pandas)
@@ -265,9 +270,9 @@ def run_d2():
     
     plt.suptitle("Μείωση Διάστασης S&P 500")
     plt.tight_layout()
-    plt.savefig("d2_sp500_dim_reduction.png")
+    plt.savefig(os.path.join(output_dir, "d2_sp500_dim_reduction.png"))
     plt.close()
-    print("   -> Αποθηκεύτηκαν τα γραφήματα: 'd2_sp500_dim_reduction.png' (Seaborn) και 'd2_sp500_3d_embedding.html' (Plotly)")
+    print("   -> Αποθηκεύτηκαν τα γραφήματα: 'instants/d/d2_sp500_dim_reduction.png' (Seaborn) και 'instants/d/d2_sp500_3d_embedding.html' (Plotly)")
     
     # 4. Bootstrap Resampling (n=100, 80%) για CIs
     print("4. Bootstrap resampling (n=100) για διαστήματα εμπιστοσύνης (95%) της Persistent Entropy...")

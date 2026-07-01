@@ -4,6 +4,11 @@ from sklearn.datasets import make_blobs
 from scipy.spatial.distance import cdist
 import gudhi
 import plotly.graph_objects as go
+import os
+
+# Create target output directory
+output_dir = os.path.join('instants', 'a')
+os.makedirs(output_dir, exist_ok=True)
 
 # =============================================================================
 # Α.1—Νέφος Σημείων & Vietoris–Rips (from scratch)
@@ -216,8 +221,8 @@ def filtration_analysis(points):
     plt.title('Betti Numbers vs Filtration Radius')
     plt.legend()
     plt.grid(True)
-    plt.savefig('filtration_betti.png')
-    print("\nΤο γράφημα Betti numbers vs r αποθηκεύτηκε ως 'filtration_betti.png'")
+    plt.savefig(os.path.join(output_dir, 'filtration_betti.png'))
+    print("\nΤο γράφημα Betti numbers vs r αποθηκεύτηκε ως 'instants/a/filtration_betti.png'")
 
 def plot_complex_steps(points, r_vals):
     plt.figure(figsize=(15, 5))
@@ -233,8 +238,8 @@ def plot_complex_steps(points, r_vals):
                     plt.plot([points[i, 0], points[j, 0]], [points[i, 1], points[j, 1]], 'r-', alpha=0.3)
         plt.title(f'r = {r}')
         plt.axis('equal')
-    plt.savefig('complex_steps.png')
-    print("Τα στιγμιότυπα του συμπλέγματος αποθηκεύτηκαν ως 'complex_steps.png'")
+    plt.savefig(os.path.join(output_dir, 'complex_steps.png'))
+    print("Τα στιγμιότυπα του συμπλέγματος αποθηκεύτηκαν ως 'instants/a/complex_steps.png'")
 
 def visualize_complex_2d(points, edges, triangles, title):
     plt.figure(figsize=(8, 8))
@@ -249,8 +254,8 @@ def visualize_complex_2d(points, edges, triangles, title):
     plt.scatter(points[:, 0], points[:, 1], c='blue', s=30, zorder=3)
     plt.title(title)
     plt.axis('equal')
-    plt.savefig('complex_2d_colored.png')
-    print("Η 2D οπτικοποίηση αποθηκεύτηκε ως 'complex_2d_colored.png'")
+    plt.savefig(os.path.join(output_dir, 'complex_2d_colored.png'))
+    print("Η 2D οπτικοποίηση αποθηκεύτηκε ως 'instants/a/complex_2d_colored.png'")
 
 def visualize_complex_3d_plotly(points, edges, triangles, title):
     import plotly.graph_objects as go
@@ -294,8 +299,8 @@ def visualize_complex_3d_plotly(points, edges, triangles, title):
     
     fig = go.Figure(data=[trace_points, trace_edges, trace_triangles])
     fig.update_layout(title=title)
-    fig.write_html('complex_3d.html')
-    print("Η 3D οπτικοποίηση αποθηκεύτηκε ως 'complex_3d.html'")
+    fig.write_html(os.path.join(output_dir, 'complex_3d.html'))
+    print("Η 3D οπτικοποίηση αποθηκεύτηκε ως 'instants/a/complex_3d.html'")
 
 # =============================================================================
 # Main Execution
@@ -330,8 +335,8 @@ if __name__ == "__main__":
     ax4.set_title('Gaussian Clusters')
     ax4.axis('equal')
     
-    plt.savefig('point_clouds.png')
-    print("Τα νέφη σημείων αποθηκεύτηκαν ως 'point_clouds.png'")
+    plt.savefig(os.path.join(output_dir, 'point_clouds.png'))
+    print("Τα νέφη σημείων αποθηκεύτηκαν ως 'instants/a/point_clouds.png'")
     
     # Α.1 Έλεγχος From Scratch
     print("\n--- Α.1 From Scratch Έλεγχος (Κύκλος) ---")

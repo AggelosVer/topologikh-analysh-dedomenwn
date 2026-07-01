@@ -9,6 +9,11 @@ import sys
 # Υποστήριξη ελληνικών στο terminal των Windows
 sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings('ignore')
+import os
+
+# Create target output directory
+output_dir = os.path.join('instants', 'e')
+os.makedirs(output_dir, exist_ok=True)
 
 # =============================================================================
 # Ε.1 — Zigzag Persistent Homology
@@ -795,10 +800,10 @@ def run_e1():
     print(f"   Window size = {window_size}, step = {step}, emb_dim = {emb_dim}")
 
     # Οπτικοποίηση sliding windows
-    plot_sliding_windows(close_scaled, window_centers, window_size, "e1_sliding_windows.png")
-
-    # Σχηματικό διάγραμμα zigzag filtration
-    plot_zigzag_schematic(len(point_clouds), "e1_zigzag_schematic.png")
+    plot_sliding_windows(close_scaled, window_centers, window_size, os.path.join(output_dir, "e1_sliding_windows.png"))
+    
+    print("\n4. Εκτέλεση Zigzag Filtration...")
+    plot_zigzag_schematic(len(point_clouds), os.path.join(output_dir, "e1_zigzag_schematic.png"))
 
     # -------------------------------------------------------------------
     # 3. Υποδειγματοληψία & Προετοιμασία
@@ -857,7 +862,7 @@ def run_e1():
             print(f"   H{dim}: 0 intervals")
 
     # Οπτικοποίηση zigzag
-    plot_zigzag_diagram(intervals_zz, n_times, "e1_zigzag_persistence.png")
+    plot_zigzag_diagram(intervals_zz, n_times, os.path.join(output_dir, "e1_zigzag_persistence.png"))
 
     # -------------------------------------------------------------------
     # 5. Κλασική Persistent Homology (ανά παράθυρο)
@@ -868,7 +873,7 @@ def run_e1():
     # Κλασική PH στην ένωση
     print("   Κλασική PH στην ένωση...")
     union_dgms = classical_ph_on_union(reduced_clouds, max_radius)
-    plot_classical_diagram(union_dgms, "e1_classical_persistence.png", "(Ένωση S&P 500 Windows)")
+    plot_classical_diagram(union_dgms, os.path.join(output_dir, "e1_classical_persistence.png"), "(Ένωση S&P 500 Windows)")
 
     # -------------------------------------------------------------------
     # 6. Σύγκριση & Οπτικοποιήσεις
@@ -877,11 +882,11 @@ def run_e1():
 
     # Σύγκριση Betti curves
     plot_betti_comparison(betti_classical, betti_zigzag_seq, sampled_centers, n_times,
-                          "e1_betti_comparison.png")
+                          os.path.join(output_dir, "e1_betti_comparison.png"))
 
     # Συγκεντρωτικό γράφημα
     plot_persistence_summary(intervals_zz, betti_classical, betti_zigzag_seq, n_times,
-                             "e1_summary_comparison.png")
+                             os.path.join(output_dir, "e1_summary_comparison.png"))
 
     # -------------------------------------------------------------------
     # 7. Αποτελέσματα & Αναφορά
@@ -915,12 +920,12 @@ def run_e1():
     print(f"     Μέσος β₁: {mean_b1:.2f} ± {std_b1:.2f}")
 
     print(f"\n   Αποθηκεύτηκαν τα γραφήματα:")
-    print(f"     - e1_sliding_windows.png")
-    print(f"     - e1_zigzag_schematic.png")
-    print(f"     - e1_zigzag_persistence.png")
-    print(f"     - e1_classical_persistence.png")
-    print(f"     - e1_betti_comparison.png")
-    print(f"     - e1_summary_comparison.png")
+    print(f"     - instants/e/e1_sliding_windows.png")
+    print(f"     - instants/e/e1_zigzag_schematic.png")
+    print(f"     - instants/e/e1_zigzag_persistence.png")
+    print(f"     - instants/e/e1_classical_persistence.png")
+    print(f"     - instants/e/e1_betti_comparison.png")
+    print(f"     - instants/e/e1_summary_comparison.png")
 
 
 
@@ -1403,19 +1408,19 @@ def run_e2():
 
     # 5. Γραφήματα
     print('\n5. Δημιουργία γραφημάτων...')
-    plot_e2_training_curves(hist_b, hist_t, 'e2_training_curves.png')
+    plot_e2_training_curves(hist_b, hist_t, os.path.join(output_dir, 'e2_training_curves.png'))
     plot_e2_roc(y_test, auc_b, auc_t, fpr_b, tpr_b, fpr_t, tpr_t,
-                'e2_roc_curves.png')
+                os.path.join(output_dir, 'e2_roc_curves.png'))
     plot_e2_latent_spaces(X_test, y_test, mlp_b, mlp_t,
-                          'e2_latent_spaces.png')
+                          os.path.join(output_dir, 'e2_latent_spaces.png'))
     plot_e2_persistence_diagrams(X_test, mlp_b, mlp_t,
-                                 'e2_persistence_diagrams.png')
+                                 os.path.join(output_dir, 'e2_persistence_diagrams.png'))
 
     print('\n   Γραφήματα αποθηκεύτηκαν:')
-    print('     - e2_training_curves.png')
-    print('     - e2_roc_curves.png')
-    print('     - e2_latent_spaces.png')
-    print('     - e2_persistence_diagrams.png')
+    print('     - instants/e/e2_training_curves.png')
+    print('     - instants/e/e2_roc_curves.png')
+    print('     - instants/e/e2_latent_spaces.png')
+    print('     - instants/e/e2_persistence_diagrams.png')
 
     return {
         'acc_base': acc_b, 'auc_base': auc_b,

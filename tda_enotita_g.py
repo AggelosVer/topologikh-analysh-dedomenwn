@@ -9,6 +9,11 @@ import itertools
 import kmapper as km
 import warnings
 import sys
+import os
+
+# Create target output directory
+output_dir = os.path.join('instants', 'c')
+os.makedirs(output_dir, exist_ok=True)
 
 # Υποστήριξη ελληνικών στο terminal των Windows
 sys.stdout.reconfigure(encoding='utf-8')
@@ -222,7 +227,7 @@ def run_g2():
             # --- Custom Mapper ---
             custom_mapper = CustomMapper(n_intervals=10, overlap_frac=0.3, clustering_algo=clustering)
             G_custom = custom_mapper.fit(X, f_val)
-            visualize_mapper_nx(G_custom, f"{ds_name} - {f_name} (Custom Mapper)", f"g2_{ds_name.lower().replace('-','_')}_{f_name.lower().replace(' ','_')}_custom.png")
+            visualize_mapper_nx(G_custom, f"{ds_name} - {f_name} (Custom Mapper)", os.path.join(output_dir, f"g2_{ds_name.lower().replace('-','_')}_{f_name.lower().replace(' ','_')}_custom.png"))
             
             # --- kmapper verification ---
             mapper = km.KeplerMapper(verbose=0)
@@ -231,9 +236,9 @@ def run_g2():
                 cover=km.Cover(n_cubes=10, perc_overlap=0.3),
                 clusterer=clustering
             )
-            html_filename = f"g2_{ds_name.lower().replace('-','_')}_{f_name.lower().replace(' ','_')}_kmapper.html"
+            html_filename = os.path.join(output_dir, f"g2_{ds_name.lower().replace('-','_')}_{f_name.lower().replace(' ','_')}_kmapper.html")
             mapper.visualize(graph, path_html=html_filename, title=f"{ds_name} - {f_name} (kmapper)")
-            print(f"    Αποθηκεύτηκαν τα γραφήματα (Custom Image & kmapper HTML)")
+            print(f"    Αποθηκεύτηκαν τα γραφήματα (Custom Image: instants/c/g2_..._custom.png & kmapper HTML: instants/c/g2_..._kmapper.html)")
 
 def sensitivity_analysis():
     print("\n--- Γ.2: Sensitivity Analysis ---")
@@ -264,9 +269,9 @@ def sensitivity_analysis():
     plt.xlabel("Overlap Fraction")
     plt.ylabel("Number of Intervals")
     plt.title("Sensitivity Analysis: Number of Connected Components\n(Figure-8, PCA Filter)")
-    plt.savefig("g2_sensitivity_heatmap.png")
+    plt.savefig(os.path.join(output_dir, "g2_sensitivity_heatmap.png"))
     plt.close()
-    print("Αποθηκεύτηκε: g2_sensitivity_heatmap.png")
+    print("Αποθηκεύτηκε: instants/c/g2_sensitivity_heatmap.png")
 
 if __name__ == "__main__":
     run_g2()

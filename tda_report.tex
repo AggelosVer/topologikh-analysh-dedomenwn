@@ -113,7 +113,24 @@
 \subsection{Αιτιολόγηση Επιλογών}
 \vspace{1em}
 
-Η επιλογή της \foreignlanguage{english}{GUDHI} έγινε λόγω της πληρότητάς της σε διάφορα είδη συμπλεγμάτων (\foreignlanguage{english}{Alpha Complex}, \foreignlanguage{english}{Cech Complex} κ.λπ.), ενώ η \foreignlanguage{english}{Ripser} επιλέχθηκε για την ταχύτητά της στον υπολογισμό του $H_1$. Ο αλγόριθμος \foreignlanguage{english}{Mapper} υλοποιήθηκε τόσο εκ του μηδενός (για βαθύτερη κατανόηση) όσο και μέσω της βιβλιοθήκης \foreignlanguage{english}{\texttt{kmapper}} για επαλήθευση των αποτελεσμάτων.
+Η επιλογή των εργαλείων και των υλοποιήσεων έγινε με γνώμονα τόσο την υπολογιστική αποδοτικότητα όσο και τη βαθύτερη θεωρητική και πρακτική κατανόηση των αλγορίθμων της Τοπολογικής Ανάλυσης Δεδομένων (\en{TDA}). Αναλυτικότερα:
+
+\begin{itemize}
+    \item \textbf{Βιβλιοθήκη \en{GUDHI}}: Επιλέχθηκε ως η κύρια βιβλιοθήκη για την κατασκευή και ανάλυση γεωμετρικών συμπλεγμάτων. Η \en{GUDHI} είναι γραμμένη σε \en{C++} (με βάση τη βιβλιοθήκη \en{CGAL}) και παρέχει εξαιρετικά αποδοτικές υλοποιήσεις για συμπλέγματα που βασίζονται σε \en{Delaunay} τριγωνοποιήσεις, όπως το \en{Alpha Complex}. Το \en{Alpha Complex} είναι τοπολογικά ισοδύναμο με το \en{Cech Complex} (μέσω του \en{Nerve Theorem}), αλλά περιέχει δραματικά λιγότερα απλόπλοκα, καθιστώντας τον υπολογισμό σε υψηλές διαστάσεις υπολογιστικά εφικτό.
+    
+    \item \textbf{Βιβλιοθήκη \en{Ripser}}: Χρησιμοποιήθηκε για τον υπολογισμό της κλασικής επίμονης ομολογίας σε \en{point clouds} (Ερωτήματα Β και Δ). Η \en{Ripser} αποτελεί το \en{state-of-the-art} εργαλείο για τον υπολογισμό \en{Vietoris--Rips} συμπλεγμάτων, καθώς χρησιμοποιεί προχωρημένες τεχνικές βελτιστοποίησης, όπως η αναπαράσταση αραιών πινάκων (\en{sparse matrices}), η τεχνική εκκαθάρισης (\en{clearing}) και η αποφυγή κατασκευής συμπλεγμάτων για διαστάσεις μεγαλύτερες από τις απαιτούμενες. Αυτό επιτρέπει τον υπολογισμό της $H_1$ ομολογίας σε ελάχιστα δευτερόλεπτα.
+    
+    \item \textbf{Βιβλιοθήκες \en{Persim} \& \en{KeplerMapper} (\en{kmapper})}: Η \en{Persim} επιλέχθηκε για την οπτικοποίηση των \en{persistence diagrams} και \en{barcodes}, καθώς και για τον υπολογισμό των αποστάσεων \en{Bottleneck} και \en{Wasserstein}, οι οποίες ορίζονται μέσω βέλτιστου ταιριάσματος (\en{optimal matching}) μεταξύ διαγραμμάτων εμμονής. Η \en{KeplerMapper} χρησιμοποιήθηκε για την κατασκευή και οπτικοποίηση των \en{Mapper graphs}, επιτρέποντας την εύκολη παραγωγή διαδραστικών \en{HTML} γραφημάτων με πλούσια πληροφορία.
+    
+    \item \textbf{Βιβλιοθήκη \en{Giotto-TDA} (\en{gtda})}: Επιλέχθηκε για την ανάλυση χρονοσειρών (\en{S\&P 500}) στο Ερώτημα Δ, καθώς προσφέρει έτοιμους μετασχηματιστές συμβατούς με το \en{scikit-learn pipeline} για το \en{Takens Embedding} (ανακατασκευή χώρου φάσεων) και τον υπολογισμό της \en{Persistent Entropy}.
+    
+    \item \textbf{Υλοποιήσεις εκ του μηδενός (\en{from scratch})}:
+    \begin{itemize}
+        \item \textit{\en{Vietoris--Rips} \& \en{Homology} (Ερώτημα Α)}: Η κατασκευή των πινάκων συνοριακών απεικονίσεων $\partial_1, \partial_2$ και ο υπολογισμός των \en{Betti} αριθμών μέσω απαλοιφής \en{Gauss} στο σώμα $\mathbb{Z}_2$ (\en{GF(2)}) υλοποιήθηκαν από το μηδέν για την πλήρη κατανόηση της γραμμικής άλγεβρας πίσω από την ομολογία.
+        \item \textit{\en{Custom} \en{Mapper} (Ερώτημα Γ)}: Η χειροκίνητη υλοποίηση του αλγορίθμου (διαμέριση σε διαστήματα, εύρεση επικαλύψεων, \en{clustering} με \en{DBSCAN} και κατασκευή του γραφήματος συνδεσιμότητας) έγινε για την κατανόηση της ευαισθησίας του αλγορίθμου στις παραμέτρους κάλυψης.
+        \item \textit{\en{Topological Loss} (Ερώτημα Ε)}: Η υλοποίηση του \en{regularizer} επίμονης ομολογίας $H_0$ και ο υπολογισμός των αναλυτικών παραγώγων της απόστασης των \en{persistence pairs} ως προς τις ενεργοποιήσεις του \en{latent space} (χρησιμοποιώντας \en{Union-Find} δομές) έγινε αποκλειστικά σε \en{NumPy}, αποδεικνύοντας πώς η τοπολογία μπορεί να ενσωματωθεί άμεσα στην εκπαίδευση νευρωνικών δικτύων χωρίς εξωτερικά εργαλεία αυτόματης διαφοροποίησης.
+    \end{itemize}
+\end{itemize}
 
 \newpage
 \section{\texorpdfstring{\underline{Αποτελέσματα \& Ανάλυση}}{Αποτελέσματα \& Ανάλυση}}
@@ -156,7 +173,7 @@ for i in range(n):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{point_clouds.png}}
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{instants/a/point_clouds.png}}
 \caption{Τα 4 παραγόμενα νέφη σημείων. Παρατηρούμε τις διαφορετικές τοπολογικές δομές (κύκλος, τόρος, σφαίρα).}
 \end{figure}
 
@@ -182,7 +199,7 @@ for i in range(n):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{complex_2d_colored.png}}
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{instants/a/complex_2d_colored.png}}
 \caption{Οπτικοποίηση του \foreignlanguage{english}{VR Complex}. Τα σημεία είναι μπλε, οι ακμές κόκκινες και τα τρίγωνα πράσινα.}
 \end{figure}
 
@@ -195,13 +212,13 @@ for i in range(n):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\texttt{\includegraphics[width=0.6\textwidth]{filtration_betti.png}}}
+\foreignlanguage{english}{\texttt{\includegraphics[width=0.6\textwidth]{instants/a/filtration_betti.png}}}
 \caption{Διάγραμμα αριθμών \foreignlanguage{english}{Betti}. Στο $r=0.2$ εμφανίζεται ο $\beta_1=1$.}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{complex_steps.png}}
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{instants/a/complex_steps.png}}
 \caption{Στιγμιότυπα της κατασκευής του συμπλέγματος για διάφορες τιμές του $r$.}
 \end{figure}
 
@@ -214,8 +231,8 @@ for i in range(n):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{complex_3d_persp1.png}}
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{complex_3d_persp2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/a/complex_3d_persp1.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/a/complex_3d_persp2.png}}
 \caption{Οπτικοποίηση του συμπλέγματος σε 3 διαστάσεις (\foreignlanguage{english}{3D}) για τον Τόρο από δύο διαφορετικές οπτικές γωνίες.}
 \end{figure}
 
@@ -248,15 +265,15 @@ diagrams = result['dgms']
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Random_R2.png}}
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Noisy_Circle.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/b/b1_Random_R2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/b/b1_Noisy_Circle.png}}
 \caption{\foreignlanguage{english}{Persistence Diagrams} για Τυχαία Σημεία και Θορυβώδη Κύκλο.}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Torus_T2.png}}
-\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{b1_Sphere_S2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/b/b1_Torus_T2.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/b/b1_Sphere_S2.png}}
 \caption{\foreignlanguage{english}{Persistence Diagrams} για Τόρο και Σφαίρα.}
 \end{figure}
 
@@ -269,7 +286,7 @@ diagrams = result['dgms']
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{b2_robustness.png}}
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{instants/b/b2_robustness.png}}
 \caption{Επίδραση του θορύβου στις αποστάσεις \foreignlanguage{english}{Bottleneck} και \foreignlanguage{english}{Wasserstein}.}
 \end{figure}
 
@@ -282,13 +299,13 @@ diagrams = result['dgms']
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{b3_persistence_diagrams_comparison.png}}
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{instants/b/b3_persistence_diagrams_comparison.png}}
 \caption{Σύγκριση \foreignlanguage{english}{Persistence Diagrams} για γράφους.}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{b3_persistence_images.png}}
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{instants/b/b3_persistence_images.png}}
 \caption{\foreignlanguage{english}{Persistence Images} για τους γράφους.}
 \end{figure}
 
@@ -327,9 +344,9 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_pca_1st_component_custom.png}}
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_l2-norm_custom.png}}
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_figure_8_density_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_pca_1st_component_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_l2-norm_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_density_custom.png}}
 \caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Figure-8} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
 \end{figure}
 
@@ -340,9 +357,9 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_pca_1st_component_custom.png}}
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_l2-norm_custom.png}}
-\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{g2_horse_shoe_density_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_pca_1st_component_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_l2-norm_custom.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_density_custom.png}}
 \caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Horse-shoe} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
 \end{figure}
 
@@ -353,7 +370,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{g2_sensitivity_heatmap.png}}
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{instants/c/g2_sensitivity_heatmap.png}}
 \caption{Ανάλυση ευαισθησίας: Αριθμός συνεκτικών συνιστωσών συναρτήσει των παραμέτρων.}
 \end{figure}
 
@@ -378,14 +395,14 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{d1_persistence_diagrams.png}}
+\foreignlanguage{english}{\includegraphics[width=0.8\textwidth]{instants/d/d1_persistence_diagrams.png}}
 \caption{\foreignlanguage{english}{Persistence Diagrams} για την κλάση \foreignlanguage{english}{Malignant} (αριστερά) και \foreignlanguage{english}{Benign} (δεξιά).}
 \end{figure}
 
 Παρατηρούμε ότι οι δύο κλάσεις παρουσιάζουν διαφορές στην τοπολογική τους δομή. Η κλάση των καλοήθων δειγμάτων εμφανίζει πιο διάσπαρτα και μακρόβια χαρακτηριστικά $H_1$ (τρύπες) σε σχέση με την κλάση των κακοήθων, πράγμα που υποδηλώνει μια πιο σύνθετη και «ανοιχτή» γεωμετρική διάταξη στο χώρο των κύριων συνιστωσών.
 
 \textbf{3. Εφαρμογή \foreignlanguage{english}{Mapper}:}
-Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 επικαλυπτόμενα διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση, και εφαρμόστηκε ο αλγόριθμος \foreignlanguage{english}{DBSCAN} (με \foreignlanguage{english}{\texttt{eps=2.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}) για το \foreignlanguage{english}{clustering} των σημείων. Το διαδραστικό γράφημα \foreignlanguage{english}{Mapper} αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{d1\_mapper\_graph.html}}. Το γράφημα αναδεικνύει τον διαχωρισμό των κλάσεων σε διαφορετικές περιοχές (\foreignlanguage{english}{branches}) του γραφήματος, με μια περιοχή μετάβασης όπου συνυπάρχουν καλοήθη και κακοήθη δείγματα.
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 επικαλυπτόμενα διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση, και εφαρμόστηκε ο αλγόριθμος \foreignlanguage{english}{DBSCAN} (με \foreignlanguage{english}{\texttt{eps=2.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}) για το \foreignlanguage{english}{clustering} των σημείων. Το διαδραστικό γράφημα \foreignlanguage{english}{Mapper} αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d1\_mapper \\ \_graph.html}}. Το γράφημα αναδεικνύει τον διαχωρισμό των κλάσεων σε διαφορετικές περιοχές (\foreignlanguage{english}{branches}) του γραφήματος, με μια περιοχή μετάβασης όπου συνυπάρχουν καλοήθη και κακοήθη δείγματα.
 
 \textbf{4. \foreignlanguage{english}{TDA} ως Χαρακτηριστικά (\foreignlanguage{english}{Features}) για Μηχανική Μάθηση:}
 Για να χρησιμοποιήσουμε την τοπολογική πληροφορία σε ταξινόμηση, μετατρέψαμε το διάνυσμα χαρακτηριστικών κάθε ασθενούς (30 τιμές) σε χρονοσειρά / \foreignlanguage{english}{point cloud} μέσω της μεθόδου \foreignlanguage{english}{Takens Embedding} (με διάσταση 3 και καθυστέρηση 1).
@@ -420,11 +437,11 @@ for int_idx, interval_bounds in enumerate(intervals):
 Επειδή η διάσταση του \foreignlanguage{english}{point cloud} είναι $d \ge 3$, υπολογίστηκε η ομολογία διάστασης 2 ($H_2$). Χρησιμοποιήθηκε το \foreignlanguage{english}{\texttt{AlphaComplex}} της βιβλιοθήκης \foreignlanguage{english}{GUDHI} για την επαλήθευση. Οι αριθμοί \foreignlanguage{english}{Betti} που προέκυψαν ήταν $\beta = [1, 0, 0]$, γεγονός που δείχνει ότι το σύμπλεγμα είναι τοπολογικά ισοδύναμο με ένα μόνο σημείο (συνεκτικό σύμπλεγμα χωρίς 1-κύκλους ή 2-κοιλότητες στην τελική κλίμακα), επιβεβαιώνοντας ότι το \foreignlanguage{english}{Takens Embedding} της χρηματοοικονομικής χρονοσειράς δεν σχηματίζει κλειστές σφαιρικές κοιλότητες ($H_2 = 0$).
 
 \textbf{3. Οπτικοποίηση και Μείωση Διάστασης:}
-Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα στο Σχήμα \ref{fig:d2_3d_embedding}.
+Η \foreignlanguage{english}{3D} τροχιά του \foreignlanguage{english}{Takens Embedding} οπτικοποιήθηκε σε διαδραστικό γράφημα \foreignlanguage{english}{Plotly} (\foreignlanguage{english}{\texttt{instants/d/d2\_sp500\_3d\_embedding.html}}). Επιπλέον, το \foreignlanguage{english}{3D point cloud} οπτικοποιήθηκε και σε στατικό τρισδιάστατο γράφημα στο Σχήμα \ref{fig:d2_3d_embedding}.
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{d2_sp500_3d_embedding.png}}
+\foreignlanguage{english}{\includegraphics[width=0.6\textwidth]{instants/d/d2_sp500_3d_embedding.png}}
 \caption{Τρισδιάστατη τροχιά του \foreignlanguage{english}{Takens Embedding} ($d=3, \tau=1$) για τη χρονοσειρά \foreignlanguage{english}{S\&P 500}.}
 \label{fig:d2_3d_embedding}
 \end{figure}
@@ -433,7 +450,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{d2_sp500_dim_reduction.png}}
+\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{instants/d/d2_sp500_dim_reduction.png}}
 \caption{Σύγκριση μείωσης διάστασης του \foreignlanguage{english}{3D Takens Embedding} του \foreignlanguage{english}{S\&P 500} με \foreignlanguage{english}{PCA}, \foreignlanguage{english}{t-SNE} και \foreignlanguage{english}{UMAP}.}
 \label{fig:d2_dim_reduction}
 \end{figure}
@@ -479,7 +496,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.85\textwidth]{e1_sliding_windows.png}}
+\foreignlanguage{english}{\includegraphics[width=0.85\textwidth]{instants/e/e1_sliding_windows.png}}
 \caption{\en{Sliding windows} στη χρονοσειρά \en{S\&P 500} που χρησιμοποιήθηκαν για την κατασκευή των \en{point clouds}.}
 \label{fig:e1_sliding_windows}
 \end{figure}
@@ -492,7 +509,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 
 \begin{figure}[H]
 \centering
-\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{e1_summary_comparison.png}}
+\foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{instants/e/e1_summary_comparison.png}}
 \caption{Συγκεντρωτικό διάγραμμα σύγκρισης: \en{Zigzag Persistence Diagram} (πάνω αριστερά), \en{Zigzag Barcode} (πάνω δεξιά) και εξέλιξη των \en{Betti} αριθμών $\beta_0$ (κάτω αριστερά) και $\beta_1$ (κάτω δεξιά) σε σύγκριση με την κλασική \en{PH}.}
 \label{fig:e1_summary_comparison}
 \end{figure}
@@ -535,14 +552,14 @@ for int_idx, interval_bounds in enumerate(intervals):
 \centering
 \begin{minipage}{0.48\textwidth}
     \centering
-    \foreignlanguage{english}{\includegraphics[width=\textwidth]{e2_training_curves.png}}
+    \foreignlanguage{english}{\includegraphics[width=\textwidth]{instants/e/e2_training_curves.png}}
     \caption{\en{Training curves} του \en{Validation} και εξέλιξη του \en{Topological Loss}.}
     \label{fig:e2_curves}
 \end{minipage}
 \hfill
 \begin{minipage}{0.48\textwidth}
     \centering
-    \foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{e2_roc_curves.png}}
+    \foreignlanguage{english}{\includegraphics[width=0.9\textwidth]{instants/e/e2_roc_curves.png}}
     \caption{\en{ROC curves} των μοντέλων στο \en{Test Set}.}
     \label{fig:e2_roc}
 \end{minipage}
@@ -552,14 +569,14 @@ for int_idx, interval_bounds in enumerate(intervals):
 \centering
 \begin{minipage}{0.48\textwidth}
     \centering
-    \foreignlanguage{english}{\includegraphics[width=\textwidth]{e2_latent_spaces.png}}
+    \foreignlanguage{english}{\includegraphics[width=\textwidth]{instants/e/e2_latent_spaces.png}}
     \caption{\en{PCA 2D} προβολή του τελευταίου \en{hidden layer} (\en{Malignant} κόκκινο, \en{Benign} μπλε).}
     \label{fig:e2_latent}
 \end{minipage}
 \hfill
 \begin{minipage}{0.48\textwidth}
     \centering
-    \foreignlanguage{english}{\includegraphics[width=\textwidth]{e2_persistence_diagrams.png}}
+    \foreignlanguage{english}{\includegraphics[width=\textwidth]{instants/e/e2_persistence_diagrams.png}}
     \caption{\en{$H_0$ Persistence Diagrams} των αντίστοιχων \en{latent spaces}.}
     \label{fig:e2_pd}
 \end{minipage}
