@@ -44,7 +44,7 @@
     \vspace{0.5cm}
     
     {\large Πανεπιστημιούπολη Ρίου $\cdot$ Πολυτεχνική Σχολή} \\
-    {\large Τμήμα Μηχανικών Η/Υ \& Πληροφορικής (\foreignlanguage{english}{ΤΜΗΥΠ} -- \foreignlanguage{english}{CEID})} \\
+    {\large Τμήμα Μηχανικών Η/Υ \& Πληροφορικής (ΤΜΗΥΠ -- \foreignlanguage{english}{CEID})} \\
     
     \vspace{2cm}
     
@@ -461,7 +461,10 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item Το \foreignlanguage{english}{UMAP} διατηρεί καλύτερα τη συνέχεια της τροχιάς της χρονοσειράς, αναδεικνύοντας τη δομή «νήματος» (\foreignlanguage{english}{filament structure}) των τιμών.
 \end{itemize}
 
-\textbf{4. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
+\textbf{5. Εφαρμογή \foreignlanguage{english}{Mapper}:}
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} για τις 3D Takens αναπαραστάσεις της χρηματοοικονομικής χρονοσειράς χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση και εφαρμόστηκε ο \foreignlanguage{english}{DBSCAN} με \foreignlanguage{english}{\texttt{eps=0.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}. Το διαδραστικό γράφημα αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d2\_sp500\_mapper\_graph.html}} και χρωματίστηκε βάσει της χρονικής σειράς (Day), αναδεικνύοντας τη χρονική εξέλιξη της τροχιάς των τιμών.
+
+\textbf{6. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
 Για να ελέγξουμε τη σταθερότητα της επίμονης εντροπίας, εφαρμόστηκε \foreignlanguage{english}{bootstrap resampling} ($n=100$) με τυχαία επιλογή του 80\% των σημείων με επανατοποθέτηση. Τα 95\% διαστήματα εμπιστοσύνης για την επίμονη εντροπία είναι:
 \begin{itemize}
     \item \textbf{$H_0$}: \foreignlanguage{english}{Mean} = 1.7014, 95\% \foreignlanguage{english}{CI} = $[1.6596, 1.7349]$
