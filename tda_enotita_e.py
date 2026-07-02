@@ -15,17 +15,10 @@ import os
 output_dir = os.path.join('instants', 'e')
 os.makedirs(output_dir, exist_ok=True)
 
-# =============================================================================
-# Ε.1 — Zigzag Persistent Homology
-# =============================================================================
-# Zigzag filtration από χρονοσειρά (sliding window) εφαρμοσμένο στα δεδομένα
-# Ενότητας Δ (S&P 500). Υπολογισμός zigzag persistent homology.
-# Σύγκριση & σχολιασμός διαφορών από κλασική επίμονη ομολογία.
-# =============================================================================
 
+# Ε.1 — Zigzag Persistent Homology
 
 def takens_embedding(x, delay=1, dimension=3):
-    """Μετατρέπει μια 1D χρονοσειρά σε point cloud μέσω Takens Embedding."""
     N = len(x)
     embedded = []
     for i in range(N - (dimension - 1) * delay):
@@ -35,30 +28,6 @@ def takens_embedding(x, delay=1, dimension=3):
 
 
 def sliding_window_point_clouds(time_series, window_size=50, step=25, emb_dim=3, emb_delay=1):
-    """
-    Δημιουργεί μια ακολουθία point clouds από χρονοσειρά μέσω sliding window
-    και Takens embedding.
-
-    Parameters
-    ----------
-    time_series : array-like
-        Η 1D χρονοσειρά.
-    window_size : int
-        Μέγεθος κάθε παραθύρου.
-    step : int
-        Βήμα ολίσθησης μεταξύ διαδοχικών παραθύρων.
-    emb_dim : int
-        Διάσταση Takens embedding.
-    emb_delay : int
-        Καθυστέρηση (delay) του Takens embedding.
-
-    Returns
-    -------
-    windows : list of np.array
-        Λίστα point clouds, κάθε ένα σχήμα (n_points, emb_dim).
-    window_centers : list of int
-        Κέντρα (μέσα indices) κάθε παραθύρου.
-    """
     windows = []
     window_centers = []
     N = len(time_series)
@@ -73,31 +42,9 @@ def sliding_window_point_clouds(time_series, window_size=50, step=25, emb_dim=3,
     return windows, window_centers
 
 
-# =============================================================================
 # Zigzag Persistent Homology — Υλοποίηση από το Μηδέν
-# =============================================================================
-# Η zigzag filtration κατασκευάζεται ως:
-#   K_0 ↪ K_0∪K_1 ↩ K_1 ↪ K_1∪K_2 ↩ K_2 ↪ ...
-# όπου τα βέλη αντιπροσωπεύουν inclusions.
-#
-# Αυτή η υλοποίηση χρησιμοποιεί τη μέθοδο "στιγμιαίων Betti αριθμών"
-# (instantaneous Betti numbers) μέσω boundary matrix στα αντίστοιχα
-# Rips complexes ανά χρονικό βήμα, και στη συνέχεια εκτιμά τα zigzag
-# persistence intervals παρακολουθώντας τα births/deaths χαρακτηριστικών
-# μεταξύ διαδοχικών βημάτων.
-# =============================================================================
-
 
 def build_rips_simplices(points, max_radius):
-    """
-    Κατασκευάζει Rips complex (0, 1, 2-simplices) για δοθέν point cloud.
-
-    Returns
-    -------
-    vertices : set of ints
-    edges : set of frozensets
-    triangles : set of frozensets
-    """
     n = len(points)
     dist_matrix = squareform(pdist(points))
 
@@ -123,16 +70,6 @@ def build_rips_simplices(points, max_radius):
 
 
 def compute_betti_numbers(n_vertices, edges, triangles):
-    """
-    Υπολογίζει τους αριθμούς Betti β₀ και β₁ μέσω πίνακα συνόρων.
-
-    β₀ = dim(ker ∂₁) = n_vertices - rank(∂₁)
-    β₁ = dim(ker ∂₂) - dim(im ∂₁) = (n_edges - rank(∂₂)) - rank(∂₁)
-         Ή ισοδύναμα: β₁ = n_edges - rank(∂₁) - rank(∂₂)
-         (Αυτό ισχύει αν: β₁ = nullity(∂₁) - rank(∂₂) = (n_edges - rank(∂₁)) - rank(∂₂))
-
-    Χρησιμοποιούμε GF(2) (mod 2) αριθμητική.
-    """
     edges_list = list(edges)
     triangles_list = list(triangles)
     n_edges = len(edges_list)
@@ -176,7 +113,6 @@ def compute_betti_numbers(n_vertices, edges, triangles):
 
 
 def _gf2_rank(matrix):
-    """Υπολογίζει τον βαθμό (rank) πίνακα πάνω από GF(2) μέσω Gaussian elimination."""
     M = matrix.copy() % 2
     rows, cols = M.shape
     rank = 0
@@ -200,23 +136,6 @@ def _gf2_rank(matrix):
 
 
 def zigzag_persistence_from_betti(betti_sequence):
-    """
-    Εξάγει zigzag persistence intervals παρακολουθώντας πώς αλλάζουν
-    οι αριθμοί Betti μεταξύ διαδοχικών βημάτων της zigzag filtration.
-
-    Όταν ο β_k αυξάνεται → birth ενός νέου k-χαρακτηριστικού
-    Όταν ο β_k μειώνεται → death ενός k-χαρακτηριστικού
-
-    Parameters
-    ----------
-    betti_sequence : list of (β₀, β₁)
-        Ακολουθία Betti αριθμών ανά χρονικό βήμα.
-
-    Returns
-    -------
-    intervals : list of (birth, death, dim)
-        Zigzag persistence intervals.
-    """
     intervals = []
 
     for dim in range(2):  # H0, H1
@@ -247,26 +166,6 @@ def zigzag_persistence_from_betti(betti_sequence):
 
 
 def run_zigzag_filtration(point_clouds, max_radius):
-    """
-    Εκτελεί zigzag filtration:
-      K_0 ↪ K_0∪K_1 ↩ K_1 ↪ K_1∪K_2 ↩ K_2 ↪ ...
-
-    Υπολογίζει τους Betti αριθμούς σε κάθε βήμα και εξάγει
-    zigzag persistence intervals.
-
-    Parameters
-    ----------
-    point_clouds : list of np.ndarray
-        Ακολουθία point clouds.
-    max_radius : float
-        Μέγιστη ακτίνα Rips.
-
-    Returns
-    -------
-    intervals : list of (birth, death, dim)
-    betti_sequence : list of (β₀, β₁)
-    n_times : int
-    """
     n_clouds = len(point_clouds)
     n_times = 2 * n_clouds - 1
     betti_sequence = []
@@ -298,14 +197,6 @@ def run_zigzag_filtration(point_clouds, max_radius):
 
 
 def classical_ph_per_window(point_clouds, max_radius):
-    """
-    Υπολογίζει κλασική persistent homology ανά παράθυρο.
-    Χρησιμοποιεί ripser αν είναι διαθέσιμο, αλλιώς gudhi, αλλιώς from scratch.
-
-    Returns
-    -------
-    betti_per_window : list of (β₀, β₁)
-    """
     betti_per_window = []
 
     # Δοκιμάζουμε ripser πρώτα
@@ -347,14 +238,6 @@ def classical_ph_per_window(point_clouds, max_radius):
 
 
 def classical_ph_on_union(point_clouds, max_radius):
-    """
-    Κλασική PH στην ένωση όλων των point clouds.
-
-    Returns
-    -------
-    dgms : list of np.arrays ή None
-    betti : (β₀, β₁)
-    """
     all_points = np.vstack(point_clouds)
 
     # Υποδειγματοληψία αν πολύ μεγάλο
@@ -389,15 +272,11 @@ def classical_ph_on_union(point_clouds, max_radius):
     return [np.array([[0, np.inf]] * b0), np.array([[0, max_radius]] * b1)]
 
 
-# =============================================================================
+
 # Οπτικοποιήσεις
-# =============================================================================
 
 
 def plot_zigzag_diagram(intervals, n_times, filename):
-    """
-    Οπτικοποιεί το zigzag persistence diagram (scatter + barcode).
-    """
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
     colors = {0: '#2980b9', 1: '#e67e22', 2: '#27ae60'}
@@ -449,9 +328,6 @@ def plot_zigzag_diagram(intervals, n_times, filename):
 
 
 def plot_classical_diagram(dgms, filename, title_suffix=""):
-    """
-    Οπτικοποιεί κλασικό persistence diagram.
-    """
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
     colors = ['#2980b9', '#e67e22', '#27ae60']
@@ -522,9 +398,6 @@ def plot_classical_diagram(dgms, filename, title_suffix=""):
 
 
 def plot_betti_comparison(betti_classical, betti_zigzag_seq, window_centers, n_times, filename):
-    """
-    Συγκρίνει αριθμούς Betti μεταξύ κλασικής PH (ανά window) και zigzag.
-    """
     fig, axes = plt.subplots(2, 1, figsize=(14, 8), sharex=False)
 
     # H0
@@ -566,9 +439,6 @@ def plot_betti_comparison(betti_classical, betti_zigzag_seq, window_centers, n_t
 
 
 def plot_zigzag_schematic(n_windows, filename):
-    """
-    Σχεδιάζει σχηματικό διάγραμμα zigzag filtration.
-    """
     fig, ax = plt.subplots(figsize=(min(16, 2 + 2.5 * min(n_windows, 5)), 3.5))
 
     n_show = min(n_windows, 5)
@@ -641,9 +511,6 @@ def plot_zigzag_schematic(n_windows, filename):
 
 
 def plot_sliding_windows(time_series, window_centers, window_size, filename, max_show=6):
-    """
-    Οπτικοποιεί τα sliding windows πάνω στη χρονοσειρά.
-    """
     fig, ax = plt.subplots(figsize=(14, 5))
 
     ax.plot(time_series, 'k-', alpha=0.6, linewidth=0.8, label='Χρονοσειρά S&P 500')
@@ -674,9 +541,6 @@ def plot_sliding_windows(time_series, window_centers, window_size, filename, max
 
 
 def plot_persistence_summary(intervals_zz, betti_classical, betti_zigzag_seq, n_times, filename):
-    """
-    Δημιουργεί ένα συγκεντρωτικό γράφημα σύγκρισης.
-    """
     fig, axes = plt.subplots(2, 2, figsize=(16, 10))
 
     colors_dim = {0: '#2980b9', 1: '#e67e22'}
@@ -750,20 +614,12 @@ def plot_persistence_summary(intervals_zz, betti_classical, betti_zigzag_seq, n_
 
 
 def run_e1():
-    """
-    Ε.1 — Zigzag Persistent Homology
-
-    Εφαρμόζει zigzag filtration μέσω sliding window στα δεδομένα S&P 500
-    (Ενότητα Δ.2), υπολογίζει zigzag persistent homology,
-    και συγκρίνει με κλασική persistent homology.
-    """
     print("=" * 70)
     print("Ε.1 — Zigzag Persistent Homology")
     print("=" * 70)
 
-    # -------------------------------------------------------------------
-    # 1. Φόρτωση δεδομένων S&P 500 (ίδια πηγή με Ενότητα Δ.2)
-    # -------------------------------------------------------------------
+    # 1. Φόρτωση δεδομένων S&P 500 
+
     print("\n1. Φόρτωση δεδομένων S&P 500...")
     try:
         import yfinance as yf
@@ -782,9 +638,8 @@ def run_e1():
     scaler = StandardScaler()
     close_scaled = scaler.fit_transform(close_prices.reshape(-1, 1)).flatten()
 
-    # -------------------------------------------------------------------
     # 2. Δημιουργία Sliding Window Point Clouds
-    # -------------------------------------------------------------------
+
     print("\n2. Δημιουργία sliding window point clouds...")
     window_size = 50
     step = 25
@@ -805,9 +660,8 @@ def run_e1():
     print("\n4. Εκτέλεση Zigzag Filtration...")
     plot_zigzag_schematic(len(point_clouds), os.path.join(output_dir, "e1_zigzag_schematic.png"))
 
-    # -------------------------------------------------------------------
+
     # 3. Υποδειγματοληψία & Προετοιμασία
-    # -------------------------------------------------------------------
     print("\n3. Προετοιμασία point clouds για zigzag filtration...")
 
     # Κρατάμε αντιπροσωπευτικό αριθμό windows
@@ -843,9 +697,9 @@ def run_e1():
     max_radius = np.percentile(all_dists, 15)
     print(f"   Ακτίνα Rips (15th percentile αποστάσεων): {max_radius:.4f}")
 
-    # -------------------------------------------------------------------
+
     # 4. Zigzag Persistent Homology
-    # -------------------------------------------------------------------
+
     print("\n4. Υπολογισμός Zigzag Persistent Homology...")
     intervals_zz, betti_zigzag_seq, n_times = run_zigzag_filtration(reduced_clouds, max_radius)
 
@@ -864,9 +718,9 @@ def run_e1():
     # Οπτικοποίηση zigzag
     plot_zigzag_diagram(intervals_zz, n_times, os.path.join(output_dir, "e1_zigzag_persistence.png"))
 
-    # -------------------------------------------------------------------
+
     # 5. Κλασική Persistent Homology (ανά παράθυρο)
-    # -------------------------------------------------------------------
+
     print("\n5. Υπολογισμός Κλασικής Persistent Homology (ανά παράθυρο)...")
     betti_classical = classical_ph_per_window(reduced_clouds, max_radius)
 
@@ -875,9 +729,9 @@ def run_e1():
     union_dgms = classical_ph_on_union(reduced_clouds, max_radius)
     plot_classical_diagram(union_dgms, os.path.join(output_dir, "e1_classical_persistence.png"), "(Ένωση S&P 500 Windows)")
 
-    # -------------------------------------------------------------------
+
     # 6. Σύγκριση & Οπτικοποιήσεις
-    # -------------------------------------------------------------------
+
     print("\n6. Σύγκριση Zigzag vs Κλασική PH...")
 
     # Σύγκριση Betti curves
@@ -888,9 +742,9 @@ def run_e1():
     plot_persistence_summary(intervals_zz, betti_classical, betti_zigzag_seq, n_times,
                              os.path.join(output_dir, "e1_summary_comparison.png"))
 
-    # -------------------------------------------------------------------
-    # 7. Αποτελέσματα & Αναφορά
-    # -------------------------------------------------------------------
+
+    # 7. Αποτελέσματα
+
 
     # Αριθμητική σύγκριση
     print("--- Αριθμητική Σύγκριση ---")
@@ -927,30 +781,7 @@ def run_e1():
     print(f"     - instants/e/e1_betti_comparison.png")
     print(f"     - instants/e/e1_summary_comparison.png")
 
-
-
-# =============================================================================
-# Ε.2 — Topological Loss σε Neural Network
-# =============================================================================
-# Topological regularization term (H0 persistence) που ελαχιστοποιεί την
-# «σύνολική επίμονη» ενδιάμεσων αναπαραστάσεων.
-# MLP 2 κρυφά layers με & χωρίς topological loss.
-# Dataset: Breast Cancer Wisconsin (binary classification).
-# Αποτελέσματα: accuracy, AUC-ROC, latent spaces, persistence diagrams.
-# =============================================================================
-
-
-# ---------------------------------------------------------------------------
-# H0 Topological Loss — Γρήγορη Υλοποίηση (Union-Find, O(n² log n))
-# ---------------------------------------------------------------------------
-
 def h0_persistence_pairs(points):
-    """
-    Υπολογίζει H0 persistence pairs μέσω Vietoris-Rips filtration.
-    Χρησιμοποιεί Union-Find — O(n² log n), πρακτικά γρήγορο.
-
-    Returns list of (birth=0, death=dist(i,j), local_i, local_j).
-    """
     n = len(points)
     if n < 2:
         return []
@@ -991,15 +822,6 @@ def h0_persistence_pairs(points):
 
 
 def topological_loss_h0(hidden, max_pts=30, lam=1.0):
-    """
-    H0 Topological Regularization Loss:
-        L_topo = lam * Σ death_k²  (death_k = dist(i_k, j_k))
-
-    Ελαχιστοποιεί τις αποστάσεις των κέντρων που ενώνονται κατά τη
-    Rips filtration → πιο συμπαγής latent space.
-
-    Returns: (loss_value, pairs, used_indices)
-    """
     n = len(hidden)
     if n > max_pts:
         idx = np.random.choice(n, max_pts, replace=False)
@@ -1014,12 +836,6 @@ def topological_loss_h0(hidden, max_pts=30, lam=1.0):
 
 
 def topological_gradient_h0(hidden, pairs, pts_idx, lam=1.0):
-    """
-    Αναλυτική παράγωγος του H0 Topological Loss:
-        dL/d(pts[i]) = 2 * lam * (pts[i] - pts[j])
-
-    Ωθεί κάθε ζεύγος (i,j) να πλησιάσει (μειώνει death = dist(i,j)).
-    """
     N, d = hidden.shape
     grad = np.zeros((N, d))
     pts = hidden[pts_idx]
@@ -1035,16 +851,9 @@ def topological_gradient_h0(hidden, pairs, pts_idx, lam=1.0):
     return grad
 
 
-# ---------------------------------------------------------------------------
-# MLP εκ του μηδενός (NumPy only)
-# ---------------------------------------------------------------------------
 
+# MLP εκ του μηδενός (NumPy only)
 class MLP:
-    """
-    Πολυεπίπεδο Perceptron (2 κρυφά layers) για binary classification.
-    Αρχιτεκτονική: input → ReLU → ReLU → Sigmoid
-    Εκπαίδευση: mini-batch gradient descent + backpropagation.
-    """
 
     def __init__(self, layer_sizes, lr=0.005, seed=42):
         np.random.seed(seed)
@@ -1114,7 +923,6 @@ class MLP:
 
 
 def compute_auc_roc(y_true, y_scores):
-    """AUC-ROC από το μηδέν (trapezoid)."""
     pos = np.sum(y_true == 1)
     neg = np.sum(y_true == 0)
     if pos == 0 or neg == 0:
@@ -1139,9 +947,6 @@ def train_mlp(X_tr, y_tr, X_vl, y_vl,
               layers, epochs=80, bs=32, lr=0.005,
               use_topo=False, topo_w=0.001,
               topo_start=20, verbose=True):
-    """
-    Εκπαιδεύει MLP με ή χωρίς H0 Topological Loss.
-    """
     mlp = MLP(layers, lr=lr)
     N = X_tr.shape[0]
     hist = {'tl': [], 'vl': [], 'ta': [], 'va': [], 'topo': []}
@@ -1187,9 +992,8 @@ def train_mlp(X_tr, y_tr, X_vl, y_vl,
     return mlp, hist
 
 
-# ---------------------------------------------------------------------------
+
 # Οπτικοποιήσεις Ε.2
-# ---------------------------------------------------------------------------
 
 def plot_e2_training_curves(h_base, h_topo, filename):
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
@@ -1321,11 +1125,6 @@ def plot_e2_persistence_diagrams(X_test, mlp_b, mlp_t, filename):
 # ---------------------------------------------------------------------------
 
 def run_e2():
-    """
-    Ε.2 — Topological Loss σε Neural Network
-    Breast Cancer Wisconsin dataset, binary classification.
-    Σύγκριση Baseline MLP vs Topo-MLP (με H0 Topological Regularization).
-    """
     print('=' * 70)
     print('Ε.2 — Topological Loss σε Neural Network')
     print('=' * 70)
