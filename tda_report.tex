@@ -342,31 +342,50 @@ for int_idx, interval_bounds in enumerate(intervals):
 \textbf{Αποτελέσματα \& Ερμηνεία:}
 Εφαρμόσαμε τον αλγόριθμο στα σύνολα δεδομένων \foreignlanguage{english}{Figure-8} και \foreignlanguage{english}{Horse-shoe} με 3 διαφορετικές συναρτήσεις φίλτρου: \foreignlanguage{english}{PCA} 1ης συνιστώσας, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.
 
+Για την επαλήθευση της ορθότητας της \foreignlanguage{english}{custom} υλοποίησής μας, συγκρίνουμε τα αποτελέσματά της με αυτά της επίσημης βιβλιοθήκης \foreignlanguage{english}{KeplerMapper} (\foreignlanguage{english}{kmapper}), χρησιμοποιώντας τις ίδιες υπερπαραμέτρους κάλυψης (10 διαστήματα με 30\% επικάλυψη) και τον ίδιο αλγόριθμο ομαδοποίησης (\foreignlanguage{english}{DBSCAN} με \foreignlanguage{english}{eps=0.3} και \foreignlanguage{english}{min\_samples=3}).
+
 \begin{figure}[H]
 \centering
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_pca_1st_component_custom.png}}
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_l2-norm_custom.png}}
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_density_custom.png}}
-\caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Figure-8} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
+\\ \vspace{0.5em}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_pca_1st_component_kmapper.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_l2-norm_kmapper.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_figure_8_density_kmapper.png}}
+\caption{Σύγκριση αποτελεσμάτων για το \foreignlanguage{english}{Figure-8}: Πάνω σειρά ο \foreignlanguage{english}{Custom Mapper} και κάτω σειρά ο \foreignlanguage{english}{KeplerMapper} (\foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}).}
+\label{fig:g2_figure_8_comparison}
 \end{figure}
 
-\textit{Σχολιασμός: Η τριάδα των γραφημάτων για το \foreignlanguage{english}{Figure-8} διαφέρει ανάλογα με το φίλτρο:
-1. Το \foreignlanguage{english}{PCA} διαχωρίζει τους δύο κύκλους (αριστερά-δεξιά) στον άξονα μέγιστης διασποράς.
-2. Το \foreignlanguage{english}{L2-norm} δείχνει την απόσταση από το κέντρο, δημιουργώντας μια δομή που "ανοίγει" από το κέντρο προς τα άκρα.
-3. Το \foreignlanguage{english}{Density} αναδεικνύει το σημείο τομής των δύο κύκλους όπου η πυκνότητα των σημείων είναι μέγιστη.}
+\textbf{Σύγκριση για το \foreignlanguage{english}{Figure-8}:}
+\begin{itemize}
+    \item \textbf{\foreignlanguage{english}{PCA Filter} (Αριστερά):} Και οι δύο υλοποιήσεις διαχωρίζουν με σαφήνεια τη δομή των δύο κύκλων (αριστερά και δεξιά). Το γράφημα σχηματίζει έναν «βρόχο οκτώ» όπου οι δύο κύκλοι συνδέονται στο κέντρο, αποτυπώνοντας τέλεια την τοπολογία των δεδομένων.
+    \item \textbf{\foreignlanguage{english}{L2-norm Filter} (Κέντρο):} Κατασκευάζεται ένα γράφημα που αντικατοπτρίζει την απόσταση από το κέντρο. Οι κόμβοι με χαμηλή τιμή φίλτρου (σκούρα χρώματα) βρίσκονται στο σημείο τομής, ενώ οι κόμβοι με υψηλή τιμή (ανοιχτά χρώματα) βρίσκονται στα εξωτερικά άκρα των δύο κύκλων. Η τοπολογική δομή είναι πανομοιότυπη και στις δύο περιπτώσεις.
+    \item \textbf{\foreignlanguage{english}{Density Filter} (Δεξιά):} Αναδεικνύεται η υψηλή πυκνότητα στο σημείο συνάντησης των δύο κύκλων. Οι υπόλοιπες περιοχές έχουν μικρότερη πυκνότητα και εμφανίζονται ως κλαδιά που απομακρύνονται από τον κεντρικό πυκνό κόμβο.
+\end{itemize}
 
 \begin{figure}[H]
 \centering
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_pca_1st_component_custom.png}}
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_l2-norm_custom.png}}
 \foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_density_custom.png}}
-\caption{Αποτελέσματα \foreignlanguage{english}{Custom Mapper} για το \foreignlanguage{english}{Horse-shoe} με φίλτρα \foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}.}
+\\ \vspace{0.5em}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_pca_1st_component_kmapper.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_l2-norm_kmapper.png}}
+\foreignlanguage{english}{\includegraphics[width=0.32\textwidth]{instants/c/g2_horse_shoe_density_kmapper.png}}
+\caption{Σύγκριση αποτελεσμάτων για το \foreignlanguage{english}{Horse-shoe}: Πάνω σειρά ο \foreignlanguage{english}{Custom Mapper} και κάτω σειρά ο \foreignlanguage{english}{KeplerMapper} (\foreignlanguage{english}{PCA}, \foreignlanguage{english}{L2-norm} και \foreignlanguage{english}{Density}).}
+\label{fig:g2_horse_shoe_comparison}
 \end{figure}
 
-\textit{Σχολιασμός: Στο \foreignlanguage{english}{Horse-shoe}:
-1. Το \foreignlanguage{english}{PCA} "ξεδιπλώνει" την καμπύλη σε μια συνεχή γραμμική δομή.
-2. Το \foreignlanguage{english}{L2-norm} δίνει παρόμοιες τιμές σε όλα τα σημεία (αφού ισαπέχουν από το κέντρο), συμπυκνώνοντας το γράφημα.
-3. Το \foreignlanguage{english}{Density} δείχνει ότι η πυκνότητα είναι ομοιόμορφη κατά μήκος του πετάλου, διατηρώντας τη δομή ως μία συνεκτική συνιστώσα.}
+\textbf{Σύγκριση για το \foreignlanguage{english}{Horse-shoe}:}
+\begin{itemize}
+    \item \textbf{\foreignlanguage{english}{PCA Filter} (Αριστερά):} Και στις δύο μεθόδους, η καμπύλη του πετάλου «ξεδιπλώνεται» σε μια συνεχή γραμμική αλυσίδα κόμβων, αποδεικνύοντας ότι το φίλτρο \foreignlanguage{english}{PCA 1D} καταγράφει με επιτυχία τη μονοδιάστατη φύση του πετάλου.
+    \item \textbf{\foreignlanguage{english}{L2-norm Filter} (Κέντρο):} Επειδή όλα τα σημεία του πετάλου ισαπέχουν σχεδόν από το κέντρο, οι τιμές του φίλτρου παρουσιάζουν ελάχιστη διακύμανση. Αυτό οδηγεί σε συσπειρωμένα γραφήματα με πολύ μικρό εύρος φιλτραρίσματος, κάτι που αποτυπώνεται εξίσου και στις δύο σειρές εικόνων.
+    \item \textbf{\foreignlanguage{english}{Density Filter} (Δεξιά):} Λόγω της ομοιόμορφης κατανομής των σημείων κατά μήκος του πετάλου, η πυκνότητα παραμένει σχεδόν σταθερή. Το αποτέλεσμα είναι ένα συνεχές μονοπάτι χωρίς σημαντικές διακυμάνσεις μεγέθους ή χρώματος κόμβων, τόσο στον \foreignlanguage{english}{custom} όσο και στον \foreignlanguage{english}{KeplerMapper}.
+\end{itemize}
+
+\textbf{Συμπέρασμα Σύγκρισης:}
+Η σύγκριση επιβεβαιώνει την πλήρη τοπολογική ισοδυναμία (ισομορφισμό) των γραφημάτων που παράγει η \foreignlanguage{english}{custom} υλοποίησή μας σε σχέση με τη βιβλιοθήκη \foreignlanguage{english}{KeplerMapper}. Οι μικρές διαφορές στη χωρική διάταξη των κόμβων οφείλονται αποκλειστικά στον αλγόριθμο τοποθέτησης (\foreignlanguage{english}{spring layout}) του \foreignlanguage{english}{NetworkX} έναντι της μηχανής \foreignlanguage{english}{D3.js} που χρησιμοποιεί το \foreignlanguage{english}{KeplerMapper} για την οπτικοποίηση, ενώ η υποκείμενη δομή (κόμβοι, συνδεσιμότητα και ιδιότητες) παραμένει ταυτόσημη.
 
 \begin{figure}[H]
 \centering
@@ -374,7 +393,7 @@ for int_idx, interval_bounds in enumerate(intervals):
 \caption{Ανάλυση ευαισθησίας: Αριθμός συνεκτικών συνιστωσών συναρτήσει των παραμέτρων.}
 \end{figure}
 
-\textit{Σχολιασμός: Η ανάλυση ευαισθησίας δείχνει ότι ο αριθμός των συνεκτικών συνιστωσών εξαρτάται έντονα από τον αριθμό των διαστημάτων και το ποσοστό επικάλυψης. Μεγαλύτερη επικάλυψη οδηγεί σε πιο συνεκτικά γραφήματα.}
+\textit{Σχολιασμός: Η ανάλυση ευαισθησίας δείχνει ότι ο αριθμός των συνεκτικών συνιστωσών εξαρτάται έντονα από τον αριθμό των διαστημάτων και το ποσοστό επικάλυψης. Μεγαλύτερη επικάλυψη οδηγεί σε πιο συνεκτικά γραφηματα.}
 
 \newpage
 \subsection{Ερώτημα Δ --- Εφαρμογή σε Πραγματικά Δεδομένα}

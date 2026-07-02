@@ -1,0 +1,15 @@
+numpy==1.26.4
+scipy
+matplotlib
+plotly
+scikit-learn
+gudhi
+ripser
+persim
+giotto-tda
+kmapper
+networkx
+pandas
+umap-learn
+seaborn
+yfinance

@@ -36,7 +36,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings('ignore')
 
 def takens_embedding(X_1d, delay=1, dimension=3):
-    """Μετατρέπει ένα 1D array σε point cloud μέσω Takens Embedding."""
+    #Μετατρέπει ένα 1D array σε point cloud μέσω Takens Embedding.
     N = len(X_1d)
     embedded = []
     for i in range(N - (dimension - 1)*delay):
@@ -179,7 +179,6 @@ def run_d2():
         from gtda.diagrams import PersistenceEntropy
     except ImportError as e:
         print(f"Σφάλμα εισαγωγής βιβλιοθηκών: {e}")
-        print("Παρακαλώ εγκαταστήστε: pip install giotto-tda yfinance umap-learn")
         return
 
     # 1. Φόρτωση δεδομένων S&P 500
@@ -220,7 +219,7 @@ def run_d2():
     embedder = TakensEmbedding(dimension=embedding_dim, time_delay=delay)
     X_embedded = embedder.fit_transform(X_ts)[0] # Παίρνουμε το 1o (και μοναδικό) sample, σχήμα: (n_points, 3)
     
-    # [ΠΡΟΣΘΗΚΗ] Υπολογισμός Persistent Homology H0, H1, H2 (ripser)
+    # Υπολογισμός Persistent Homology H0, H1, H2 (ripser)
     print("   -> Υπολογισμός Persistent Homology για το S&P 500 (ripser)...")
     res_sp500 = ripser(X_embedded, maxdim=2)
     
@@ -251,7 +250,7 @@ def run_d2():
     plt.close()
     print("   -> Αποθηκεύτηκαν τα διαγράμματα: instants/d/d2_sp500_persistence_diagrams.png και instants/d/d2_sp500_barcode.png")
     
-    # [ΠΡΟΣΘΗΚΗ] Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
+    # Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
     print("   -> Επαλήθευση/Υπολογισμός H2 ομολογίας με GUDHI (Alpha Complex)...")
     alpha_complex = gudhi.AlphaComplex(points=X_embedded)
     st = alpha_complex.create_simplex_tree()
@@ -259,7 +258,7 @@ def run_d2():
     betti_numbers = st.betti_numbers()
     print(f"      Gudhi Betti Numbers: {betti_numbers}")
 
-    # [ΠΡΟΣΘΗΚΗ] Διαδραστικό 3D Plot με Plotly (Βιβλιοθήκη Plotly)
+    # Διαδραστικό 3D Plot με Plotly (Βιβλιοθήκη Plotly)
     print("   -> Δημιουργία διαδραστικού 3D γραφήματος με Plotly...")
     df_embedded = pd.DataFrame(X_embedded, columns=['Dim1', 'Dim2', 'Dim3'])
     fig_3d = px.scatter_3d(df_embedded, x='Dim1', y='Dim2', z='Dim3', title="S&P 500 3D Takens Embedding", opacity=0.7)
@@ -277,7 +276,7 @@ def run_d2():
     plt.savefig(os.path.join(output_dir, "d2_sp500_3d_embedding.png"), dpi=150)
     plt.close()
     
-    # [ΠΡΟΣΘΗΚΗ] Εφαρμογή Mapper στο S&P 500
+    # Εφαρμογή Mapper στο S&P 500
     print("   -> Δημιουργία διαδραστικού Mapper Graph (kmapper) για το S&P 500...")
     mapper_d2 = km.KeplerMapper(verbose=0)
     # Προβολή στα 2 πρώτα PCA components του 3D embedding

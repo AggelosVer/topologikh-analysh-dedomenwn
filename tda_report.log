@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.6.9)  1 JUL 2026 03:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.6.9)  2 JUL 2026 23:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -922,17 +922,37 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has
                                                   \__shipout_drop_firstpage_...
 l.224 
        <./instants/a/complex_2d_colored.png> <./instants/a/filtration_betti.png>]
-<instants/a/complex_3d_persp1.png.png, id=236, 832.61063pt x 706.13812pt>
-File: instants/a/complex_3d_persp1.png.png Graphic file (type png)
-<use instants/a/complex_3d_persp1.png.png>
-Package pdftex.def Info: instants/a/complex_3d_persp1.png.png  used on input line 234.
-(pdftex.def)             Requested size: 212.41261pt x 180.14365pt.
-<instants/a/complex_3d_persp2.png, id=237, 693.34032pt x 724.20563pt>
-File: instants/a/complex_3d_persp2.png Graphic file (type png)
-<use instants/a/complex_3d_persp2.png>
-Package pdftex.def Info: instants/a/complex_3d_persp2.png  used on input line 235.
-(pdftex.def)             Requested size: 212.41261pt x 221.87141pt.
- [8
+
+LaTeX Warning: File `instants/a/complex_3d_persp1.png' not found on input line 234.
+
+
+! Package pdftex.def Error: File `instants/a/complex_3d_persp1.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.234 ...width]{instants/a/complex_3d_persp1.png}}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `instants/a/complex_3d_persp2.png' not found on input line 235.
+
+
+! Package pdftex.def Error: File `instants/a/complex_3d_persp2.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.235 ...width]{instants/a/complex_3d_persp2.png}}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[8
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
@@ -942,28 +962,28 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.239 \newpage
-               <./instants/a/complex_steps.png> <./instants/a/complex_3d_persp1.png.png> <./instants/a/complex_3d_persp2.png>]
-<instants/b/b1_Random_R2.png, id=247, 1011.78pt x 361.35pt>
+               <./instants/a/complex_steps.png>]
+<instants/b/b1_Random_R2.png, id=243, 1011.78pt x 361.35pt>
 File: instants/b/b1_Random_R2.png Graphic file (type png)
 <use instants/b/b1_Random_R2.png>
 Package pdftex.def Info: instants/b/b1_Random_R2.png  used on input line 268.
 (pdftex.def)             Requested size: 212.41261pt x 75.85817pt.
-<instants/b/b1_Noisy_Circle.png, id=248, 1011.78pt x 361.35pt>
+<instants/b/b1_Noisy_Circle.png, id=244, 1011.78pt x 361.35pt>
 File: instants/b/b1_Noisy_Circle.png Graphic file (type png)
 <use instants/b/b1_Noisy_Circle.png>
 Package pdftex.def Info: instants/b/b1_Noisy_Circle.png  used on input line 269.
 (pdftex.def)             Requested size: 212.41261pt x 75.85817pt.
-<instants/b/b1_Torus_T2.png, id=249, 1011.78pt x 361.35pt>
+<instants/b/b1_Torus_T2.png, id=245, 1011.78pt x 361.35pt>
 File: instants/b/b1_Torus_T2.png Graphic file (type png)
 <use instants/b/b1_Torus_T2.png>
 Package pdftex.def Info: instants/b/b1_Torus_T2.png  used on input line 275.
 (pdftex.def)             Requested size: 212.41261pt x 75.85817pt.
-<instants/b/b1_Sphere_S2.png, id=250, 1011.78pt x 361.35pt>
+<instants/b/b1_Sphere_S2.png, id=246, 1011.78pt x 361.35pt>
 File: instants/b/b1_Sphere_S2.png Graphic file (type png)
 <use instants/b/b1_Sphere_S2.png>
 Package pdftex.def Info: instants/b/b1_Sphere_S2.png  used on input line 276.
 (pdftex.def)             Requested size: 212.41261pt x 75.85817pt.
-<instants/b/b2_robustness.png, id=251, 578.16pt x 361.35pt>
+<instants/b/b2_robustness.png, id=247, 578.16pt x 361.35pt>
 File: instants/b/b2_robustness.png Graphic file (type png)
 <use instants/b/b2_robustness.png>
 Package pdftex.def Info: instants/b/b2_robustness.png  used on input line 289.
@@ -979,12 +999,12 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has
                                                   \__shipout_drop_firstpage_...
 l.292 
        <./instants/b/b1_Random_R2.png> <./instants/b/b1_Noisy_Circle.png> <./instants/b/b1_Torus_T2.png> <./instants/b/b1_Sphere_S2.png>]
-<instants/b/b3_persistence_diagrams_comparison.png, id=268, 867.24pt x 361.35pt>
+<instants/b/b3_persistence_diagrams_comparison.png, id=264, 867.24pt x 361.35pt>
 File: instants/b/b3_persistence_diagrams_comparison.png Graphic file (type png)
 <use instants/b/b3_persistence_diagrams_comparison.png>
 Package pdftex.def Info: instants/b/b3_persistence_diagrams_comparison.png  used on input line 302.
 (pdftex.def)             Requested size: 377.62642pt x 157.34587pt.
-<instants/b/b3_persistence_images.png, id=269, 1011.78pt x 361.35pt>
+<instants/b/b3_persistence_images.png, id=265, 1011.78pt x 361.35pt>
 File: instants/b/b3_persistence_images.png Graphic file (type png)
 <use instants/b/b3_persistence_images.png>
 Package pdftex.def Info: instants/b/b3_persistence_images.png  used on input line 308.
@@ -1005,163 +1025,194 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) ha
                                                   \__shipout_drop_firstpage_...
 l.312 \newpage
                <./instants/b/b3_persistence_images.png>]
-<instants/c/g2_figure_8_pca_1st_component_custom.png, id=284, 578.16pt x 433.62pt>
+<instants/c/g2_figure_8_pca_1st_component_custom.png, id=280, 578.16pt x 433.62pt>
 File: instants/c/g2_figure_8_pca_1st_component_custom.png Graphic file (type png)
 <use instants/c/g2_figure_8_pca_1st_component_custom.png>
-Package pdftex.def Info: instants/c/g2_figure_8_pca_1st_component_custom.png  used on input line 347.
+Package pdftex.def Info: instants/c/g2_figure_8_pca_1st_component_custom.png  used on input line 349.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
-<instants/c/g2_figure_8_l2-norm_custom.png, id=285, 578.16pt x 433.62pt>
+<instants/c/g2_figure_8_l2-norm_custom.png, id=281, 578.16pt x 433.62pt>
 File: instants/c/g2_figure_8_l2-norm_custom.png Graphic file (type png)
 <use instants/c/g2_figure_8_l2-norm_custom.png>
-Package pdftex.def Info: instants/c/g2_figure_8_l2-norm_custom.png  used on input line 348.
+Package pdftex.def Info: instants/c/g2_figure_8_l2-norm_custom.png  used on input line 350.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
-<instants/c/g2_figure_8_density_custom.png, id=286, 578.16pt x 433.62pt>
+<instants/c/g2_figure_8_density_custom.png, id=282, 578.16pt x 433.62pt>
 File: instants/c/g2_figure_8_density_custom.png Graphic file (type png)
 <use instants/c/g2_figure_8_density_custom.png>
-Package pdftex.def Info: instants/c/g2_figure_8_density_custom.png  used on input line 349.
+Package pdftex.def Info: instants/c/g2_figure_8_density_custom.png  used on input line 351.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
-<instants/c/g2_horse_shoe_pca_1st_component_custom.png, id=287, 578.16pt x 433.62pt>
+<instants/c/g2_figure_8_pca_1st_component_kmapper.png, id=283, 666.99188pt x 557.08125pt>
+File: instants/c/g2_figure_8_pca_1st_component_kmapper.png Graphic file (type png)
+<use instants/c/g2_figure_8_pca_1st_component_kmapper.png>
+Package pdftex.def Info: instants/c/g2_figure_8_pca_1st_component_kmapper.png  used on input line 353.
+(pdftex.def)             Requested size: 151.05345pt x 126.1624pt.
+<instants/c/g2_figure_8_l2-norm_kmapper.png, id=284, 733.99219pt x 691.83469pt>
+File: instants/c/g2_figure_8_l2-norm_kmapper.png Graphic file (type png)
+<use instants/c/g2_figure_8_l2-norm_kmapper.png>
+Package pdftex.def Info: instants/c/g2_figure_8_l2-norm_kmapper.png  used on input line 354.
+(pdftex.def)             Requested size: 151.05345pt x 142.37596pt.
+<instants/c/g2_figure_8_density_kmapper.png, id=285, 730.98094pt x 679.78969pt>
+File: instants/c/g2_figure_8_density_kmapper.png Graphic file (type png)
+<use instants/c/g2_figure_8_density_kmapper.png>
+Package pdftex.def Info: instants/c/g2_figure_8_density_kmapper.png  used on input line 355.
+(pdftex.def)             Requested size: 151.05345pt x 140.46767pt.
+ [12]
+<instants/c/g2_horse_shoe_pca_1st_component_custom.png, id=299, 578.16pt x 433.62pt>
 File: instants/c/g2_horse_shoe_pca_1st_component_custom.png Graphic file (type png)
 <use instants/c/g2_horse_shoe_pca_1st_component_custom.png>
-Package pdftex.def Info: instants/c/g2_horse_shoe_pca_1st_component_custom.png  used on input line 360.
+Package pdftex.def Info: instants/c/g2_horse_shoe_pca_1st_component_custom.png  used on input line 369.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
-<instants/c/g2_horse_shoe_l2-norm_custom.png, id=288, 578.16pt x 433.62pt>
+<instants/c/g2_horse_shoe_l2-norm_custom.png, id=300, 578.16pt x 433.62pt>
 File: instants/c/g2_horse_shoe_l2-norm_custom.png Graphic file (type png)
 <use instants/c/g2_horse_shoe_l2-norm_custom.png>
-Package pdftex.def Info: instants/c/g2_horse_shoe_l2-norm_custom.png  used on input line 361.
+Package pdftex.def Info: instants/c/g2_horse_shoe_l2-norm_custom.png  used on input line 370.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
-<instants/c/g2_horse_shoe_density_custom.png, id=289, 578.16pt x 433.62pt>
+<instants/c/g2_horse_shoe_density_custom.png, id=301, 578.16pt x 433.62pt>
 File: instants/c/g2_horse_shoe_density_custom.png Graphic file (type png)
 <use instants/c/g2_horse_shoe_density_custom.png>
-Package pdftex.def Info: instants/c/g2_horse_shoe_density_custom.png  used on input line 362.
+Package pdftex.def Info: instants/c/g2_horse_shoe_density_custom.png  used on input line 371.
 (pdftex.def)             Requested size: 151.05345pt x 113.2877pt.
- [12
+<instants/c/g2_horse_shoe_pca_1st_component_kmapper.png, id=302, 662.475pt x 441.90094pt>
+File: instants/c/g2_horse_shoe_pca_1st_component_kmapper.png Graphic file (type png)
+<use instants/c/g2_horse_shoe_pca_1st_component_kmapper.png>
+Package pdftex.def Info: instants/c/g2_horse_shoe_pca_1st_component_kmapper.png  used on input line 373.
+(pdftex.def)             Requested size: 151.05345pt x 100.7585pt.
+<instants/c/g2_horse_shoe_l2-norm_kmapper.png, id=303, 648.92438pt x 453.19313pt>
+File: instants/c/g2_horse_shoe_l2-norm_kmapper.png Graphic file (type png)
+<use instants/c/g2_horse_shoe_l2-norm_kmapper.png>
+Package pdftex.def Info: instants/c/g2_horse_shoe_l2-norm_kmapper.png  used on input line 374.
+(pdftex.def)             Requested size: 151.05345pt x 105.49078pt.
+<instants/c/g2_horse_shoe_density_kmapper.png, id=304, 755.07094pt x 626.34pt>
+File: instants/c/g2_horse_shoe_density_kmapper.png Graphic file (type png)
+<use instants/c/g2_horse_shoe_density_kmapper.png>
+Package pdftex.def Info: instants/c/g2_horse_shoe_density_kmapper.png  used on input line 375.
+(pdftex.def)             Requested size: 151.05345pt x 125.29445pt.
+ [13
 pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.365 
-       <./instants/c/g2_figure_8_pca_1st_component_custom.png> <./instants/c/g2_figure_8_l2-norm_custom.png> <./instants/c/g2_figure_8_density_custom.png>]
-<instants/c/g2_sensitivity_heatmap.png, id=307, 578.16pt x 433.62pt>
+l.379 
+       <./instants/c/g2_figure_8_pca_1st_component_custom.png> <./instants/c/g2_figure_8_l2-norm_custom.png> <./instants/c/g2_figure_8_density_custom.png> <./instants/c/g2_figure_8_pca_1st_component_kmapper.png> <./instants/c/g2_figure_8_l2-norm_kmapper.png> <./instants/c/g2_figure_8_density_kmapper.png>]
+<instants/c/g2_sensitivity_heatmap.png, id=316, 578.16pt x 433.62pt>
 File: instants/c/g2_sensitivity_heatmap.png Graphic file (type png)
 <use instants/c/g2_sensitivity_heatmap.png>
-Package pdftex.def Info: instants/c/g2_sensitivity_heatmap.png  used on input line 373.
+Package pdftex.def Info: instants/c/g2_sensitivity_heatmap.png  used on input line 392.
 (pdftex.def)             Requested size: 283.22162pt x 212.4161pt.
- [13
+ [14
 pdfTeX warning (ext4): destination with the same identifier (name{figure.12}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.379 \newpage
-              
+l.395 
+       <./instants/c/g2_horse_shoe_pca_1st_component_custom.png> <./instants/c/g2_horse_shoe_l2-norm_custom.png> <./instants/c/g2_horse_shoe_density_custom.png> <./instants/c/g2_horse_shoe_pca_1st_component_kmapper.png> <./instants/c/g2_horse_shoe_l2-norm_kmapper.png> <./instants/c/g2_horse_shoe_density_kmapper.png>] [15
 pdfTeX warning (ext4): destination with the same identifier (name{figure.13}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.379 \newpage
-               <./instants/c/g2_horse_shoe_pca_1st_component_custom.png> <./instants/c/g2_horse_shoe_l2-norm_custom.png> <./instants/c/g2_horse_shoe_density_custom.png> <./instants/c/g2_sensitivity_heatmap.png>]
-<instants/d/d1_persistence_diagrams.png, id=318, 867.24pt x 361.35pt>
+l.398 \newpage
+               <./instants/c/g2_sensitivity_heatmap.png>]
+<instants/d/d1_persistence_diagrams.png, id=335, 867.24pt x 361.35pt>
 File: instants/d/d1_persistence_diagrams.png Graphic file (type png)
 <use instants/d/d1_persistence_diagrams.png>
-Package pdftex.def Info: instants/d/d1_persistence_diagrams.png  used on input line 398.
+Package pdftex.def Info: instants/d/d1_persistence_diagrams.png  used on input line 417.
 (pdftex.def)             Requested size: 377.62642pt x 157.34587pt.
 
-Overfull \hbox (32.22617pt too wide) in paragraph at lines 404--406
+Overfull \hbox (32.22617pt too wide) in paragraph at lines 423--425
 \OT1/cmr/m/n/12 ing []\LGR/cmr/m/n/12 twn sh-me-Ðwn. To dia-dra-sti-kì grˆfh-ma []\OT1/cmr/m/n/12 Map-per []\LGR/cmr/m/n/12 a-po-jh-ke-Ôth-ke sto ar-qe-Ðo []\OT1/cmtt/m/n/12 instants/d/d1[]mapper 
  []
 
-[14
+[16
 pdfTeX warning (ext4): destination with the same identifier (name{figure.14}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.406 
-       <./instants/d/d1_persistence_diagrams.png>] [15]
-<instants/d/d2_sp500_3d_embedding.png, id=334, 578.16pt x 433.62pt>
+l.425 
+       <./instants/d/d1_persistence_diagrams.png>] [17]
+<instants/d/d2_sp500_3d_embedding.png, id=350, 578.16pt x 433.62pt>
 File: instants/d/d2_sp500_3d_embedding.png Graphic file (type png)
 <use instants/d/d2_sp500_3d_embedding.png>
-Package pdftex.def Info: instants/d/d2_sp500_3d_embedding.png  used on input line 444.
+Package pdftex.def Info: instants/d/d2_sp500_3d_embedding.png  used on input line 463.
 (pdftex.def)             Requested size: 283.22162pt x 212.4161pt.
-<instants/d/d2_sp500_dim_reduction.png, id=336, 1084.05pt x 361.35pt>
+<instants/d/d2_sp500_dim_reduction.png, id=352, 1084.05pt x 361.35pt>
 File: instants/d/d2_sp500_dim_reduction.png Graphic file (type png)
 <use instants/d/d2_sp500_dim_reduction.png>
-Package pdftex.def Info: instants/d/d2_sp500_dim_reduction.png  used on input line 453.
+Package pdftex.def Info: instants/d/d2_sp500_dim_reduction.png  used on input line 472.
 (pdftex.def)             Requested size: 424.82523pt x 141.60963pt.
- [16
+ [18
 pdfTeX warning (ext4): destination with the same identifier (name{figure.15}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.466 
+l.485 
       
 pdfTeX warning (ext4): destination with the same identifier (name{figure.16}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.466 
-       <./instants/d/d2_sp500_3d_embedding.png> <./instants/d/d2_sp500_dim_reduction.png>] [17]
-<instants/e/e1_sliding_windows.png, id=352, 1003.1076pt x 351.714pt>
+l.485 
+       <./instants/d/d2_sp500_3d_embedding.png> <./instants/d/d2_sp500_dim_reduction.png>] [19]
+<instants/e/e1_sliding_windows.png, id=369, 1003.1076pt x 351.714pt>
 File: instants/e/e1_sliding_windows.png Graphic file (type png)
 <use instants/e/e1_sliding_windows.png>
-Package pdftex.def Info: instants/e/e1_sliding_windows.png  used on input line 502.
+Package pdftex.def Info: instants/e/e1_sliding_windows.png  used on input line 521.
 (pdftex.def)             Requested size: 401.22942pt x 140.67773pt.
-<instants/e/e1_summary_comparison.png, id=353, 1148.6112pt x 761.244pt>
+<instants/e/e1_summary_comparison.png, id=370, 1148.6112pt x 761.244pt>
 File: instants/e/e1_summary_comparison.png Graphic file (type png)
 <use instants/e/e1_summary_comparison.png>
-Package pdftex.def Info: instants/e/e1_summary_comparison.png  used on input line 515.
+Package pdftex.def Info: instants/e/e1_summary_comparison.png  used on input line 534.
 (pdftex.def)             Requested size: 424.82523pt x 281.55133pt.
- [18
+ [20
 pdfTeX warning (ext4): destination with the same identifier (name{figure.17}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.519 
-       <./instants/e/e1_sliding_windows.png>] [19
+l.538 
+       <./instants/e/e1_sliding_windows.png>] [21
 pdfTeX warning (ext4): destination with the same identifier (name{figure.18}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.525 \newpage
+l.544 \newpage
                <./instants/e/e1_summary_comparison.png>]
-<instants/e/e2_training_curves.png, id=369, 1147.6476pt x 355.5684pt>
+<instants/e/e2_training_curves.png, id=385, 1147.6476pt x 355.5684pt>
 File: instants/e/e2_training_curves.png Graphic file (type png)
 <use instants/e/e2_training_curves.png>
-Package pdftex.def Info: instants/e/e2_training_curves.png  used on input line 558.
+Package pdftex.def Info: instants/e/e2_training_curves.png  used on input line 577.
 (pdftex.def)             Requested size: 226.57297pt x 70.1955pt.
-<instants/e/e2_roc_curves.png, id=370, 570.4512pt x 496.254pt>
+<instants/e/e2_roc_curves.png, id=386, 570.4512pt x 496.254pt>
 File: instants/e/e2_roc_curves.png Graphic file (type png)
 <use instants/e/e2_roc_curves.png>
-Package pdftex.def Info: instants/e/e2_roc_curves.png  used on input line 565.
+Package pdftex.def Info: instants/e/e2_roc_curves.png  used on input line 584.
 (pdftex.def)             Requested size: 203.91428pt x 177.3943pt.
- [20
+ [22
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.570 
+l.589 
       ]
-<instants/e/e2_latent_spaces.png, id=378, 1004.553pt x 428.3202pt>
+<instants/e/e2_latent_spaces.png, id=394, 1004.553pt x 428.3202pt>
 File: instants/e/e2_latent_spaces.png Graphic file (type png)
 <use instants/e/e2_latent_spaces.png>
-Package pdftex.def Info: instants/e/e2_latent_spaces.png  used on input line 575.
+Package pdftex.def Info: instants/e/e2_latent_spaces.png  used on input line 594.
 (pdftex.def)             Requested size: 226.57297pt x 96.60316pt.
-<instants/e/e2_persistence_diagrams.png, id=379, 1003.1076pt x 426.393pt>
+<instants/e/e2_persistence_diagrams.png, id=395, 1003.1076pt x 426.393pt>
 File: instants/e/e2_persistence_diagrams.png Graphic file (type png)
 <use instants/e/e2_persistence_diagrams.png>
-Package pdftex.def Info: instants/e/e2_persistence_diagrams.png  used on input line 582.
+Package pdftex.def Info: instants/e/e2_persistence_diagrams.png  used on input line 601.
 (pdftex.def)             Requested size: 226.57297pt x 96.30513pt.
- [21
+ [23
 pdfTeX warning (ext4): destination with the same identifier (name{figure.19}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.595 \newpage
+l.614 \newpage
               
 pdfTeX warning (ext4): destination with the same identifier (name{figure.20}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.595 \newpage
+l.614 \newpage
               
 pdfTeX warning (ext4): destination with the same identifier (name{figure.21}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.595 \newpage
+l.614 \newpage
               
 pdfTeX warning (ext4): destination with the same identifier (name{figure.22}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.595 \newpage
-               <./instants/e/e2_training_curves.png> <./instants/e/e2_roc_curves.png> <./instants/e/e2_latent_spaces.png> <./instants/e/e2_persistence_diagrams.png>] [22] [23] [24] (./tda_report.aux)
+l.614 \newpage
+               <./instants/e/e2_training_curves.png> <./instants/e/e2_roc_curves.png> <./instants/e/e2_latent_spaces.png> <./instants/e/e2_persistence_diagrams.png>] [24] [25] [26] (./tda_report.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-05-26>
@@ -1170,18 +1221,18 @@ Package rerunfilecheck Info: File `tda_report.out' has not changed.
 (rerunfilecheck)             Checksum: A5EC0CB714B7CB5030A64A0B718C8ECE;7662.
  ) 
 Here is how much of TeX's memory you used:
- 16282 strings out of 469050
- 264686 string characters out of 5456106
+ 16370 strings out of 469050
+ 268788 string characters out of 5456106
  956714 words of memory out of 5000000
- 44971 multiletter control sequences out of 15000+600000
+ 45057 multiletter control sequences out of 15000+600000
  648245 words of font info for 98 fonts, out of 8000000 for 9000
  81 hyphenation exceptions out of 8191
  74i,9n,79p,1354b,1291s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <c:/Users/user/AppData/Roaming/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grmi1200.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grmn0800.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grmn1200.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grmn1440.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grmn1728.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grxn1200.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grxn1440.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grxn1728.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/cbfonts/grxn2488.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on tda_report.pdf (25 pages, 2503865 bytes).
+Output written on tda_report.pdf (27 pages, 2399510 bytes).
 PDF statistics:
- 551 PDF objects out of 1000 (max. 8388607)
- 413 compressed objects within 5 object streams
- 127 named destinations out of 1000 (max. 500000)
- 391 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 567 PDF objects out of 1000 (max. 8388607)
+ 419 compressed objects within 5 object streams
+ 129 named destinations out of 1000 (max. 500000)
+ 411 words of extra memory for PDF output out of 10000 (max. 10000000)
 

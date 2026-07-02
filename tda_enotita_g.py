@@ -19,23 +19,10 @@ os.makedirs(output_dir, exist_ok=True)
 sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings('ignore')
 
-# =============================================================================
 # Γ.1 — Υλοποίηση Mapper εκ του Μηδενός
-# =============================================================================
 
 class CustomMapper:
-    """
-    Αλγόριθμος Mapper σε Python (από το μηδέν).
-    
-    Parameters
-    ----------
-    n_intervals : int ή tuple
-        Αριθμός από intervals ανά διάσταση.
-    overlap_frac : float
-        Ποσοστό επικάλυψης (overlap) των intervals [0, 1).
-    clustering_algo : object
-        Scikit-learn συμβατό clustering algorithm object (π.χ. DBSCAN).
-    """
+    # Κατασκευαστής της κλάσης CustomMapper
     def __init__(self, n_intervals=10, overlap_frac=0.1, clustering_algo=None):
         self.n_intervals = n_intervals
         self.overlap_frac = overlap_frac
@@ -44,24 +31,8 @@ class CustomMapper:
         else:
             self.clustering_algo = clustering_algo
             
+    # Υπολογισμός των 1D διαστημάτων με επικάλυψη για τη συνάρτηση φιλτραρίσματος
     def _get_1d_intervals(self, filter_data, n, overlap):
-        """
-        Υπολογίζει τα 1D διαστήματα.
-        
-        Parameters
-        ----------
-        filter_data : array-like
-            1D δεδομένα (τιμές από filter function).
-        n : int
-            Αριθμός διαστημάτων.
-        overlap : float
-            Ποσοστό επικάλυψης.
-            
-        Returns
-        -------
-        intervals : list of tuples
-            Λίστα με τα (start, end) για κάθε interval.
-        """
         min_val = np.min(filter_data)
         max_val = np.max(filter_data)
         eps = 1e-8
@@ -78,22 +49,8 @@ class CustomMapper:
             intervals.append((start, end))
         return intervals
 
+    # Κατασκευή του γραφήματος Mapper από τα δεδομένα εισόδου
     def fit(self, X, filter_values):
-        """
-        Κατασκευάζει το Mapper graph.
-        
-        Parameters
-        ----------
-        X : array-like
-            Τα αρχικά δεδομένα.
-        filter_values : array-like
-            Οι τιμές του filter function, 1D ή 2D.
-            
-        Returns
-        -------
-        G : networkx.Graph
-            Το γράφημα Mapper.
-        """
         X = np.array(X)
         filter_values = np.array(filter_values)
         
@@ -157,10 +114,9 @@ class CustomMapper:
                     
         return G
 
-# =============================================================================
 # Γ.2 — Εφαρμογή Mapper
-# =============================================================================
 
+# Δημιουργία των συνθετικών συνόλων δεδομένων (Figure-8 και Horse-shoe)
 def generate_datasets_g2():
     np.random.seed(42)
     # 1. Figure-8 (σύνδεση δύο κύκλων)
@@ -175,6 +131,7 @@ def generate_datasets_g2():
     
     return {"Figure-8": fig8, "Horse-shoe": horseshoe}
 
+# Υπολογισμός των τριών συναρτήσεων φιλτραρίσματος (PCA, L2-norm, Density)
 def get_filter_functions(X):
     # 1. PCA 1η συνιστώσα
     f_pca = PCA(n_components=1).fit_transform(X).flatten()
@@ -192,6 +149,7 @@ def get_filter_functions(X):
         "Density": f_density
     }
 
+# Οπτικοποίηση του γραφήματος Mapper και αποθήκευση σε εικόνα
 def visualize_mapper_nx(G, title, filename):
     plt.figure(figsize=(8, 6))
     if len(G.nodes) == 0:
@@ -211,6 +169,7 @@ def visualize_mapper_nx(G, title, filename):
     plt.savefig(filename)
     plt.close()
 
+# Εκτέλεση των πειραμάτων και σύγκριση του custom Mapper με τον KeplerMapper
 def run_g2():
     print("\n--- Γ.2: Εφαρμογή Mapper ---")
     datasets = generate_datasets_g2()
@@ -224,12 +183,12 @@ def run_g2():
         for f_name, f_val in filters.items():
             print(f"  Filter: {f_name}")
             
-            # --- Custom Mapper ---
+            #Custom Mapper
             custom_mapper = CustomMapper(n_intervals=10, overlap_frac=0.3, clustering_algo=clustering)
             G_custom = custom_mapper.fit(X, f_val)
             visualize_mapper_nx(G_custom, f"{ds_name} - {f_name} (Custom Mapper)", os.path.join(output_dir, f"g2_{ds_name.lower().replace('-','_')}_{f_name.lower().replace(' ','_')}_custom.png"))
             
-            # --- kmapper verification ---
+            #kmapper verification
             mapper = km.KeplerMapper(verbose=0)
             graph = mapper.map(
                 f_val, X,
@@ -240,6 +199,7 @@ def run_g2():
             mapper.visualize(graph, path_html=html_filename, title=f"{ds_name} - {f_name} (kmapper)")
             print(f"    Αποθηκεύτηκαν τα γραφήματα (Custom Image: instants/c/g2_..._custom.png & kmapper HTML: instants/c/g2_..._kmapper.html)")
 
+# Ανάλυση ευαισθησίας του Mapper ως προς τον αριθμό διαστημάτων και το ποσοστό επικάλυψης
 def sensitivity_analysis():
     print("\n--- Γ.2: Sensitivity Analysis ---")
     datasets = generate_datasets_g2()

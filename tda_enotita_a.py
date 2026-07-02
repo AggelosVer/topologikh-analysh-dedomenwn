@@ -10,9 +10,7 @@ import os
 output_dir = os.path.join('instants', 'a')
 os.makedirs(output_dir, exist_ok=True)
 
-# =============================================================================
 # Α.1—Νέφος Σημείων & Vietoris–Rips (from scratch)
-# =============================================================================
 
 def generate_data():
     np.random.seed(42)
@@ -117,19 +115,17 @@ def compute_betti_scratch(vertices, edges, triangles):
     
     return beta0, beta1, beta2
 
-# =============================================================================
 # Α.2—Σύγκριση VR/Čech/Alpha μέσω GUDHI
-# =============================================================================
 
 def compare_complexes(points, r):
     print(f"\n--- Σύγκριση Συμπλεγμάτων για r = {r} ---")
     
     # 1. Vietoris-Rips
-    # GUDHI uses max_edge_length. To correspond to ball radius r, edge length is 2r.
+    # GUDHI uses max_edge_length (edge length is 2r)
     rips = gudhi.RipsComplex(points=points, max_edge_length=2*r)
     st_rips = rips.create_simplex_tree(max_dimension=2)
     
-    # 2. Čech (using DelaunayCechComplex)
+    # 2. Čech 
     cech = gudhi.DelaunayCechComplex(points=points)
     st_cech = cech.create_simplex_tree()
     
@@ -186,9 +182,8 @@ def visualize_point_cloud(points, title):
         ax.scatter(points[:, 0], points[:, 1], points[:, 2], c='blue', s=20)
         ax.set_title(title)
         
-# =============================================================================
+
 # Α.3—Filtration & Ανάλυση Κλίμακας
-# =============================================================================
 
 def filtration_analysis(points):
     r_vals = np.arange(0, 2.1, 0.1)
@@ -302,9 +297,8 @@ def visualize_complex_3d_plotly(points, edges, triangles, title):
     fig.write_html(os.path.join(output_dir, 'complex_3d.html'))
     print("Η 3D οπτικοποίηση αποθηκεύτηκε ως 'instants/a/complex_3d.html'")
 
-# =============================================================================
+
 # Main Execution
-# =============================================================================
 
 if __name__ == "__main__":
     print("Παραγωγή δεδομένων...")
@@ -376,4 +370,4 @@ if __name__ == "__main__":
     v_s, e_s, t_s = construct_vr_scratch(sphere_small, epsilon=0.8)
     visualize_complex_3d_plotly(sphere_small, e_s, t_s, 'VR Complex (Sphere) - 3D Plotly')
     
-    # plt.show()
+

@@ -20,9 +20,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 # Αγνοούμε κάποια warnings από το persim/gudhi
 warnings.filterwarnings('ignore')
 
-# =============================================================================
 # Β.1 — Persistent Homology από Νέφη Σημείων
-# =============================================================================
 
 def generate_datasets_b1():
     np.random.seed(42)
@@ -109,9 +107,7 @@ def run_b1():
         plt.close()
         print(f"Αποθηκεύτηκε: {filename}")
 
-# =============================================================================
 # Β.2 — Robustness σε Gaussian Θόρυβο
-# =============================================================================
 
 def run_b2():
     print("\n--- Β.2: Robustness σε Gaussian Θόρυβο ---")
@@ -133,7 +129,6 @@ def run_b2():
         dgm_noisy = res_noisy['dgms'][1]
         
         # Υπολογισμός αποστάσεων (για H1)
-        # Χρειάζεται clean if dgm is empty, αλλά για κύκλο με αυτό το θόρυβο λογικά θα έχει H1.
         if len(dgm_noisy) == 0:
             dgm_noisy = np.array([[0, 0]]) # dummy για αποφυγή error
             
@@ -157,9 +152,7 @@ def run_b2():
     plt.close()
     print("Αποθηκεύτηκε: instants/b/b2_robustness.png")
 
-# =============================================================================
 # Β.3 — Persistent Homology σε Γράφους
-# =============================================================================
 
 def clean_dgm(dgm, max_val):
     """Καθαρισμός diagram από άπειρα deaths για χρήση σε Persim Imager"""
@@ -196,7 +189,7 @@ def run_b3():
     st_edge.persistence()
     print("1/2: Υπολογίστηκε το Sublevel Edge Filtration (Clique Complex).")
     
-    # --- Υλοποίηση: Heat Kernel Signature (HKS) Filtration ---
+    #Υλοποίηση: Heat Kernel Signature (HKS) Filtration 
     # 1. Υπολογισμός Graph Laplacian (L = D - W)
     W = np.zeros((len(pts), len(pts)))
     for i in range(len(pts)):
@@ -238,7 +231,7 @@ def run_b3():
     dgm_edge = clean_dgm(st_edge.persistence_intervals_in_dimension(1), threshold + 0.1)
     dgm_hks = clean_dgm(st_hks.persistence_intervals_in_dimension(1), 1.5)
 
-    # --- Συγκριτικό Plot των Persistence Diagrams ---
+    # Συγκριτικό Plot των Persistence Diagrams 
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
     if len(dgm_edge) > 0:
@@ -255,7 +248,7 @@ def run_b3():
     plt.close()
     print("Αποθηκεύτηκε: instants/b/b3_persistence_diagrams_comparison.png")
     
-    # --- Persistence Images ---
+    # Persistence Images 
     from persim import PersistenceImager
     
     plt.figure(figsize=(14, 5))
