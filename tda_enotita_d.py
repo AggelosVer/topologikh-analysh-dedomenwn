@@ -16,7 +16,7 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cluster import DBSCAN
-from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 
 from ripser import ripser
 from persim import plot_diagrams, PersistenceImager
@@ -160,6 +160,30 @@ def run_d1():
     print("\n=== Αποτελέσματα Ταξινόμησης με TDA Features ===")
     print(f"Random Forest Accuracy : {acc:.4f}")
     print(f"Random Forest AUC      : {auc:.4f}")
+
+    # Αποθήκευση εικόνας μιας ενδεικτικής Persistence Image
+    plt.figure(figsize=(6, 5))
+    pimager_h0.plot_image(pimgs_h0[0])
+    plt.title("Sample Persistence Image (Patient 0)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "d1_sample_persistence_image.png"))
+    plt.close()
+
+    # Αποθήκευση της καμπύλης ROC
+    fpr, tpr, _ = roc_curve(y_test, y_proba)
+    plt.figure(figsize=(6, 5))
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {auc:.4f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC Curve (TDA features)')
+    plt.legend(loc="lower right")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "d1_classification_roc.png"))
+    plt.close()
+    print("   -> Αποθηκεύτηκαν τα διαγράμματα: instants/d/d1_sample_persistence_image.png και instants/d/d1_classification_roc.png")
 
 def run_d2():
     print("\n--- Δ.2 Ανάλυση Δεύτερου Dataset (S&P 500) ---")

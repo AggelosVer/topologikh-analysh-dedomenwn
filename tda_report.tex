@@ -418,10 +418,25 @@ for int_idx, interval_bounds in enumerate(intervals):
 \caption{\foreignlanguage{english}{Persistence Diagrams} για την κλάση \foreignlanguage{english}{Malignant} (αριστερά) και \foreignlanguage{english}{Benign} (δεξιά).}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.48\textwidth]{instants/d/d1_barcode_malignant.png}}
+\foreignlanguage{english}{\includegraphics[width=0.48\textwidth]{instants/d/d1_barcode_benign.png}}
+\caption{Διαγράμματα \foreignlanguage{english}{Barcodes} για την κλάση \foreignlanguage{english}{Malignant} (αριστερά) και \foreignlanguage{english}{Benign} (δεξιά).}
+\label{fig:d1_barcodes}
+\end{figure}
+
 Παρατηρούμε ότι οι δύο κλάσεις παρουσιάζουν διαφορές στην τοπολογική τους δομή. Η κλάση των καλοήθων δειγμάτων εμφανίζει πιο διάσπαρτα και μακρόβια χαρακτηριστικά $H_1$ (τρύπες) σε σχέση με την κλάση των κακοήθων, πράγμα που υποδηλώνει μια πιο σύνθετη και «ανοιχτή» γεωμετρική διάταξη στο χώρο των κύριων συνιστωσών.
 
 \textbf{3. Εφαρμογή \foreignlanguage{english}{Mapper}:}
-Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 επικαλυπτόμενα διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση, και εφαρμόστηκε ο αλγόριθμος \foreignlanguage{english}{DBSCAN} (με \foreignlanguage{english}{\texttt{eps=2.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}) για το \foreignlanguage{english}{clustering} των σημείων. Το διαδραστικό γράφημα \foreignlanguage{english}{Mapper} αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d1\_mapper \\ \_graph.html}}. Το γράφημα αναδεικνύει τον διαχωρισμό των κλάσεων σε διαφορετικές περιοχές (\foreignlanguage{english}{branches}) του γραφήματος, με μια περιοχή μετάβασης όπου συνυπάρχουν καλοήθη και κακοήθη δείγματα.
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 επικαλυπτόμενα διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση, και εφαρμόστηκε ο αλγόριθμος \foreignlanguage{english}{DBSCAN} (με \foreignlanguage{english}{\texttt{eps=2.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}) για το \foreignlanguage{english}{clustering} των σημείων. Το διαδραστικό γράφημα \foreignlanguage{english}{Mapper} αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d1\_mapper\_graph.html}} και ένα στιγμιότυπό του παρουσιάζεται στο Σχήμα \ref{fig:d1_mapper}. Το γράφημα αναδεικνύει τον διαχωρισμό των κλάσεων σε διαφορετικές περιοχές (\foreignlanguage{english}{branches}) του γραφήματος, με μια περιοχή μετάβασης όπου συνυπάρχουν καλοήθη και κακοήθη δείγματα.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.65\textwidth]{instants/d/d1_mapper_graph.png}}
+\caption{Οπτικοποίηση του γραφήματος \foreignlanguage{english}{Mapper} για το \foreignlanguage{english}{dataset} καρκίνου του μαστού, όπου διακρίνεται ο διαχωρισμός των κλάσεων σε διαφορετικές διακλαδώσεις.}
+\label{fig:d1_mapper}
+\end{figure}
 
 \textbf{4. \foreignlanguage{english}{TDA} ως Χαρακτηριστικά (\foreignlanguage{english}{Features}) για Μηχανική Μάθηση:}
 Για να χρησιμοποιήσουμε την τοπολογική πληροφορία σε ταξινόμηση, μετατρέψαμε το διάνυσμα χαρακτηριστικών κάθε ασθενούς (30 τιμές) σε χρονοσειρά / \foreignlanguage{english}{point cloud} μέσω της μεθόδου \foreignlanguage{english}{Takens Embedding} (με διάσταση 3 και καθυστέρηση 1).
@@ -431,6 +446,15 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item \foreignlanguage{english}{\textbf{Accuracy}}: 0.6901
     \item \foreignlanguage{english}{\textbf{AUC Score}}: 0.7152
 \end{itemize}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/d/d1_sample_persistence_image.png}}
+\foreignlanguage{english}{\includegraphics[width=0.45\textwidth]{instants/d/d1_classification_roc.png}}
+\caption{Παράδειγμα \foreignlanguage{english}{Persistence Image} για έναν ασθενή (αριστερά) και η καμπύλη \foreignlanguage{english}{ROC} της ταξινόμησης (δεξιά) χρησιμοποιώντας αποκλειστικά τοπολογικά χαρακτηριστικά.}
+\label{fig:d1_classification_plots}
+\end{figure}
+
 Αν και η ακρίβεια αυτή είναι χαμηλότερη από τη χρήση των αρχικών δεδομένων άμεσα (καθώς το \foreignlanguage{english}{Takens embedding} σε 30 \foreignlanguage{english}{features} εισάγει θόρυβο), επιβεβαιώνει ότι η καθαρά τοπολογική δομή των χαρακτηριστικών φέρει σημαντική διακριτική ικανότητα για τη διάγνωση του καρκίνου.
 
 \subsubsection{Δ.2 --- Ανάλυση Δεύτερου \en{Dataset} (\en{S\&P 500})}
@@ -451,6 +475,14 @@ for int_idx, interval_bounds in enumerate(intervals):
     \item $H_1$: 8.6782
     \item $H_2$: -0.6358
 \end{itemize}
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.48\textwidth]{instants/d/d2_sp500_persistence_diagrams.png}}
+\foreignlanguage{english}{\includegraphics[width=0.48\textwidth]{instants/d/d2_sp500_barcode.png}}
+\caption{\foreignlanguage{english}{Persistence Diagrams} (αριστερά) και \foreignlanguage{english}{Barcodes} (δεξιά) του \foreignlanguage{english}{Takens Embedding} για τον δείκτη \foreignlanguage{english}{S\&P 500}.}
+\label{fig:d2_sp500_persistence_plots}
+\end{figure}
 
 \textbf{2. Επαλήθευση $H_2$ Ομολογίας με \foreignlanguage{english}{GUDHI}:}
 Επειδή η διάσταση του \foreignlanguage{english}{point cloud} είναι $d \ge 3$, υπολογίστηκε η ομολογία διάστασης 2 ($H_2$). Χρησιμοποιήθηκε το \foreignlanguage{english}{\texttt{AlphaComplex}} της βιβλιοθήκης \foreignlanguage{english}{GUDHI} για την επαλήθευση. Οι αριθμοί \foreignlanguage{english}{Betti} που προέκυψαν ήταν $\beta = [1, 0, 0]$, γεγονός που δείχνει ότι το σύμπλεγμα είναι τοπολογικά ισοδύναμο με ένα μόνο σημείο (συνεκτικό σύμπλεγμα χωρίς 1-κύκλους ή 2-κοιλότητες στην τελική κλίμακα), επιβεβαιώνοντας ότι το \foreignlanguage{english}{Takens Embedding} της χρηματοοικονομικής χρονοσειράς δεν σχηματίζει κλειστές σφαιρικές κοιλότητες ($H_2 = 0$).
@@ -481,7 +513,14 @@ for int_idx, interval_bounds in enumerate(intervals):
 \end{itemize}
 
 \textbf{5. Εφαρμογή \foreignlanguage{english}{Mapper}:}
-Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} για τις 3D Takens αναπαραστάσεις της χρηματοοικονομικής χρονοσειράς χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση και εφαρμόστηκε ο \foreignlanguage{english}{DBSCAN} με \foreignlanguage{english}{\texttt{eps=0.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}. Το διαδραστικό γράφημα αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d2\_sp500\_mapper\_graph.html}} και χρωματίστηκε βάσει της χρονικής σειράς (Day), αναδεικνύοντας τη χρονική εξέλιξη της τροχιάς των τιμών.
+Κατασκευάστηκε το γράφημα \foreignlanguage{english}{Mapper} για τις \foreignlanguage{english}{3D Takens} αναπαραστάσεις της χρηματοοικονομικής χρονοσειράς χρησιμοποιώντας τη βιβλιοθήκη \foreignlanguage{english}{\texttt{kmapper}}. Ως συνάρτηση φίλτρου χρησιμοποιήθηκε η προβολή \foreignlanguage{english}{PCA} σε 2 διαστάσεις. Ο χώρος καλύφθηκε από 10 διαστήματα με ποσοστό επικάλυψης 30\% ανά διάσταση και εφαρμόστηκε ο \foreignlanguage{english}{DBSCAN} με \foreignlanguage{english}{\texttt{eps=0.5}} και \foreignlanguage{english}{\texttt{min\_samples=3}}. Το διαδραστικό γράφημα αποθηκεύτηκε στο αρχείο \foreignlanguage{english}{\texttt{instants/d/d2\_sp500\_mapper\_graph.html}}, χρωματίστηκε βάσει της χρονικής σειράς (\foreignlanguage{english}{Day}), αναδεικνύοντας τη χρονική εξέλιξη της τροχιάς των τιμών, και ένα στιγμιότυπό του παρουσιάζεται στο Σχήμα \ref{fig:d2_mapper}.
+
+\begin{figure}[H]
+\centering
+\foreignlanguage{english}{\includegraphics[width=0.7\textwidth]{instants/d/d2_sp500_mapper_graph.png}}
+\caption{Οπτικοποίηση του γραφήματος \foreignlanguage{english}{Mapper} για τη χρονοσειρά \foreignlanguage{english}{S\&P 500}, χρωματισμένο με βάση τη χρονική εξέλιξη (ημέρες), όπου αποτυπώνεται η τροχιά της αγοράς.}
+\label{fig:d2_mapper}
+\end{figure}
 
 \textbf{6. \foreignlanguage{english}{Bootstrap Resampling} \& Διαστήματα Εμπιστοσύνης (95\%):}
 Για να ελέγξουμε τη σταθερότητα της επίμονης εντροπίας, εφαρμόστηκε \foreignlanguage{english}{bootstrap resampling} ($n=100$) με τυχαία επιλογή του 80\% των σημείων με επανατοποθέτηση. Τα 95\% διαστήματα εμπιστοσύνης για την επίμονη εντροπία είναι:
@@ -629,12 +668,12 @@ for int_idx, interval_bounds in enumerate(intervals):
 \newpage
 \section{\texorpdfstring{\underline{Χρήση \en{AI}}}{Χρήση AI}}
 \vspace{1em}
-Η χρήση Τεχνητής Νοημοσύνης (συγκεκριμένα Μεγάλων Γλωσσικών Μοντέλων - \foreignlanguage{english}{LLMs}) έγινε στα εξής σημεία της εργασίας:
+Η χρήση Τεχνητής Νοημοσύνης (\foreignlanguage{english}{LLMs}) έγινε στα εξής σημεία της εργασίας:
 
 \begin{itemize}
-    \item \textbf{Ανάπτυξη Κώδικα:} Υποστήριξη στη συγγραφή και βελτιστοποίηση κώδικα \foreignlanguage{english}{Python} σε όλα τα ερωτήματα της εργασίας (συμπεριλαμβανομένης της υλοποίησης του συμπλέγματος \foreignlanguage{english}{Vietoris--Rips} εκ του μηδενός και του αλγορίθμου \foreignlanguage{english}{Custom Mapper}).
+    \item \textbf{Ανάπτυξη Κώδικα:} Υποστήριξη στη συγγραφή και βελτιστοποίηση κώδικα \foreignlanguage{english}{Python} σε όλα τα ερωτήματα της εργασίας.
     \item \textbf{Επίλυση Σφαλμάτων (\foreignlanguage{english}{Debugging}):} Βοήθεια στην επίλυση σφαλμάτων συμβατότητας των βιβλιοθηκών \foreignlanguage{english}{GUDHI} και \foreignlanguage{english}{Ripser}, καθώς και στη διαχείριση της κωδικοποίησης (\foreignlanguage{english}{UTF-8}) στο περιβάλλον των \foreignlanguage{english}{Windows}.
-    \item \textbf{Ερμηνεία Αποτελεσμάτων:} Συζήτηση και ανάλυση των διαγραμμάτων εμμονής και των γραφημάτων του \foreignlanguage{english}{Mapper} για την καλύτερη κατανόηση των τοπολογικών δομών.
+    \item \textbf{Ερμηνεία Αποτελεσμάτων:} Συζήτηση και ανάλυση των αποτελεσμάτων για την καλύτερη κατανόηση των τοπολογικών δομών.
 \end{itemize}
 
 \textit{Σημείωση: Η τελική αξιολόγηση, ο έλεγχος της ορθότητας του κώδικα και η συγγραφή των τελικών συμπερασμάτων έγιναν από την ομάδα εργασίας.}

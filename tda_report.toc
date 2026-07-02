@@ -28,11 +28,11 @@
 \contentsline {subsubsection}{\numberline {3.3.2}Γ.2: Εφαρμογή \foreignlanguage {english}{Mapper} \bbl@greek@ampersand Ανάλυση Ευαισθησίας}{12}{subsubsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.4}Ερώτημα Δ --- Εφαρμογή σε Πραγματικά Δεδομένα}{16}{subsection.3.4}%
 \contentsline {subsubsection}{\numberline {3.4.1}Δ.1 --- Ανάλυση Πρώτου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{Breast Cancer})}{16}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Δ.2 --- Ανάλυση Δεύτερου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{S\bbl@greek@ampersand P 500})}{17}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Δ.3 --- Βαθιά Σύγκριση \bbl@greek@ampersand Συζήτηση: \foreignlanguage {english}{TDA} \foreignlanguage {english}{vs} Κλασικές Μέθοδοι}{19}{subsubsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.5}Ερώτημα Ε --- \foreignlanguage {english}{Zigzag Persistent Homology}}{20}{subsection.3.5}%
-\contentsline {subsubsection}{\numberline {3.5.1}Ε.1 --- \foreignlanguage {english}{Zigzag Persistent Homology} σε Χρονοσειρές}{20}{subsubsection.3.5.1}%
-\contentsline {subsubsection}{\numberline {3.5.2}Ε.2 --- \foreignlanguage {english}{Topological Loss} σε \foreignlanguage {english}{Neural Network}}{22}{subsubsection.3.5.2}%
-\contentsline {section}{\numberline {4}\underline {Συμπεράσματα}}{24}{section.4}%
-\contentsline {section}{\numberline {5}\underline {Χρήση \foreignlanguage {english}{AI}}}{25}{section.5}%
-\contentsline {section}{\numberline {6}\underline {Βιβλιογραφία}}{26}{section.6}%
+\contentsline {subsubsection}{\numberline {3.4.2}Δ.2 --- Ανάλυση Δεύτερου \foreignlanguage {english}{Dataset} (\foreignlanguage {english}{S\bbl@greek@ampersand P 500})}{18}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Δ.3 --- Βαθιά Σύγκριση \bbl@greek@ampersand Συζήτηση: \foreignlanguage {english}{TDA} \foreignlanguage {english}{vs} Κλασικές Μέθοδοι}{21}{subsubsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.5}Ερώτημα Ε --- \foreignlanguage {english}{Zigzag Persistent Homology}}{23}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Ε.1 --- \foreignlanguage {english}{Zigzag Persistent Homology} σε Χρονοσειρές}{23}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Ε.2 --- \foreignlanguage {english}{Topological Loss} σε \foreignlanguage {english}{Neural Network}}{25}{subsubsection.3.5.2}%
+\contentsline {section}{\numberline {4}\underline {Συμπεράσματα}}{27}{section.4}%
+\contentsline {section}{\numberline {5}\underline {Χρήση \foreignlanguage {english}{AI}}}{28}{section.5}%
+\contentsline {section}{\numberline {6}\underline {Βιβλιογραφία}}{29}{section.6}%
