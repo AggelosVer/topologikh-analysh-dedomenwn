@@ -850,8 +850,6 @@ def topological_gradient_h0(hidden, pairs, pts_idx, lam=1.0):
 
     return grad
 
-
-
 # MLP εκ του μηδενός (NumPy only)
 class MLP:
 
