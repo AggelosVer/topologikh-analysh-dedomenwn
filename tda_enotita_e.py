@@ -75,19 +75,20 @@ def compute_betti_numbers(n_vertices, edges, triangles):
     n_edges = len(edges_list)
     n_triangles = len(triangles_list)
 
-    # ∂₁: edges → vertices
+    # ∂₁: edges → vertices (Συνοριακός τελεστής διάστασης 1)
     if n_edges == 0:
         rank_d1 = 0
     else:
-        # Boundary matrix ∂₁ (n_vertices x n_edges) over GF(2)
+        # Boundary matrix ∂₁ over GF(2)
         d1 = np.zeros((n_vertices, n_edges), dtype=int)
         for j, edge in enumerate(edges_list):
             verts = sorted(edge)
             d1[verts[0], j] = 1
             d1[verts[1], j] = 1
+        # Υπολογισμός βαθμίδας στο δυαδικό σώμα
         rank_d1 = _gf2_rank(d1)
 
-    # ∂₂: triangles → edges
+    # ∂₂: triangles → edges (Συνοριακός τελεστής διάστασης 2)
     if n_triangles == 0:
         rank_d2 = 0
     else:
@@ -104,8 +105,10 @@ def compute_betti_numbers(n_vertices, edges, triangles):
             for face in faces:
                 if face in edge_to_idx:
                     d2[edge_to_idx[face], j] = 1
+        # Υπολογισμός βαθμίδας στο δυαδικό σώμα
         rank_d2 = _gf2_rank(d2)
 
+    # Υπολογισμός αριθμών Betti βάσει του θεωρήματος ομολογίας
     beta_0 = n_vertices - rank_d1
     beta_1 = n_edges - rank_d1 - rank_d2
 
@@ -142,15 +145,16 @@ def zigzag_persistence_from_betti(betti_sequence):
         active_features = []  # Stack: χρόνοι birth ενεργών features
         prev_betti = 0
 
+        # Ανάλυση της ακολουθίας Betti για τον εντοπισμό γεννήσεων/θανάτων
         for t, betti_pair in enumerate(betti_sequence):
             curr_betti = betti_pair[dim]
 
             if curr_betti > prev_betti:
-                # Γεννήθηκαν νέα features
+                # Γεννήθηκαν νέα features (προσθήκη στη στοίβα LIFO)
                 for _ in range(curr_betti - prev_betti):
                     active_features.append(t)
             elif curr_betti < prev_betti:
-                # Πέθαναν features (LIFO: κλείνουμε τα πιο πρόσφατα)
+                # Πέθαναν features (LIFO: κλείνουμε τα πιο πρόσφατα γεννημένα)
                 for _ in range(prev_betti - curr_betti):
                     if active_features:
                         birth = active_features.pop()
@@ -158,7 +162,7 @@ def zigzag_persistence_from_betti(betti_sequence):
 
             prev_betti = curr_betti
 
-        # Features που επιμένουν μέχρι το τέλος
+        # Features που επιμένουν μέχρι το τέλος της ακολουθίας
         for birth in active_features:
             intervals.append((birth, len(betti_sequence), dim))
 
@@ -172,9 +176,10 @@ def run_zigzag_filtration(point_clouds, max_radius):
 
     print(f"   Χρονικά βήματα zigzag filtration: {n_times}")
 
+    # Υπολογισμός Betti για κάθε βήμα t της zigzag διήθησης
     for t in range(n_times):
         if t % 2 == 0:
-            # t = 2i → K_i
+            # t = 2i → Point cloud παραθύρου K_i
             i = t // 2
             pc = point_clouds[i]
             verts, edges, tris = build_rips_simplices(pc, max_radius)
@@ -184,13 +189,14 @@ def run_zigzag_filtration(point_clouds, max_radius):
                 print(f"     t={t} (K_{i}): β₀={b0}, β₁={b1}, "
                       f"|V|={len(verts)}, |E|={len(edges)}, |Δ|={len(tris)}")
         else:
-            # t = 2i+1 → K_i ∪ K_{i+1}
+            # t = 2i+1 → Ένωση δύο διαδοχικών παραθύρων K_i ∪ K_{i+1}
             i = t // 2
             pc_union = np.vstack([point_clouds[i], point_clouds[i + 1]])
             verts, edges, tris = build_rips_simplices(pc_union, max_radius)
             b0, b1 = compute_betti_numbers(len(pc_union), edges, tris)
             betti_sequence.append((b0, b1))
 
+    # Ανακατασκευή των διαστημάτων persistence από τη σειρά Betti
     intervals = zigzag_persistence_from_betti(betti_sequence)
 
     return intervals, betti_sequence, n_times
@@ -823,6 +829,7 @@ def h0_persistence_pairs(points):
 
 def topological_loss_h0(hidden, max_pts=30, lam=1.0):
     n = len(hidden)
+    # Υποδειγματοληψία για μείωση υπολογιστικού κόστους
     if n > max_pts:
         idx = np.random.choice(n, max_pts, replace=False)
         pts = hidden[idx]
@@ -830,7 +837,9 @@ def topological_loss_h0(hidden, max_pts=30, lam=1.0):
         idx = np.arange(n)
         pts = hidden
 
+    # Εύρεση H0 persistence pairs μέσω του MST (Kruskal)
     pairs = h0_persistence_pairs(pts)
+    # Άθροισμα τετραγώνων των persistence (αποστάσεων θανάτου)
     loss = lam * sum(d * d for (_, d, _, _) in pairs)
     return loss, pairs, idx
 
@@ -840,10 +849,12 @@ def topological_gradient_h0(hidden, pairs, pts_idx, lam=1.0):
     grad = np.zeros((N, d))
     pts = hidden[pts_idx]
 
+    # Αναλυτικός υπολογισμός παραγώγου για κάθε ζεύγος σημείων που συνδέεται
     for (_, dist_ij, i, j) in pairs:
         if dist_ij < 1e-10:
             continue
         diff = pts[i] - pts[j]
+        # Κλίση (gradient): κατεύθυνση έλξης των συνδεδεμένων σημείων
         g = 2.0 * lam * diff
         grad[pts_idx[i]] += g
         grad[pts_idx[j]] -= g
@@ -893,17 +904,21 @@ class MLP:
     def backward(self, X, y, topo_grad=None, topo_weight=0.0):
         N = X.shape[0]
         y = y.reshape(-1, 1)
+        # Παράγωγος του Binary Cross Entropy Loss
         dL = (self._cache['a'][-1] - y) / N
         gW, gb = [], []
+        # Backpropagation μέσω των επιπέδων (από το τέλος προς την αρχή)
         for i in reversed(range(len(self.weights))):
             z = self._cache['z'][i]
             ap = self._cache['a'][i]
             dz = dL if i == len(self.weights) - 1 else dL * self._relu_d(z)
+            # Προσθήκη του Topological Gradient στο τελευταίο κρυφό επίπεδο
             if topo_grad is not None and i == len(self.weights) - 2:
                 dz = dz + topo_weight * topo_grad * self._relu_d(z)
             gW.insert(0, ap.T @ dz)
             gb.insert(0, dz.sum(axis=0, keepdims=True))
             dL = dz @ self.weights[i].T
+        # Ενημέρωση των βαρών και των biases με Gradient Descent
         for i in range(len(self.weights)):
             self.weights[i] -= self.lr * gW[i]
             self.biases[i] -= self.lr * gb[i]
@@ -949,23 +964,27 @@ def train_mlp(X_tr, y_tr, X_vl, y_vl,
     N = X_tr.shape[0]
     hist = {'tl': [], 'vl': [], 'ta': [], 'va': [], 'topo': []}
 
+    # Κύριος βρόχος εκπαίδευσης (Epochs)
     for ep in range(epochs):
         perm = np.random.permutation(N)
         Xs, ys = X_tr[perm], y_tr[perm]
         ep_topo, n_topo = 0.0, 0
 
+        # Εκπαίδευση ανά mini-batch
         for s in range(0, N, bs):
             Xb, yb = Xs[s:s + bs], ys[s:s + bs]
             _, hids = mlp.forward(Xb, return_hidden=True)
-            lh = hids[-1]
+            lh = hids[-1] # Latent space (έξοδος τελευταίου κρυφού επιπέδου)
 
             tg, tv = None, 0.0
+            # Εφαρμογή Topological Loss μετά το προκαθορισμένο epoch (topo_start)
             if use_topo and ep >= topo_start:
                 tv, pairs, pidx = topological_loss_h0(lh, max_pts=25, lam=1.0)
                 tg = topological_gradient_h0(lh, pairs, pidx, lam=1.0)
                 ep_topo += tv
                 n_topo += 1
 
+            # Backpropagation με ενσωμάτωση του τοπολογικού gradient
             mlp.backward(Xb, yb, topo_grad=tg, topo_weight=topo_w)
 
         ytp = mlp.forward(X_tr)

@@ -54,15 +54,18 @@ class CustomMapper:
         X = np.array(X)
         filter_values = np.array(filter_values)
         
+        # Έλεγχος αν η συνάρτηση φιλτραρίσματος είναι 1D ή 2D
         is_1d = (filter_values.ndim == 1) or (filter_values.shape[1] == 1)
         f_dim = 1 if is_1d else filter_values.shape[1]
         
         if is_1d:
+            # Περίπτωση 1D φίλτρου: δημιουργία μονοδιάστατων διαστημάτων
             f1 = filter_values.flatten()
             n_int = self.n_intervals if isinstance(self.n_intervals, int) else self.n_intervals[0]
             intervals_1d = self._get_1d_intervals(f1, n_int, self.overlap_frac)
             intervals = [[(s, e)] for s, e in intervals_1d]
         else:
+            # Περίπτωση 2D φίλτρου: δημιουργία δισδιάστατου πλέγματος διαστημάτων
             f1 = filter_values[:, 0]
             f2 = filter_values[:, 1]
             n_int = self.n_intervals if isinstance(self.n_intervals, tuple) else (self.n_intervals, self.n_intervals)
@@ -73,26 +76,35 @@ class CustomMapper:
         nodes = []
         node_id_counter = 0
         
+        # Επανάληψη για κάθε διάστημα φιλτραρίσματος
         for int_idx, interval_bounds in enumerate(intervals):
+            # Αρχικοποίηση μάσκας για την εύρεση των σημείων στο διάστημα
             in_interval = np.ones(len(X), dtype=bool)
             for d in range(f_dim):
                 start, end = interval_bounds[d]
                 f_d = filter_values.flatten() if f_dim == 1 else filter_values[:, d]
+                # Φιλτράρισμα σημείων ανά διάσταση
                 in_interval &= (f_d >= start) & (f_d <= end)
                 
+            # Λήψη των δεικτών των σημείων που ανήκουν στο διάστημα
             pts_idx = np.where(in_interval)[0]
             if len(pts_idx) == 0:
                 continue
                 
+            # Απομόνωση των σημείων του διαστήματος για συσταδοποίηση
             X_subset = X[pts_idx]
+            # Εκτέλεση του αλγορίθμου clustering (π.χ. DBSCAN)
             labels = self.clustering_algo.fit_predict(X_subset)
             
+            # Δημιουργία κόμβων από τα clusters που βρέθηκαν
             unique_labels = np.unique(labels)
             for label in unique_labels:
                 if label == -1: # Αγνοούμε το noise του DBSCAN
                     continue
                     
+                # Λήψη των σημείων του συγκεκριμένου cluster
                 cluster_pts = pts_idx[labels == label]
+                # Προσθήκη του cluster ως κόμβο στο γράφημα με τις ιδιότητές του
                 nodes.append({
                     'id': node_id_counter,
                     'points': set(cluster_pts),
@@ -102,14 +114,18 @@ class CustomMapper:
                 })
                 node_id_counter += 1
                 
+        # Δημιουργία κενού γραφήματος NetworkX
         G = nx.Graph()
+        # Προσθήκη των κόμβων (clusters) στο γράφημα
         for node in nodes:
             G.add_node(node['id'], size=node['size'], points=list(node['points']), mean_filter=node['mean_filter'])
             
+        # Έλεγχος επικαλύψεων μεταξύ των clusters για τη δημιουργία ακμών
         for i in range(len(nodes)):
             for j in range(i+1, len(nodes)):
                 if not nodes[i]['points'].isdisjoint(nodes[j]['points']):
                     weight = len(nodes[i]['points'].intersection(nodes[j]['points']))
+                    # Προσθήκη ακμής αν υπάρχουν κοινά σημεία
                     G.add_edge(nodes[i]['id'], nodes[j]['id'], weight=weight)
                     
         return G

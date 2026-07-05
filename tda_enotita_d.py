@@ -36,10 +36,12 @@ sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings('ignore')
 
 def takens_embedding(X_1d, delay=1, dimension=3):
-    #Μετατρέπει ένα 1D array σε point cloud μέσω Takens Embedding.
+    # Μετατρέπει ένα 1D array σε point cloud μέσω Takens Embedding.
     N = len(X_1d)
     embedded = []
+    # Επανάληψη για κάθε χρονική στιγμή
     for i in range(N - (dimension - 1)*delay):
+        # Δημιουργία διανύσματος με καθυστέρηση (delay)
         pt = [X_1d[i + j*delay] for j in range(dimension)]
         embedded.append(pt)
     return np.array(embedded)
@@ -78,14 +80,17 @@ def run_d1():
     plt.savefig(os.path.join(output_dir, "d1_persistence_diagrams.png"))
     plt.close()
     
-    # Barcodes
+    # Σχεδίαση Persistent Barcode
     def plot_barcode(dgms, title, filename):
         plt.figure(figsize=(8, 4))
         colors = ['#1f77b4', '#ff7f0e']
         y_pos = 0
+        # Επανάληψη ανά διάσταση ομολογίας (H0, H1)
         for dim, dgm in enumerate(dgms):
             for b, d in dgm:
-                if np.isinf(d): d = 10.0 # Οπτικό όριο
+                # Αντικατάσταση άπειρης διάρκειας ζωής με οπτικό όριο
+                if np.isinf(d): d = 10.0 
+                # Σχεδίαση της οριζόντιας γραμμής (bar) για κάθε persistence generator
                 plt.plot([b, d], [y_pos, y_pos], color=colors[dim], lw=2)
                 y_pos += 1
         plt.yticks([])
@@ -126,6 +131,7 @@ def run_d1():
     print("4. Εξαγωγή TDA features (Persistence Images) και εκπαίδευση Random Forest...")
     all_h0 = []
     
+    # Μετατροπή του προφίλ κάθε ασθενούς σε point cloud και υπολογισμός ομολογίας
     for i in range(X_scaled.shape[0]):
         # Μετατροπή κάθε ασθενούς (30 features) σε point cloud μέσω Takens
         pts = takens_embedding(X_scaled[i], delay=1, dimension=3)
@@ -136,12 +142,12 @@ def run_d1():
         
         all_h0.append(h0)
         
-    # Fit Imagers (προσθέτουμε ένα dummy point για να διασφαλίσουμε width > 0 στον άξονα birth)
+    # Εκπαίδευση Persistence Imager για μετατροπή διαγραμμάτων σε εικόνες
     pimager_h0 = PersistenceImager(pixel_size=0.1)
     pimager_h0.fit(all_h0 + [np.array([[0.0, 0.0], [1.0, 1.0]])])
     pimgs_h0 = pimager_h0.transform(all_h0)
     
-    # Flatten τα images σε 1D vector για κάθε ασθενή
+    # Μετατροπή των εικόνων persistence σε μονοδιάστατα διανύσματα (flatten)
     X_features = []
     for img0 in pimgs_h0:
         X_features.append(img0.flatten())
@@ -208,17 +214,20 @@ def run_d2():
     # 1. Φόρτωση δεδομένων S&P 500
     print("1. Φόρτωση δεδομένων S&P 500 (τελευταία 2 έτη)...")
     try:
+        # Λήψη δεδομένων από Yahoo Finance
         sp500 = yf.download('^GSPC', period='2y', interval='1d', progress=False)
         if sp500.empty:
             raise ValueError("Κενά δεδομένα")
         close_prices = sp500['Close'].values.flatten()
         print(f"   Φορτώθηκαν {len(close_prices)} ημερήσιες τιμές κλεισίματος.")
     except Exception as e:
+        # Εναλλακτική παραγωγή συνθετικής χρονοσειράς αν αποτύχει η λήψη
         print(f"   Αποτυχία φόρτωσης S&P 500 ({e}).")
         print("   Χρήση συνθετικής χρονοσειράς (ημίτονο + τάση + θόρυβος)...")
         np.random.seed(42)
         t = np.linspace(0, 4 * np.pi, 500)
         close_prices = np.sin(t) + 0.3 * np.sin(3 * t) + 0.1 * t + np.random.normal(0, 0.1, len(t))
+    # Κανονικοποίηση των τιμών
     scaler = StandardScaler()
     close_prices_scaled = scaler.fit_transform(close_prices.reshape(-1, 1)).flatten()
     
@@ -230,16 +239,18 @@ def run_d2():
     # Το gtda δέχεται (n_samples, n_timestamps)
     X_ts = [close_prices_scaled]
     
+    # Ορισμός pipeline: Embedding -> Persistent Homology -> Persistence Entropy
     tda_pipeline = Pipeline([
         ('embedding', TakensEmbedding(dimension=embedding_dim, time_delay=delay)),
         ('persistence', VietorisRipsPersistence(homology_dimensions=(0, 1, 2), n_jobs=-1)),
         ('entropy', PersistenceEntropy(normalize=True))
     ])
     
+    # Εκτέλεση του pipeline
     features = tda_pipeline.fit_transform(X_ts)
     print(f"   -> Persistent Entropy (H0, H1, H2): {features[0]}")
     
-    # Εξαγωγή του point cloud για τα βήματα 3 και 4
+    # Εξαγωγή του 3D point cloud μέσω Takens Embedding
     embedder = TakensEmbedding(dimension=embedding_dim, time_delay=delay)
     X_embedded = embedder.fit_transform(X_ts)[0] # Παίρνουμε το 1o (και μοναδικό) sample, σχήμα: (n_points, 3)
     
@@ -276,9 +287,12 @@ def run_d2():
     
     # Επαλήθευση H2 Ομολογίας με GUDHI (Βιβλιοθήκη Gudhi)
     print("   -> Επαλήθευση/Υπολογισμός H2 ομολογίας με GUDHI (Alpha Complex)...")
+    # Κατασκευή Alpha Complex από το point cloud
     alpha_complex = gudhi.AlphaComplex(points=X_embedded)
+    # Δημιουργία του simplex tree για υπολογισμό persistence
     st = alpha_complex.create_simplex_tree()
     st.compute_persistence()
+    # Υπολογισμός των Betti Numbers
     betti_numbers = st.betti_numbers()
     print(f"      Gudhi Betti Numbers: {betti_numbers}")
 
@@ -327,12 +341,15 @@ def run_d2():
     
     # 3. Βαθιά σύγκριση με PCA, t-SNE, UMAP (χρήση Seaborn και Pandas)
     print("3. Σύγκριση TDA point cloud με PCA, t-SNE, UMAP...")
+    # Μείωση διάστασης με PCA
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_embedded)
     
+    # Μείωση διάστασης με t-SNE
     tsne = TSNE(n_components=2, perplexity=30, random_state=42)
     X_tsne = tsne.fit_transform(X_embedded)
     
+    # Μείωση διάστασης με UMAP
     reducer = umap.UMAP(n_components=2, random_state=42)
     X_umap = reducer.fit_transform(X_embedded)
     
@@ -366,20 +383,23 @@ def run_d2():
     n_points = len(X_embedded)
     n_sample_size = int(0.8 * n_points)
     
+    # Ορισμός κλάσεων Vietoris-Rips και Persistent Entropy
     vr = VietorisRipsPersistence(homology_dimensions=(0, 1, 2), n_jobs=-1)
     pe = PersistenceEntropy(normalize=True)
     
+    # Εκτέλεση bootstrap επαναλήψεων
     for i in range(n_iterations):
         # Sampling 80% των σημείων με επανατοποθέτηση
         X_boot = resample(X_embedded, n_samples=n_sample_size, random_state=i)
         
-        # Το vr.fit_transform δέχεται input σχήματος (n_samples, n_points, n_dimensions)
+        # Υπολογισμός διαγραμμάτων persistence και εντροπίας για το bootstrap δείγμα
         diagrams = vr.fit_transform([X_boot])
         ent = pe.fit_transform(diagrams)[0]
         entropy_samples.append(ent)
         
     entropy_samples = np.array(entropy_samples) # Shape: (100, 3)
     
+    # Υπολογισμός των εκατοστημορίων για το 95% διάστημα εμπιστοσύνης
     ci_lower = np.percentile(entropy_samples, 2.5, axis=0)
     ci_upper = np.percentile(entropy_samples, 97.5, axis=0)
     mean_entropy = np.mean(entropy_samples, axis=0)
